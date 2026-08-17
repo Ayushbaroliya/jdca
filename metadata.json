@@ -1,0 +1,6 @@
+{
+  "name": "Cricket Scorer",
+  "description": "A responsive cricket scoring, match management, live analytics, and scouting platform with interactive wagon wheels, ball-by-ball scoring, and detailed player profiles.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
