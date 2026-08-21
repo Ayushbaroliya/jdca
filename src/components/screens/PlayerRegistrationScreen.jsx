@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Camera, User, ArrowLeft, Check, Sparkles } from 'lucide-react';
+import { Camera, User, ArrowLeft, Check, Sparkles, AlertCircle } from 'lucide-react';
 import { useCricket } from '../../context/CricketContext';
+import { PlayerRegistrationSchema } from '../../engine/validationSchemas';
 
 export default function PlayerRegistrationScreen() {
   const { registerPlayer, goBack } = useCricket();
@@ -13,6 +14,7 @@ export default function PlayerRegistrationScreen() {
   const [category, setCategory] = useState('Under-16');
   const [age, setAge] = useState(15);
   const [avatar, setAvatar] = useState('https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=300&auto=format&fit=crop&q=80');
+  const [formErrors, setFormErrors] = useState({});
 
   const avatarPresets = [
     'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=300&auto=format&fit=crop&q=80',
@@ -23,9 +25,9 @@ export default function PlayerRegistrationScreen() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!name.trim()) return;
+    setFormErrors({});
 
-    registerPlayer({
+    const formData = {
       name,
       role,
       battingStyle,
@@ -34,7 +36,21 @@ export default function PlayerRegistrationScreen() {
       category,
       age: Number(age),
       avatar
-    });
+    };
+
+    // Zod Schema Validation
+    const validation = PlayerRegistrationSchema.safeParse(formData);
+    if (!validation.success) {
+      const fieldErrors = {};
+      validation.error.errors.forEach((err) => {
+        const field = err.path[0];
+        if (field) fieldErrors[field] = err.message;
+      });
+      setFormErrors(fieldErrors);
+      return;
+    }
+
+    registerPlayer(validation.data);
   };
 
   return (
@@ -86,12 +102,24 @@ export default function PlayerRegistrationScreen() {
           </label>
           <input
             type="text"
-            required
             placeholder="e.g. Virat Kohli"
             value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm font-semibold text-slate-900 placeholder:text-slate-400 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-2xs"
+            onChange={(e) => {
+              setName(e.target.value);
+              if (formErrors.name) setFormErrors((prev) => ({ ...prev, name: null }));
+            }}
+            className={`w-full px-4 py-3 rounded-xl border text-sm font-semibold text-slate-900 placeholder:text-slate-400 outline-none shadow-2xs ${
+              formErrors.name
+                ? 'border-red-500 bg-red-50/20 focus:ring-2 focus:ring-red-400'
+                : 'border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+            }`}
           />
+          {formErrors.name && (
+            <p className="text-xs font-semibold text-red-600 mt-1 flex items-center space-x-1">
+              <AlertCircle className="w-3.5 h-3.5" />
+              <span>{formErrors.name}</span>
+            </p>
+          )}
         </div>
 
         {/* Primary Role Selector Pills (Batter / Bowler / All-Rounder) */}
@@ -152,11 +180,35 @@ export default function PlayerRegistrationScreen() {
           </select>
         </div>
 
-        {/* Age Category & District Grid */}
-        <div className="grid grid-cols-2 gap-3">
+        {/* Age, Age Category & District Grid */}
+        <div className="grid grid-cols-3 gap-3">
           <div>
             <label className="text-xs font-extrabold uppercase tracking-wider text-slate-700 block mb-1.5">
-              Age Category
+              Age (Years) *
+            </label>
+            <input
+              type="number"
+              min="8"
+              max="50"
+              value={age}
+              onChange={(e) => {
+                setAge(e.target.value);
+                if (formErrors.age) setFormErrors((prev) => ({ ...prev, age: null }));
+              }}
+              className={`w-full px-3 py-2.5 rounded-xl border text-xs font-semibold ${
+                formErrors.age ? 'border-red-500 bg-red-50/20' : 'border-slate-300'
+              }`}
+            />
+            {formErrors.age && (
+              <p className="text-[10px] font-semibold text-red-600 mt-1">
+                {formErrors.age}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label className="text-xs font-extrabold uppercase tracking-wider text-slate-700 block mb-1.5">
+              Category
             </label>
             <select
               value={category}
@@ -166,7 +218,7 @@ export default function PlayerRegistrationScreen() {
               <option value="Under-13">Under-13</option>
               <option value="Under-16">Under-16</option>
               <option value="Under-19">Under-19</option>
-              <option value="Senior/Open">Senior/Open</option>
+              <option value="Senior">Senior/Open</option>
             </select>
           </div>
 

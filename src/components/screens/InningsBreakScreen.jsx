@@ -22,14 +22,20 @@ export default function InningsBreakScreen() {
         <div className="absolute -right-8 -top-8 w-40 h-40 bg-blue-600/20 rounded-full blur-2xl pointer-events-none" />
 
         <div className="relative z-10 space-y-3">
-          <div className="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-blue-300">
-            <span className="w-2 h-2 rounded-full bg-amber-400" />
-            <span>Innings Complete • 1st Innings</span>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-blue-300">
+              <span className="w-2 h-2 rounded-full bg-amber-400" />
+              <span>Innings Complete • 1st Innings</span>
+            </div>
+            <div className="flex items-center space-x-1.5 bg-white/10 px-2.5 py-1 rounded-full text-xs font-bold text-amber-300 border border-white/10">
+              <CricketBatIcon className="w-3.5 h-3.5 text-amber-400" />
+              <span>Batting 1st</span>
+            </div>
           </div>
 
           <div>
-            <h2 className="text-xl sm:text-2xl font-semibold text-blue-100">
-              Super Kings
+            <h2 className="text-xl sm:text-2xl font-semibold text-blue-100 flex items-center gap-2">
+              <span>Super Kings</span>
             </h2>
             <div className="text-4xl sm:text-5xl font-black text-white tracking-tight mt-1 font-display">
               {runs || 214} <span className="text-2xl text-blue-300 font-bold">/{wickets || 4}</span>
@@ -42,10 +48,11 @@ export default function InningsBreakScreen() {
       </div>
 
       {/* 2. Target Challenge Card */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-5 text-center space-y-1">
-        <span className="text-[11px] font-bold uppercase tracking-widest text-slate-400">
-          TARGET FOR 2ND INNINGS
-        </span>
+      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-5 text-center space-y-2">
+        <div className="inline-flex items-center justify-center space-x-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-extrabold uppercase tracking-wider">
+          <CricketBatIcon className="w-3.5 h-3.5 text-[#0B57D0]" />
+          <span>TARGET FOR 2ND INNINGS BATTING</span>
+        </div>
         <div className="text-3xl sm:text-4xl font-extrabold text-[#0B57D0] font-display">
           {targetScore || 215} Runs
         </div>
@@ -62,9 +69,9 @@ export default function InningsBreakScreen() {
 
         <div className="grid grid-cols-2 gap-3">
           {/* Top Batter */}
-          <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-100">
-            <div className="flex items-center space-x-1.5 text-xs font-bold text-slate-500 mb-1">
-              <CricketBatIcon className="w-3.5 h-3.5" />
+          <div className="p-3.5 rounded-xl bg-amber-50/60 border border-amber-200/70">
+            <div className="flex items-center space-x-1.5 text-xs font-bold text-amber-800 mb-1">
+              <CricketBatIcon className="w-3.5 h-3.5 text-amber-700" />
               <span>Top Batter</span>
             </div>
             <h4 className="font-bold text-sm text-slate-900">V. Kohli</h4>
@@ -77,7 +84,7 @@ export default function InningsBreakScreen() {
           {/* Top Bowler */}
           <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-100">
             <div className="flex items-center space-x-1.5 text-xs font-bold text-slate-500 mb-1">
-              <CricketBallIcon className="w-3.5 h-3.5" />
+              <CricketBallIcon className="w-3.5 h-3.5 text-red-500" />
               <span>Top Bowler</span>
             </div>
             <h4 className="font-bold text-sm text-slate-900">R. Khan</h4>
@@ -95,8 +102,8 @@ export default function InningsBreakScreen() {
           onClick={handleStartSecondInnings}
           className="w-full py-4 bg-[#0B57D0] hover:bg-blue-700 active:scale-[0.99] text-white font-bold rounded-2xl shadow-lg flex items-center justify-center space-x-2 text-sm sm:text-base transition-all cursor-pointer"
         >
-          <Play className="w-4 h-4 fill-white" />
-          <span>Start 2nd Innings</span>
+          <CricketBatIcon className="w-4 h-4 text-white" />
+          <span>Start 2nd Innings (Batting)</span>
         </button>
 
         <button

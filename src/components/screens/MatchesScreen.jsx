@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Plus, MapPin, ArrowRight, Radio, Trophy, Clock } from 'lucide-react';
+import { Plus, MapPin, ArrowRight, Radio, Trophy, Clock, Sparkles } from 'lucide-react';
 import { useCricket } from '../../context/CricketContext';
 import { TeamCrest } from '../CricketIcons';
+import { CricketStadiumHeroIllustration } from '../CricketIllustrations';
 
 export default function MatchesScreen() {
   const { matches, navigateTo, setActiveMatchId } = useCricket();
@@ -16,6 +17,17 @@ export default function MatchesScreen() {
   return (
     <div className="min-h-[calc(100vh-120px)] bg-slate-50/60 pb-20 px-4 pt-4 max-w-xl mx-auto animate-in fade-in duration-200">
       
+      {/* Stadium Hero Banner SVG */}
+      <div 
+        onClick={() => {
+          setActiveMatchId('match-live-1');
+          navigateTo('scoring');
+        }}
+        className="mb-4 cursor-pointer group transition-transform active:scale-[0.99]"
+      >
+        <CricketStadiumHeroIllustration className="w-full h-40 shadow-md border border-slate-800/40" />
+      </div>
+
       {/* Category Pills Bar */}
       <div className="flex items-center space-x-2.5 overflow-x-auto no-scrollbar pb-3 pt-1">
         {categories.map((cat) => {

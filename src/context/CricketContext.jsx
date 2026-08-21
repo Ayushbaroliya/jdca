@@ -2,6 +2,14 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import confetti from 'canvas-confetti';
 import {
+  processDelivery,
+  formatOvers,
+  calculateCRR,
+  calculateProjectedScore,
+  canBowlerBowlNextOver,
+  MATCH_STATES,
+} from '../engine/cricketStateMachine';
+import {
   INITIAL_PLAYERS,
   INITIAL_MATCHES,
   OFFICIALS,
@@ -40,8 +48,8 @@ export function CricketProvider({ children }) {
   const activeTab = activeTabMap[currentScreen] || 'matches';
 
   // Authentication State
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
-  const [userMobile, setUserMobile] = useState('');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
   const [userRole, setUserRole] = useState('Admin'); // Admin, Scorer, Selector, Player
 
   // Players & Scouting
@@ -64,6 +72,12 @@ export function CricketProvider({ children }) {
     totalOvers: 20,
     widePenalty: 1,
     noBallPenalty: 1,
+    umpires: {
+      umpire1: '',
+      umpire2: '',
+      tvUmpire: '',
+      referee: ''
+    },
     playingXI: [
       { id: 'p1', name: 'V. Kohli', role: 'Batter', isCaptain: true },
       { id: 'p2', name: 'F. du Plessis', role: 'Batter', isCaptain: false },
@@ -108,7 +122,7 @@ export function CricketProvider({ children }) {
     balls: 42,
     fours: 5,
     sixes: 2,
-    strikeRate: 152.4
+    strikeRate: '152.4'
   });
 
   const [nonStriker, setNonStriker] = useState({
@@ -118,23 +132,27 @@ export function CricketProvider({ children }) {
     balls: 8,
     fours: 1,
     sixes: 0,
-    strikeRate: 150.0
+    strikeRate: '150.0'
   });
 
   const [currentBowler, setCurrentBowler] = useState({
     id: 'bw1',
     name: 'P. Cummins',
     overs: 3.4,
+    ballsBowled: 22,
     maidens: 0,
     runs: 28,
     wickets: 1,
-    economy: 7.64,
+    economy: '7.64',
     wk: 'A. Carey'
   });
 
-  // Ball Direction / Shot Sector
+  // Ball Direction / Shot Sector & State Machine Attributes
   const [selectedDirection, setSelectedDirection] = useState('Cover');
   const [ballHistory, setBallHistory] = useState([]);
+  const [isFreeHit, setIsFreeHit] = useState(false);
+  const [validationError, setValidationError] = useState(null);
+  const [matchStatus, setMatchStatus] = useState('IN_PROGRESS');
 
   // Modals & Sheets
   const [dismissalModalOpen, setDismissalModalOpen] = useState(false);
@@ -145,6 +163,14 @@ export function CricketProvider({ children }) {
 
   // Scorecard detailed tables
   const [scorecard, setScorecard] = useState(INITIAL_SCORECARD);
+
+  // Auto-clear validation errors after 3 seconds
+  useEffect(() => {
+    if (validationError) {
+      const timer = setTimeout(() => setValidationError(null), 3500);
+      return () => clearTimeout(timer);
+    }
+  }, [validationError]);
 
   // Navigation helpers
   const navigateTo = (screenName, tabName = null) => {
@@ -169,106 +195,102 @@ export function CricketProvider({ children }) {
     navigate(-1);
   };
 
-  // Convert raw ball count to cricket overs string (e.g. 94 balls -> 15.4)
-  const formatOvers = (ballCount) => {
-    const fullOvers = Math.floor(ballCount / 6);
-    const remainder = ballCount % 6;
-    return `${fullOvers}.${remainder}`;
+  // Convert raw ball count to cricket overs string
+  const formatOversDisplay = (ballCount = balls) => {
+    return formatOvers(ballCount);
   };
 
   // Current Run Rate (CRR)
-  const calculateCRR = () => {
-    if (balls === 0) return '0.00';
-    const totalOvers = balls / 6;
-    return (runs / totalOvers).toFixed(2);
+  const getCRR = () => {
+    return calculateCRR(runs, balls);
   };
 
   // Projected Score
-  const calculateProjectedScore = () => {
-    const crr = parseFloat(calculateCRR());
-    if (isNaN(crr) || crr === 0) return runs;
-    return Math.round(crr * totalMatchOvers);
+  const getProjectedScore = () => {
+    return calculateProjectedScore(runs, balls, matchSetup.totalOvers);
   };
 
-  // Switch striker
+  // Switch striker manually
   const toggleStriker = () => {
     const temp = striker;
     setStriker(nonStriker);
     setNonStriker(temp);
   };
 
-  // Add runs action (0, 1, 2, 3, 4, 5, 6)
+  // Helper to snapshot current state for deterministic Undo
+  const captureSnapshot = () => ({
+    runs,
+    wickets,
+    balls,
+    currentOverBalls: [...currentOverBalls],
+    striker: { ...striker },
+    nonStriker: { ...nonStriker },
+    currentBowler: { ...currentBowler },
+    extras: { ...extras },
+    isFreeHit,
+    innings,
+    matchStatus,
+    scorecard: JSON.parse(JSON.stringify(scorecard)),
+  });
+
+  // Apply State Machine Result
+  const applyStateResult = (result) => {
+    if (!result.success) {
+      setValidationError(result.error);
+      return false;
+    }
+
+    const { newState } = result;
+    setBallHistory((prev) => [...prev, captureSnapshot()]);
+
+    setRuns(newState.runs);
+    setWickets(newState.wickets);
+    setBalls(newState.balls);
+    setCurrentOverBalls(newState.currentOverBalls);
+    setStriker(newState.striker);
+    setNonStriker(newState.nonStriker);
+    setCurrentBowler(newState.currentBowler);
+    setExtras(newState.extras);
+    setIsFreeHit(newState.isFreeHit);
+    setScorecard(newState.scorecard);
+    setMatchStatus(newState.matchStatus);
+    setValidationError(null);
+
+    // Check innings or match termination
+    if (newState.matchStatus === MATCH_STATES.INNINGS_BREAK) {
+      setTimeout(() => navigateTo('innings-break'), 600);
+    } else if (newState.matchStatus === MATCH_STATES.MATCH_FINISHED) {
+      setTimeout(() => navigateTo('match-result'), 600);
+    }
+
+    return true;
+  };
+
+  // 1. Add Runs Action (0..6)
   const recordRuns = (runAmount, direction = selectedDirection) => {
-    // Snapshot for Undo
-    const snapshot = {
+    const currentState = {
       runs,
       wickets,
       balls,
-      currentOverBalls: [...currentOverBalls],
-      striker: { ...striker },
-      nonStriker: { ...nonStriker },
-      currentBowler: { ...currentBowler },
-      extras: { ...extras },
+      currentOverBalls,
+      striker,
+      nonStriker,
+      currentBowler,
+      extras,
+      isFreeHit,
       innings,
+      totalMatchOvers: matchSetup.totalOvers,
+      scorecard,
     };
-    setBallHistory((prev) => [...prev, snapshot]);
 
-    const newRuns = runs + runAmount;
-    const newBalls = balls + 1;
-    setRuns(newRuns);
-    setBalls(newBalls);
+    const result = processDelivery(currentState, {
+      type: 'run',
+      runs: runAmount,
+      wagonZone: direction,
+    });
 
-    // Update striker stats
-    const updatedStriker = {
-      ...striker,
-      runs: striker.runs + runAmount,
-      balls: striker.balls + 1,
-      fours: runAmount === 4 ? striker.fours + 1 : striker.fours,
-      sixes: runAmount === 6 ? striker.sixes + 1 : striker.sixes,
-    };
-    updatedStriker.strikeRate = ((updatedStriker.runs / updatedStriker.balls) * 100).toFixed(1);
-
-    // Update bowler stats
-    const newBowlerBalls = Math.round((currentBowler.overs % 1) * 10) + 1;
-    const newBowlerOvers = newBowlerBalls === 6 
-      ? Math.floor(currentBowler.overs) + 1 
-      : Math.floor(currentBowler.overs) + (newBowlerBalls / 10);
-    
-    const updatedBowler = {
-      ...currentBowler,
-      runs: currentBowler.runs + runAmount,
-      overs: Number(newBowlerOvers.toFixed(1)),
-      economy: (((currentBowler.runs + runAmount) / (newBalls / 6))).toFixed(2)
-    };
-    setCurrentBowler(updatedBowler);
-
-    // Update current over pills
-    const ballLabel = runAmount.toString();
-    const newOverBalls = [...currentOverBalls, { type: 'run', value: runAmount, label: ballLabel, direction }];
-    
-    // 1. Determine ends based on runs scored
-    let nextStriker, nextNonStriker;
-    if (runAmount % 2 !== 0) {
-      nextStriker = nonStriker;
-      nextNonStriker = updatedStriker;
-    } else {
-      nextStriker = updatedStriker;
-      nextNonStriker = nonStriker;
-    }
-
-    // 2. Check if over finished (6 legal deliveries)
-    if (newBalls > 0 && newBalls % 6 === 0) {
-      setCurrentOverBalls([]);
-      setStriker(nextNonStriker);
-      setNonStriker(nextStriker);
-    } else {
-      setCurrentOverBalls(newOverBalls);
-      setStriker(nextStriker);
-      setNonStriker(nextNonStriker);
-    }
-
-    // Trigger celebration confetti for milestone
-    if (runAmount === 6) {
+    const ok = applyStateResult(result);
+    if (ok && runAmount === 6) {
       confetti({
         particleCount: 40,
         spread: 60,
@@ -276,162 +298,65 @@ export function CricketProvider({ children }) {
         colors: ['#FABB05', '#1D4ED8', '#10B981']
       });
     }
-
-    // Check if 1st innings target reached or completed
-    if (newBalls >= totalMatchOvers * 6 || (innings === 2 && newRuns > 185)) {
-      if (innings === 1) {
-        setTimeout(() => {
-          navigateTo('innings-break');
-        }, 600);
-      } else {
-        setTimeout(() => {
-          navigateTo('match-result');
-        }, 600);
-      }
-    }
   };
 
-  // Record Extra (Wide, No Ball, Leg Bye, Bye, Penalty)
+  // 2. Record Extra (Wide, No Ball, Leg Bye, Bye, Penalty)
   const recordExtra = (type, runsWithExtra = 0) => {
-    const snapshot = {
+    const currentState = {
       runs,
       wickets,
       balls,
-      currentOverBalls: [...currentOverBalls],
-      striker: { ...striker },
-      nonStriker: { ...nonStriker },
-      currentBowler: { ...currentBowler },
-      extras: { ...extras },
+      currentOverBalls,
+      striker,
+      nonStriker,
+      currentBowler,
+      extras,
+      isFreeHit,
       innings,
+      totalMatchOvers: matchSetup.totalOvers,
+      scorecard,
     };
-    setBallHistory((prev) => [...prev, snapshot]);
 
-    if (type === 'wide') {
-      const extraRuns = 1 + runsWithExtra;
-      setRuns((r) => r + extraRuns);
-      setExtras((e) => ({ ...e, wides: e.wides + extraRuns }));
-      setCurrentBowler((b) => ({ ...b, runs: b.runs + extraRuns }));
-      setCurrentOverBalls((prev) => [...prev, { type: 'extra', value: 'Wd', label: runsWithExtra > 0 ? `${runsWithExtra}Wd` : 'Wd' }]);
-      if (runsWithExtra % 2 !== 0) {
-        toggleStriker();
-      }
-    } else if (type === 'no_ball') {
-      const extraRuns = 1 + runsWithExtra;
-      setRuns((r) => r + extraRuns);
-      setExtras((e) => ({ ...e, noBalls: e.noBalls + extraRuns }));
-      setCurrentBowler((b) => ({ ...b, runs: b.runs + extraRuns }));
-      setCurrentOverBalls((prev) => [...prev, { type: 'extra', value: 'Nb', label: runsWithExtra > 0 ? `${runsWithExtra}Nb` : 'Nb' }]);
-      if (runsWithExtra % 2 !== 0) {
-        toggleStriker();
-      }
-    } else if (type === 'leg_bye' || type === 'bye') {
-      const extraRuns = runsWithExtra || 1;
-      setRuns((r) => r + extraRuns);
-      
-      const newBalls = balls + 1;
-      setBalls(newBalls);
-      setExtras((e) => ({ ...e, legByes: e.legByes + extraRuns }));
-      
-      let nextStriker = striker;
-      let nextNonStriker = nonStriker;
-      if (extraRuns % 2 !== 0) {
-        nextStriker = nonStriker;
-        nextNonStriker = striker;
-      }
-      
-      if (newBalls > 0 && newBalls % 6 === 0) {
-        setCurrentOverBalls([]);
-        setStriker(nextNonStriker);
-        setNonStriker(nextStriker);
-      } else {
-        setCurrentOverBalls((prev) => [...prev, { type: 'extra', value: type === 'bye' ? 'B' : 'Lb', label: `${extraRuns}${type === 'bye' ? 'B' : 'Lb'}` }]);
-        setStriker(nextStriker);
-        setNonStriker(nextNonStriker);
-      }
-    }
+    const result = processDelivery(currentState, {
+      type: 'extra',
+      extraType: type,
+      extraRuns: runsWithExtra,
+    });
+
+    applyStateResult(result);
   };
 
-  // Record Wicket / Dismissal (Bowled, Caught, LBW, Run Out, Stumped, Other)
+  // 3. Record Wicket / Dismissal (Bowled, Caught, LBW, Run Out, Stumped, etc.)
   const recordWicket = (dismissalType, outPlayerName = striker.name, fielder = '') => {
-    const snapshot = {
+    const currentState = {
       runs,
       wickets,
       balls,
-      currentOverBalls: [...currentOverBalls],
-      striker: { ...striker },
-      nonStriker: { ...nonStriker },
-      currentBowler: { ...currentBowler },
-      extras: { ...extras },
+      currentOverBalls,
+      striker,
+      nonStriker,
+      currentBowler,
+      extras,
+      isFreeHit,
       innings,
-    };
-    setBallHistory((prev) => [...prev, snapshot]);
-
-    const newWickets = wickets + 1;
-    const newBalls = balls + 1;
-    setWickets(newWickets);
-    setBalls(newBalls);
-
-    // Update bowler wickets
-    const isBowlerWicket = dismissalType !== 'Run Out';
-    setCurrentBowler((b) => ({
-      ...b,
-      wickets: isBowlerWicket ? b.wickets + 1 : b.wickets,
-      overs: Number((Math.floor(b.overs) + ((Math.round((b.overs % 1) * 10) + 1) === 6 ? 1 : (Math.round((b.overs % 1) * 10) + 1) / 10)).toFixed(1))
-    }));
-
-    // Add Wicket ball to over
-    setCurrentOverBalls((prev) => [
-      ...prev,
-      { type: 'wicket', value: 'W', label: 'W', dismissalType, player: outPlayerName }
-    ]);
-
-    // Fall of wicket entry
-    const newFOW = {
-      wicketNumber: newWickets,
-      score: runs,
-      player: outPlayerName,
-      over: `${formatOvers(newBalls)} ov`
-    };
-    setScorecard((sc) => ({
-      ...sc,
-      fallOfWickets: [...sc.fallOfWickets, newFOW]
-    }));
-
-    // Bring in new batter
-    const nextBatterName = newWickets === 5 ? 'D. Karthik' : newWickets === 6 ? 'C. Green' : 'R. Patidar';
-    const newBatter = {
-      id: `bat-${newWickets + 2}`,
-      name: nextBatterName,
-      runs: 0,
-      balls: 0,
-      fours: 0,
-      sixes: 0,
-      strikeRate: '0.0'
+      totalMatchOvers: matchSetup.totalOvers,
+      scorecard,
     };
 
-    if (newBalls > 0 && newBalls % 6 === 0) {
-      setCurrentOverBalls([]);
-      // Over ends, new batter goes to non-striker end
-      setStriker(nonStriker);
-      setNonStriker(newBatter);
-    } else {
-      // Normal wicket mid-over, new batter takes strike (new rules)
-      setStriker(newBatter);
-    }
+    const result = processDelivery(currentState, {
+      type: 'wicket',
+      dismissalType,
+      outPlayerName,
+      fielderName: fielder,
+    });
 
-    setDismissalModalOpen(false);
-
-    // Check all out
-    if (newWickets >= 10) {
-      if (innings === 1) {
-        navigateTo('innings-break');
-      } else {
-        navigateTo('match-result');
-      }
+    const ok = applyStateResult(result);
+    if (ok) {
+      setDismissalModalOpen(false);
     }
   };
 
-  // Undo Last Action
+  // 4. Undo Last Action (Zero-Drift Event Reversal)
   const undoLastAction = () => {
     if (ballHistory.length === 0) return;
     const previousState = ballHistory[ballHistory.length - 1];
@@ -443,8 +368,14 @@ export function CricketProvider({ children }) {
     setNonStriker(previousState.nonStriker);
     setCurrentBowler(previousState.currentBowler);
     setExtras(previousState.extras);
+    setIsFreeHit(previousState.isFreeHit);
     setInnings(previousState.innings);
+    setMatchStatus(previousState.matchStatus || 'IN_PROGRESS');
+    if (previousState.scorecard) {
+      setScorecard(previousState.scorecard);
+    }
     setBallHistory((prev) => prev.slice(0, -1));
+    setValidationError(null);
   };
 
   // Shortlist toggle for scouting
@@ -508,8 +439,8 @@ export function CricketProvider({ children }) {
         goBack,
         isAuthenticated,
         setIsAuthenticated,
-        userMobile,
-        setUserMobile,
+        userEmail,
+        setUserEmail,
         userRole,
         setUserRole,
         players,
@@ -539,6 +470,12 @@ export function CricketProvider({ children }) {
         striker,
         nonStriker,
         currentBowler,
+        isFreeHit,
+        validationError,
+        setValidationError,
+        matchStatus,
+        canBowlerBowlNextOver,
+        MATCH_STATES,
         toggleStriker,
         recordRuns,
         recordExtra,

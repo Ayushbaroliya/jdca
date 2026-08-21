@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   RotateCcw, 
   MoreHorizontal, 
@@ -8,12 +8,16 @@ import {
   Sliders,
   Check,
   X,
-  Sparkles
+  Sparkles,
+  Zap,
+  AlertTriangle
 } from 'lucide-react';
 import { useCricket } from '../../context/CricketContext';
 import { FIELD_DIRECTIONS } from '../../data/mockData';
+import { FREE_HIT_ALLOWED_DISMISSALS } from '../../engine/validationSchemas';
 import { 
   CricketBatIcon, 
+  CricketBatAsset,
   CricketBallIcon, 
   CricketKeeperGloveIcon 
 } from '../CricketIcons';
@@ -30,6 +34,10 @@ export default function ScoringScreen() {
     striker,
     nonStriker,
     currentBowler,
+    isFreeHit,
+    validationError,
+    setValidationError,
+    matchStatus,
     toggleStriker,
     recordRuns,
     recordExtra,
@@ -48,7 +56,14 @@ export default function ScoringScreen() {
   const [selectedDismissal, setSelectedDismissal] = useState('Caught');
   const [fielderName, setFielderName] = useState('P. Cummins');
 
-  const dismissalTypes = ['Bowled', 'Caught', 'LBW', 'Run Out', 'Stumped', 'Other'];
+  // If Free Hit becomes active, auto-default to 'Run Out'
+  useEffect(() => {
+    if (isFreeHit && !FREE_HIT_ALLOWED_DISMISSALS.includes(selectedDismissal)) {
+      setSelectedDismissal('Run Out');
+    }
+  }, [isFreeHit]);
+
+  const allDismissalTypes = ['Bowled', 'Caught', 'LBW', 'Run Out', 'Stumped', 'Hit Wicket', 'Obstructing Field', 'Other'];
 
   const handleRunClick = (amount) => {
     recordRuns(amount, selectedDirection);
@@ -61,6 +76,37 @@ export default function ScoringScreen() {
   return (
     <div className="min-h-[calc(100vh-120px)] bg-slate-100/60 pb-20 px-3.5 pt-3 max-w-xl mx-auto space-y-3.5 animate-in fade-in duration-200">
       
+      {/* Dynamic Validation Alert Toast */}
+      {validationError && (
+        <div className="bg-amber-500 text-white px-4 py-3 rounded-2xl shadow-lg flex items-center justify-between animate-in slide-in-from-top duration-300">
+          <div className="flex items-center space-x-2.5">
+            <AlertTriangle className="w-5 h-5 flex-shrink-0 text-white animate-bounce" />
+            <span className="text-xs font-bold tracking-wide">{validationError}</span>
+          </div>
+          <button 
+            onClick={() => setValidationError(null)}
+            className="p-1 rounded-full hover:bg-amber-600 transition-colors"
+          >
+            <X className="w-4 h-4 text-white" />
+          </button>
+        </div>
+      )}
+
+      {/* Free Hit Active Banner */}
+      {isFreeHit && (
+        <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white px-4 py-2.5 rounded-2xl shadow-md flex items-center justify-between animate-pulse">
+          <div className="flex items-center space-x-2">
+            <Zap className="w-5 h-5 fill-white text-yellow-200" />
+            <span className="text-xs font-extrabold uppercase tracking-wider">
+              FREE HIT ACTIVE (Law 21.18)
+            </span>
+          </div>
+          <span className="text-[11px] font-semibold bg-white/20 px-2 py-0.5 rounded-full">
+            No Dismissals except Run Out
+          </span>
+        </div>
+      )}
+
       {/* 1. Score Summary Banner Card (Matches Image 7 / 27) */}
       <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs overflow-hidden">
         {/* Top multi-color strip */}
@@ -129,8 +175,11 @@ export default function ScoringScreen() {
         
         {/* Batters section header */}
         <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-slate-400">
-          <span>BATTERS (TAP TO SELECT STRIKER)</span>
-          <span className="text-[10px] text-blue-600 lowercase bg-blue-50 px-2 py-0.5 rounded">
+          <div className="flex items-center space-x-1.5">
+            <CricketBatAsset className="w-3.5 h-3.5 object-contain" />
+            <span>BATTERS (TAP TO SELECT STRIKER)</span>
+          </div>
+          <span className="text-[10px] text-blue-600 lowercase bg-blue-50 px-2 py-0.5 rounded font-semibold">
             tap to switch strike
           </span>
         </div>
@@ -142,9 +191,9 @@ export default function ScoringScreen() {
             onClick={toggleStriker}
             className="flex items-center justify-between p-2.5 rounded-xl bg-blue-50/80 border border-blue-200/80 cursor-pointer transition-colors"
           >
-            <div className="flex items-center space-x-2">
-              <div className="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center shadow-2xs">
-                <CricketBatIcon className="w-3.5 h-3.5 text-white" />
+            <div className="flex items-center space-x-2.5">
+              <div className="w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center shadow-2xs p-1">
+                <CricketBatAsset className="w-4 h-4 object-contain brightness-0 invert" />
               </div>
               <span className="font-bold text-sm text-slate-900">
                 {striker.name} <span className="text-blue-600 font-extrabold">*</span>
@@ -160,9 +209,9 @@ export default function ScoringScreen() {
             onClick={toggleStriker}
             className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-150 cursor-pointer transition-colors"
           >
-            <div className="flex items-center space-x-2">
-              <div className="w-6 h-6 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center">
-                <CricketBatIcon className="w-3.5 h-3.5 text-slate-400 opacity-60" />
+            <div className="flex items-center space-x-2.5">
+              <div className="w-7 h-7 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center p-1">
+                <CricketBatAsset className="w-4 h-4 object-contain opacity-70" />
               </div>
               <span className="font-semibold text-sm text-slate-700">
                 {nonStriker.name}
@@ -444,22 +493,44 @@ export default function ScoringScreen() {
               </button>
             </div>
 
+            {/* Free Hit Info Banner inside Modal */}
+            {isFreeHit && (
+              <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-900 text-xs flex items-center space-x-2">
+                <Zap className="w-4 h-4 text-amber-600 flex-shrink-0" />
+                <span>
+                  <strong>MCC Law 21.18:</strong> Only Run Out / Obstructing Field is permitted during a Free Hit.
+                </span>
+              </div>
+            )}
+
             {/* Dismissal Types Grid */}
-            <div className="grid grid-cols-3 gap-2">
-              {dismissalTypes.map((type) => (
-                <button
-                  key={type}
-                  type="button"
-                  onClick={() => setSelectedDismissal(type)}
-                  className={`py-3 px-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                    selectedDismissal === type
-                      ? 'bg-red-600 text-white shadow-md'
-                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                  }`}
-                >
-                  {type}
-                </button>
-              ))}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              {allDismissalTypes.map((type) => {
+                const isBlocked = isFreeHit && !FREE_HIT_ALLOWED_DISMISSALS.includes(type);
+
+                return (
+                  <button
+                    key={type}
+                    type="button"
+                    disabled={isBlocked}
+                    onClick={() => !isBlocked && setSelectedDismissal(type)}
+                    className={`py-3 px-2 rounded-xl text-xs font-bold transition-all relative ${
+                      isBlocked
+                        ? 'bg-slate-100/60 text-slate-300 border border-dashed border-slate-200 cursor-not-allowed line-through'
+                        : selectedDismissal === type
+                        ? 'bg-red-600 text-white shadow-md cursor-pointer'
+                        : 'bg-slate-100 text-slate-700 hover:bg-slate-200 cursor-pointer'
+                    }`}
+                  >
+                    {type}
+                    {isBlocked && (
+                      <span className="block text-[9px] font-normal no-underline text-amber-700 mt-0.5">
+                        Free Hit Rule
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
             </div>
 
             {/* Fielder Name if caught or run out */}
@@ -472,7 +543,7 @@ export default function ScoringScreen() {
                   type="text"
                   value={fielderName}
                   onChange={(e) => setFielderName(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:ring-2 focus:ring-red-500 outline-none"
                 />
               </div>
             )}

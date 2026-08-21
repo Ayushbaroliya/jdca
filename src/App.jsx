@@ -4,6 +4,7 @@ import { CricketProvider, useCricket } from './context/CricketContext';
 import Header from './components/Header';
 import BottomNav from './components/BottomNav';
 import DrawerMenu from './components/DrawerMenu';
+import ProtectedRoute, { ROLE_HOME } from './components/ProtectedRoute';
 
 // Screens
 import AuthScreen from './components/screens/AuthScreen';
@@ -20,6 +21,15 @@ import PlayerRegistrationScreen from './components/screens/PlayerRegistrationScr
 import PlayerComparisonModal from './components/screens/PlayerComparisonModal';
 import SelectorsScreen from './components/screens/SelectorsScreen';
 
+// Auth-aware root redirect: logged-in users skip the login screen
+function RootRedirect() {
+  const { isAuthenticated, userRole } = useCricket();
+  if (isAuthenticated) {
+    return <Navigate to={ROLE_HOME[userRole] || '/matches'} replace />;
+  }
+  return <AuthScreen />;
+}
+
 function MainApp() {
   return (
     <div className="min-h-screen bg-slate-100 flex flex-col font-sans text-slate-900 selection:bg-blue-500 selection:text-white">
@@ -29,18 +39,23 @@ function MainApp() {
       {/* Main Screen Content Area */}
       <main className="flex-1 w-full max-w-xl mx-auto">
         <Routes>
-          <Route path="/" element={<AuthScreen />} />
-          <Route path="/matches" element={<MatchesScreen />} />
-          <Route path="/match-setup" element={<MatchSetupScreen />} />
-          <Route path="/scoring" element={<ScoringScreen />} />
-          <Route path="/scorecard" element={<ScorecardScreen />} />
-          <Route path="/match-overview" element={<MatchOverviewScreen />} />
-          <Route path="/innings-break" element={<InningsBreakScreen />} />
-          <Route path="/match-result" element={<MatchResultScreen />} />
-          <Route path="/scouting" element={<ScoutingHubScreen />} />
-          <Route path="/player-profile" element={<PlayerProfileScreen />} />
-          <Route path="/player-registration" element={<PlayerRegistrationScreen />} />
-          <Route path="/selectors" element={<SelectorsScreen />} />
+          {/* Public — Auth */}
+          <Route path="/" element={<RootRedirect />} />
+
+          {/* Protected Routes */}
+          <Route path="/matches"             element={<ProtectedRoute path="/matches"             element={<MatchesScreen />} />} />
+          <Route path="/match-setup"         element={<ProtectedRoute path="/match-setup"         element={<MatchSetupScreen />} />} />
+          <Route path="/scoring"             element={<ProtectedRoute path="/scoring"             element={<ScoringScreen />} />} />
+          <Route path="/scorecard"           element={<ProtectedRoute path="/scorecard"           element={<ScorecardScreen />} />} />
+          <Route path="/match-overview"      element={<ProtectedRoute path="/match-overview"      element={<MatchOverviewScreen />} />} />
+          <Route path="/innings-break"       element={<ProtectedRoute path="/innings-break"       element={<InningsBreakScreen />} />} />
+          <Route path="/match-result"        element={<ProtectedRoute path="/match-result"        element={<MatchResultScreen />} />} />
+          <Route path="/scouting"            element={<ProtectedRoute path="/scouting"            element={<ScoutingHubScreen />} />} />
+          <Route path="/player-profile"      element={<ProtectedRoute path="/player-profile"      element={<PlayerProfileScreen />} />} />
+          <Route path="/player-registration" element={<ProtectedRoute path="/player-registration" element={<PlayerRegistrationScreen />} />} />
+          <Route path="/selectors"           element={<ProtectedRoute path="/selectors"           element={<SelectorsScreen />} />} />
+
+          {/* Fallback */}
           <Route path="*" element={<Navigate to="/matches" replace />} />
         </Routes>
       </main>

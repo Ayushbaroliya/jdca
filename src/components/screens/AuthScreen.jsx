@@ -1,41 +1,41 @@
 import React, { useState } from 'react';
 import { useCricket } from '../../context/CricketContext';
 import { CricketAppLogo } from '../CricketIcons';
+import { CricketBatsmanActionIllustration } from '../CricketIllustrations';
+import { ROLE_HOME } from '../ProtectedRoute';
 
 export default function AuthScreen() {
-  const { navigateTo, setUserMobile, setUserRole } = useCricket();
-  const [mobileInput, setMobileInput] = useState('');
-  const [countryCode, setCountryCode] = useState('+91');
-  const [showOtpInput, setShowOtpInput] = useState(false);
-  const [otpValue, setOtpValue] = useState('');
+  const { navigateTo, setUserEmail, setUserRole, setIsAuthenticated } = useCricket();
+  const [emailInput, setEmailInput] = useState('');
   const [selectedRole, setSelectedRole] = useState('Admin');
 
-  const handleGetOtp = (e) => {
+  const completeLogin = (email, role) => {
+    setUserEmail(email);
+    setUserRole(role);
+    setIsAuthenticated(true);
+    // Navigate to the role's designated home screen
+    const homeRoute = ROLE_HOME[role] || '/matches';
+    const routeToScreen = {
+      '/matches': 'matches',
+      '/scouting': 'scouting',
+      '/player-profile': 'player-profile',
+    };
+    navigateTo(routeToScreen[homeRoute] || 'matches');
+  };
+
+  const handleLogin = (e) => {
     e.preventDefault();
-    setUserRole(selectedRole);
-    if (showOtpInput) {
-      // Complete login
-      setUserMobile(`${countryCode} ${mobileInput}`);
-      navigateTo('matches');
-    } else {
-      if (mobileInput.length >= 5) {
-        setShowOtpInput(true);
-      } else {
-        // Direct entry for quick demo
-        setUserMobile(`${countryCode} 9876543210`);
-        navigateTo('matches');
-      }
+    if (emailInput.includes('@')) {
+      completeLogin(emailInput, selectedRole);
     }
   };
 
   const handleSocialLogin = (provider) => {
-    setUserRole(selectedRole);
-    setUserMobile(`${provider} User`);
-    navigateTo('matches');
+    completeLogin(`${provider} User`, selectedRole);
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col justify-between items-center px-6 py-12 max-w-md mx-auto animate-in fade-in duration-300">
+    <div className="min-h-screen bg-white flex flex-col justify-between items-center px-6 py-10 max-w-md mx-auto animate-in fade-in duration-300">
       
       {/* Top spacing */}
       <div className="w-full" />
@@ -43,9 +43,14 @@ export default function AuthScreen() {
       {/* Main Form Center */}
       <div className="w-full flex flex-col items-center text-center">
         
-        {/* Cricket Scorer Logo */}
-        <div className="mb-8 drop-shadow-md">
-          <CricketAppLogo className="w-24 h-24" />
+        {/* Cricket Hero Action Illustration & Scorer Logo */}
+        <div className="mb-6 flex flex-col items-center justify-center">
+          <div className="relative">
+            <CricketBatsmanActionIllustration className="w-36 h-36 drop-shadow-xl" />
+            <div className="absolute -bottom-2 -right-2">
+              <CricketAppLogo className="w-10 h-10" isMini={true} />
+            </div>
+          </div>
         </div>
 
         {/* Title & Subtitle */}
@@ -53,13 +58,11 @@ export default function AuthScreen() {
           Welcome to Cricket Scorer
         </h1>
         <p className="text-slate-500 text-sm sm:text-base max-w-xs mb-10 leading-relaxed">
-          {showOtpInput 
-            ? 'Enter 4-digit verification code sent to your number.'
-            : 'Enter your mobile number to start scoring matches.'}
+          Enter your email ID to start scoring matches.
         </p>
 
         {/* Form Box */}
-        <form onSubmit={handleGetOtp} className="w-full space-y-4">
+        <form onSubmit={handleLogin} className="w-full space-y-4">
           
           {/* Role Selector */}
           <div>
@@ -84,57 +87,29 @@ export default function AuthScreen() {
             </div>
           </div>
 
-          {!showOtpInput ? (
-            <div>
-              <label className="block text-left text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
-                Mobile Number
-              </label>
-              
-              <div className="flex rounded-xl border border-slate-300 bg-white overflow-hidden shadow-2xs focus-within:ring-2 focus-within:ring-emerald-600 focus-within:border-emerald-600">
-                <div className="flex items-center px-3.5 bg-slate-50 border-r border-slate-200 text-slate-700 font-semibold text-sm">
-                  <select 
-                    value={countryCode} 
-                    onChange={(e) => setCountryCode(e.target.value)}
-                    className="bg-transparent outline-none cursor-pointer pr-1"
-                  >
-                    <option value="+91">+91</option>
-                    <option value="+44">+44</option>
-                    <option value="+61">+61</option>
-                    <option value="+1">+1</option>
-                  </select>
-                </div>
-                <input
-                  type="tel"
-                  placeholder="Enter 10-digit number"
-                  value={mobileInput}
-                  onChange={(e) => setMobileInput(e.target.value)}
-                  className="w-full px-4 py-3.5 text-sm text-slate-900 placeholder:text-slate-400 outline-none bg-transparent"
-                />
-              </div>
-            </div>
-          ) : (
-            <div>
-              <label className="block text-left text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
-                Enter OTP Code
-              </label>
+          <div>
+            <label className="block text-left text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+              Email Address
+            </label>
+            
+            <div className="flex rounded-xl border border-slate-300 bg-white overflow-hidden shadow-2xs focus-within:ring-2 focus-within:ring-emerald-600 focus-within:border-emerald-600">
               <input
-                type="text"
-                maxLength={6}
-                placeholder="4-digit OTP (e.g. 1234)"
-                value={otpValue}
-                onChange={(e) => setOtpValue(e.target.value)}
-                className="w-full px-4 py-3.5 rounded-xl border border-slate-300 text-center tracking-widest text-lg font-bold text-slate-900 placeholder:text-slate-400 outline-none focus:ring-2 focus:ring-emerald-600"
-                autoFocus
+                type="email"
+                placeholder="Enter your email ID"
+                value={emailInput}
+                onChange={(e) => setEmailInput(e.target.value)}
+                className="w-full px-4 py-3.5 text-sm text-slate-900 placeholder:text-slate-400 outline-none bg-transparent"
+                required
               />
             </div>
-          )}
+          </div>
 
           {/* Green CTA Button */}
           <button
             type="submit"
             className="w-full py-4 bg-[#0a5e24] hover:bg-[#084e1e] active:scale-[0.99] text-white font-bold rounded-xl shadow-md transition-all text-base cursor-pointer"
           >
-            {showOtpInput ? 'Verify & Continue' : 'Get OTP'}
+            Login
           </button>
         </form>
 

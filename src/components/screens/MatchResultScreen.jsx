@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { useCricket } from '../../context/CricketContext';
 import { TeamCrest, CricketBatIcon, CricketBallIcon } from '../CricketIcons';
+import { CricketTrophyBannerIllustration } from '../CricketIllustrations';
 
 export default function MatchResultScreen() {
   const { navigateTo } = useCricket();
@@ -19,15 +20,10 @@ export default function MatchResultScreen() {
     <div className="min-h-[calc(100vh-120px)] bg-slate-100/60 pb-20 px-3.5 pt-3 max-w-xl mx-auto space-y-4 animate-in fade-in duration-200">
       
       {/* 1. Champion Result Hero Card (Matches Image 17) */}
-      <div className="rounded-3xl bg-[#0B2545] text-white p-6 shadow-xl relative overflow-hidden dot-pattern">
-        {/* Decorative Golden Trophy Ribbon */}
-        <div className="absolute top-4 right-4 w-12 h-12 rounded-full bg-amber-400/20 flex items-center justify-center text-amber-400">
-          <Trophy className="w-6 h-6" />
-        </div>
-
-        <div className="relative z-10 space-y-2">
-          <span className="text-[11px] font-bold uppercase tracking-widest text-amber-400">
-            FINAL RESULT
+      <div className="rounded-3xl bg-gradient-to-br from-[#0B2545] via-[#133E87] to-[#0A192F] text-white p-6 shadow-xl relative overflow-hidden flex items-center justify-between">
+        <div className="relative z-10 space-y-2 max-w-[65%]">
+          <span className="text-[11px] font-bold uppercase tracking-widest text-amber-400 bg-amber-400/10 px-2.5 py-1 rounded-full">
+            CHAMPIONSHIP RESULT
           </span>
 
           <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight font-display">
@@ -35,8 +31,13 @@ export default function MatchResultScreen() {
           </h2>
 
           <p className="text-xs text-blue-200 font-medium">
-            T20 Championship Final • Stadium Blue
+            T20 Championship Final • JDCA Stadium
           </p>
+        </div>
+
+        {/* Scalable Golden Trophy SVG */}
+        <div className="relative z-10">
+          <CricketTrophyBannerIllustration className="w-24 h-24 sm:w-28 sm:h-28" />
         </div>
       </div>
 

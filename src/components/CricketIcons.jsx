@@ -1,4 +1,5 @@
 import React from 'react';
+import batIconUrl from '../assets/bat-icon.png';
 
 /**
  * High-fidelity Vector Icons & Logos matching Stitch UI Cricket specifications
@@ -6,84 +7,14 @@ import React from 'react';
 
 // 1. Official Cricket Scorer Emblem (Used in Welcome screen & Header)
 export function CricketAppLogo({ className = "w-12 h-12", isMini = false }) {
-  if (isMini) {
-    return (
-      <div className="relative flex items-center justify-center">
-        <svg className={className} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="24" cy="24" r="22" fill="#1B6B33" stroke="#145227" strokeWidth="1.5"/>
-          {/* Cricket Pitch Ground */}
-          <path d="M12 24C12 30.6274 17.3726 36 24 36C30.6274 36 36 30.6274 36 24" stroke="#48BB78" strokeWidth="1.5" strokeDasharray="2 2" opacity="0.6"/>
-          {/* Crossed Bat */}
-          <rect x="14" y="11" width="5" height="22" rx="2" transform="rotate(-40 14 11)" fill="#ECC94B" stroke="#D69E2E" strokeWidth="1"/>
-          <path d="M28 27L33 33" stroke="#CBD5E0" strokeWidth="2.5" strokeLinecap="round"/>
-          {/* Cricket Ball */}
-          <circle cx="31" cy="18" r="6.5" fill="#E53E3E" stroke="#C53030" strokeWidth="1"/>
-          <path d="M26 15.5C28.5 17.5 30 20 31.5 24" stroke="white" strokeWidth="1" strokeDasharray="1.5 1.5"/>
-          <path d="M30 12.5C32.5 14.5 34 17 35.5 21" stroke="white" strokeWidth="1" strokeDasharray="1.5 1.5"/>
-        </svg>
-      </div>
-    );
-  }
-
   return (
     <div className="relative flex items-center justify-center">
-      <svg className={className} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <radialGradient id="ballShine" cx="30%" cy="30%" r="70%">
-            <stop offset="0%" stopColor="#FF6B6B" />
-            <stop offset="60%" stopColor="#D92626" />
-            <stop offset="100%" stopColor="#991414" />
-          </radialGradient>
-          <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#1E7B3B" />
-            <stop offset="100%" stopColor="#0E4822" />
-          </linearGradient>
-          <linearGradient id="goldTrim" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#F6E05E" />
-            <stop offset="100%" stopColor="#D69E2E" />
-          </linearGradient>
-        </defs>
-
-        {/* Outer Circular Green Emblem */}
-        <circle cx="50" cy="50" r="46" fill="url(#shieldGrad)" stroke="url(#goldTrim)" strokeWidth="3" />
-        
-        {/* Inner Turf Circle */}
-        <circle cx="50" cy="50" r="38" fill="#145227" stroke="#2F855A" strokeWidth="1.5" strokeDasharray="4 3" />
-        
-        {/* Cricket Wickets in Background */}
-        <g stroke="#ECC94B" strokeWidth="2" strokeLinecap="round" opacity="0.85">
-          {/* Stumps */}
-          <line x1="44" y1="32" x2="44" y2="58" />
-          <line x1="50" y1="30" x2="50" y2="58" />
-          <line x1="56" y1="32" x2="56" y2="58" />
-          {/* Bails */}
-          <line x1="42" y1="32" x2="58" y2="32" strokeWidth="2.5" />
-        </g>
-
-        {/* Cricket Bat (Angled Front) */}
-        <g transform="rotate(-38 50 50)">
-          {/* Blade */}
-          <rect x="45" y="22" width="10" height="42" rx="3" fill="#ED8936" stroke="#C05621" strokeWidth="1.5" />
-          <line x1="50" y1="24" x2="50" y2="60" stroke="#DD6B20" strokeWidth="1.5" />
-          {/* Handle Grip */}
-          <rect x="47" y="10" width="6" height="14" rx="2" fill="#FFFFFF" stroke="#CBD5E0" strokeWidth="1" />
-          <line x1="47" y1="13" x2="53" y2="13" stroke="#718096" strokeWidth="1" />
-          <line x1="47" y1="16" x2="53" y2="16" stroke="#718096" strokeWidth="1" />
-          <line x1="47" y1="19" x2="53" y2="19" stroke="#718096" strokeWidth="1" />
-        </g>
-
-        {/* Cricket Ball with Seam & Stitching */}
-        <g>
-          <circle cx="64" cy="54" r="14" fill="url(#ballShine)" stroke="#741212" strokeWidth="1.5" />
-          {/* Ball Seam Curved */}
-          <path d="M54 48C58 53 62 57 66 66" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" />
-          {/* Seam Stitches */}
-          <path d="M53 49L56 46M56 52L59 49M59 55L62 52M62 58L65 55M65 62L68 59" stroke="#FFFFFF" strokeWidth="1.2" strokeLinecap="round" />
-        </g>
-
-        {/* Star Accents */}
-        <path d="M50 14L52 18L56 19L53 22L54 26L50 24L46 26L47 22L44 19L48 18Z" fill="#F6E05E" />
-      </svg>
+      <img
+        src={batIconUrl}
+        alt="Cricket Bat"
+        className={className}
+        style={{ objectFit: 'contain' }}
+      />
     </div>
   );
 }
@@ -162,7 +93,16 @@ export function TeamCrest({ teamName, className = "w-10 h-10", size = 40 }) {
 }
 
 // 3. Cricket Equipment & Action Icons
-export function CricketBatIcon({ className = "w-4 h-4 text-amber-600" }) {
+export function CricketBatAsset({ className = "w-5 h-5 object-contain", alt = "Cricket Bat" }) {
+  return (
+    <img src={batIconUrl} alt={alt} className={className} />
+  );
+}
+
+export function CricketBatIcon({ className = "w-4 h-4 text-amber-600", useAsset = false }) {
+  if (useAsset) {
+    return <img src={batIconUrl} alt="Bat" className={className} />;
+  }
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="m14 7 3-3 4 4-3 3" />
