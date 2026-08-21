@@ -1,13 +1,45 @@
 import React, { useState } from 'react';
-import { Check, Edit2, Search, ArrowRight, ArrowLeft, Shield, Sliders } from 'lucide-react';
+import { Check, Edit2, Search, ArrowRight, ArrowLeft, Shield, Sliders, Plus, Trash2, X, UserPlus } from 'lucide-react';
 import { useCricket } from '../../context/CricketContext';
 import { TeamCrest, CricketBatIcon, CricketBatAsset, CricketBallIcon } from '../CricketIcons';
 
 export default function MatchSetupScreen() {
-  const { matchSetup, setMatchSetup, navigateTo, goBack } = useCricket();
+  const { matchSetup, setMatchSetup, navigateTo, goBack, players } = useCricket();
   const [currentStep, setCurrentStep] = useState(2); // 1: Teams, 2: Toss, 3: Rules
   const [searchQuery, setSearchQuery] = useState('');
   const [isEditingXI, setIsEditingXI] = useState(false);
+  const [isAddPlayerModalOpen, setIsAddPlayerModalOpen] = useState(false);
+  const [rosterSearchQuery, setRosterSearchQuery] = useState('');
+
+  const addPlayerToXI = (player) => {
+    if (matchSetup.playingXI.length >= 11) {
+      alert("You can only select up to 11 players for the Playing XI.");
+      return;
+    }
+    if (matchSetup.playingXI.find(p => p.id === player.id)) {
+      alert("Player is already in the Playing XI.");
+      return;
+    }
+    
+    // Add player with default roles
+    const newPlayer = {
+      ...player,
+      isCaptain: false,
+      role: player.role || 'Batter'
+    };
+    
+    setMatchSetup(prev => ({
+      ...prev,
+      playingXI: [...prev.playingXI, newPlayer]
+    }));
+  };
+
+  const removePlayerFromXI = (playerId) => {
+    setMatchSetup(prev => ({
+      ...prev,
+      playingXI: prev.playingXI.filter(p => p.id !== playerId)
+    }));
+  };
 
   const toggleRole = (playerId, roleType) => {
     setMatchSetup(prev => ({
@@ -273,7 +305,7 @@ export default function MatchSetupScreen() {
 
             {/* Players selected list */}
             <div className="space-y-2 pt-1">
-              {filteredPlayers.slice(0, 3).map((player) => (
+              {filteredPlayers.map((player) => (
                 <div
                   key={player.id}
                   className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50/80 border border-slate-100"
@@ -284,9 +316,11 @@ export default function MatchSetupScreen() {
                     </div>
                     <div>
                       <span className="text-xs sm:text-sm font-semibold text-slate-800 flex items-center gap-1">
-                        {player.name} {player.isCaptain && <span className="text-[#0B57D0] font-bold">(c)</span>}
+                        {player.name} 
+                        {player.isCaptain && <span className="text-[#0B57D0] font-bold text-[10px] ml-1 bg-blue-100 px-1.5 py-0.5 rounded">(c)</span>}
+                        {player.role.includes('Wicket Keeper') && <span className="text-amber-600 font-bold text-[10px] ml-1 bg-amber-100 px-1.5 py-0.5 rounded">(wk)</span>}
                       </span>
-                      <span className="text-[10px] text-slate-400 flex items-center gap-1">
+                      <span className="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5">
                         {player.role.includes('Batter') ? (
                           <><CricketBatAsset className="w-3 h-3 object-contain inline" /> {player.role}</>
                         ) : player.role.includes('Bowler') ? (
@@ -298,17 +332,51 @@ export default function MatchSetupScreen() {
                     </div>
                   </div>
                   
-                  {/* Grip lines */}
-                  <div className="text-slate-400 cursor-grab">
-                    <div className="w-4 h-0.5 bg-slate-300 mb-1" />
-                    <div className="w-4 h-0.5 bg-slate-300" />
-                  </div>
+                  {isEditingXI ? (
+                    <div className="flex items-center space-x-2">
+                      <button 
+                        onClick={() => toggleRole(player.id, 'captain')}
+                        className={`text-[10px] font-bold px-2 py-1 rounded transition-colors ${player.isCaptain ? 'bg-blue-600 text-white' : 'bg-slate-200 text-slate-600 hover:bg-slate-300'}`}
+                      >
+                        C
+                      </button>
+                      <button 
+                        onClick={() => toggleRole(player.id, 'wk')}
+                        className={`text-[10px] font-bold px-2 py-1 rounded transition-colors ${player.role.includes('Wicket Keeper') ? 'bg-amber-500 text-white' : 'bg-slate-200 text-slate-600 hover:bg-slate-300'}`}
+                      >
+                        WK
+                      </button>
+                      <button 
+                        onClick={() => removePlayerFromXI(player.id)}
+                        className="p-1.5 text-red-500 hover:bg-red-50 rounded-full transition-colors ml-1"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="text-slate-400 cursor-grab">
+                      <div className="w-4 h-0.5 bg-slate-300 mb-1" />
+                      <div className="w-4 h-0.5 bg-slate-300" />
+                    </div>
+                  )}
                 </div>
               ))}
 
-              <div className="text-center py-2 text-xs font-semibold text-slate-500">
-                + 8 more players selected
-              </div>
+              {!isEditingXI && filteredPlayers.length === 11 ? (
+                <div className="text-center py-2 text-xs font-semibold text-emerald-600 bg-emerald-50 rounded-xl mt-2">
+                  <Check className="w-4 h-4 inline mr-1" /> Playing XI Complete
+                </div>
+              ) : null}
+
+              {isEditingXI && (
+                <button
+                  onClick={() => setIsAddPlayerModalOpen(true)}
+                  className="w-full mt-2 py-3 border-2 border-dashed border-slate-300 rounded-xl flex flex-col items-center justify-center text-slate-500 hover:text-[#0B57D0] hover:border-blue-300 hover:bg-blue-50 transition-all cursor-pointer"
+                >
+                  <Plus className="w-5 h-5 mb-1" />
+                  <span className="text-xs font-bold">Add Player ({matchSetup.playingXI.length}/11)</span>
+                </button>
+              )}
             </div>
 
           </div>
@@ -341,6 +409,7 @@ export default function MatchSetupScreen() {
                 <option value={50}>50 Overs (ODI Full Match)</option>
                 <option value={5}>5 Overs (Quick Match)</option>
                 <option value={1}>1 Over (Super Over)</option>
+                <option value={450}>Unlimited (Test Match)</option>
               </select>
             </div>
 
@@ -432,6 +501,78 @@ export default function MatchSetupScreen() {
           </button>
         </div>
       </div>
+
+      {/* Add Player Modal */}
+      {isAddPlayerModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div 
+            className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" 
+            onClick={() => setIsAddPlayerModalOpen(false)} 
+          />
+          <div className="bg-white rounded-2xl w-full max-w-sm shadow-2xl z-10 overflow-hidden flex flex-col max-h-[80vh] animate-in zoom-in-95 duration-200">
+            <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+              <h3 className="font-bold text-slate-800 flex items-center gap-2">
+                <UserPlus className="w-5 h-5 text-blue-600" />
+                Select Player
+              </h3>
+              <button 
+                onClick={() => setIsAddPlayerModalOpen(false)}
+                className="p-1 text-slate-400 hover:text-slate-600 hover:bg-slate-200 rounded-full transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            
+            <div className="p-3 border-b border-slate-100">
+              <div className="relative">
+                <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+                <input
+                  type="text"
+                  placeholder="Search full roster..."
+                  value={rosterSearchQuery}
+                  onChange={(e) => setRosterSearchQuery(e.target.value)}
+                  className="w-full pl-9 pr-3 py-2 text-sm rounded-xl bg-slate-100 border-none placeholder:text-slate-400 outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+            </div>
+
+            <div className="overflow-y-auto p-2 space-y-1">
+              {players
+                .filter(p => !matchSetup.playingXI.find(xi => xi.id === p.id))
+                .filter(p => p.name.toLowerCase().includes(rosterSearchQuery.toLowerCase()))
+                .map((player) => (
+                  <div 
+                    key={player.id}
+                    className="flex items-center justify-between p-2 hover:bg-slate-50 rounded-xl transition-colors group cursor-pointer border border-transparent hover:border-slate-200"
+                    onClick={() => {
+                      addPlayerToXI(player);
+                      setIsAddPlayerModalOpen(false);
+                    }}
+                  >
+                    <div className="flex items-center space-x-3">
+                      <img src={player.avatar} alt={player.name} className="w-10 h-10 rounded-full object-cover shadow-sm" />
+                      <div>
+                        <div className="text-sm font-bold text-slate-800 group-hover:text-blue-700 transition-colors">{player.name}</div>
+                        <div className="text-[10px] text-slate-500 font-medium flex items-center gap-1">
+                          {player.role} • {player.battingStyle}
+                        </div>
+                      </div>
+                    </div>
+                    <button className="p-2 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-full transition-colors">
+                      <Plus className="w-4 h-4 stroke-[3]" />
+                    </button>
+                  </div>
+              ))}
+              
+              {players.filter(p => !matchSetup.playingXI.find(xi => xi.id === p.id)).length === 0 && (
+                <div className="text-center py-6 text-sm text-slate-500">
+                  All players are already in the squad!
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );
