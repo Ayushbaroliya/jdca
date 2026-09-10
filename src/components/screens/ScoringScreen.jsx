@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import {
   RotateCcw, FileText, ShieldAlert, AlertTriangle, X,
   ChevronRight, RefreshCw, Radio, CircleHelp, WifiOff,
-  MoreHorizontal
+  MoreHorizontal, Users
 } from 'lucide-react';
 import { useCricket } from '../../context/CricketContext';
 import { FREE_HIT_ALLOWED_DISMISSALS } from '../../engine/validationSchemas';
@@ -32,7 +32,7 @@ export default function ScoringScreen() {
     currentOverBalls, striker, nonStriker, currentBowler, isFreeHit, toggleStriker,
     validationError, setValidationError, matchStatus, recordRuns, recordExtra,
     recordWicket, undoLastAction, innings, navigateTo, activeMatchId, matches,
-    matchSetup, replaceStriker, continueAfterOver, lastOverBowlerId,
+    matchSetup, setMatchSetup, replaceStriker, continueAfterOver, lastOverBowlerId,
     deliveryLog = [], scoringFirstRunDone, markScoringFirstRunDone, goBack
   } = useCricket();
 
@@ -42,9 +42,9 @@ export default function ScoringScreen() {
   const [runOutPlayer, setRunOutPlayer] = useState('');
   const [newBatterOpen, setNewBatterOpen] = useState(false);
   const [overOpen, setOverOpen] = useState(false);
+  const [changeWkOpen, setChangeWkOpen] = useState(false);
   const [extrasOpen, setExtrasOpen] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
-  const [practiceStep, setPracticeStep] = useState(0);
 
   const activeMatch = matches?.find(m => m.id === activeMatchId);
   const teamAName = activeMatch?.teamA?.name || activeMatch?.teamA || 'Jabalpur';
@@ -96,13 +96,23 @@ export default function ScoringScreen() {
     setOverOpen(false);
   };
 
-  const practiceActions = [
-    { label: 'Tap 1 run', hint: 'The score and striker update automatically.' },
-    { label: 'Tap a dot ball', hint: 'The ball is counted, but no run is added.' },
-    { label: 'Tap 4 runs', hint: 'The batter gets the runs and the boundary is recorded.' },
-    { label: 'Tap Wide', hint: 'The extra is recorded and the ball does not count as legal.' },
-  ];
-  
+  const selectNewWk = (player) => {
+    if (!player) return;
+    if (setMatchSetup) {
+      setMatchSetup(prev => ({
+        ...prev,
+        playingXI: prev.playingXI.map(p => {
+          if (p.id === player.id) return { ...p, role: 'Wicket Keeper' };
+          if (p.role.includes('Wicket Keeper')) return { ...p, role: 'Batter' };
+          return p;
+        })
+      }));
+    }
+    setChangeWkOpen(false);
+  };
+
+  const currentWk = playingXI.find(p => /wicket/i.test(p.role || ''));
+
   return (
     <div className="pb-[100px] bg-[#101827] min-h-screen text-white">
       
@@ -142,11 +152,11 @@ export default function ScoringScreen() {
             {runs}<span className="text-[40px] text-white/60">/{wickets}</span>
           </div>
           <div className="flex items-center justify-center gap-4 text-[14px] font-bold">
-            <div className="bg-white/10 px-4 py-1.5 rounded-full">
-              Overs <span className="text-white ml-1">{formatOvers(balls)}</span>
+            <div className="bg-white/10 px-4 py-1.5 rounded-full border border-[#F4B942]/30">
+              Overs <span className="text-[#F4B942] ml-1">{formatOvers(balls)}</span>
             </div>
-            <div className="bg-white/10 px-4 py-1.5 rounded-full">
-              CRR <span className="text-white ml-1">{calculateCRR()}</span>
+            <div className="bg-white/10 px-4 py-1.5 rounded-full border border-[#F4B942]/30">
+              CRR <span className="text-[#F4B942] ml-1">{calculateCRR()}</span>
             </div>
           </div>
         </div>
@@ -154,7 +164,7 @@ export default function ScoringScreen() {
 
       {/* RECENT BALLS */}
       <div className="px-4 mb-6">
-        <div className="bg-white/5 rounded-[16px] p-3 border border-white/10 flex items-center justify-between">
+        <div className="bg-white/5 rounded-[16px] p-3 border border-[#F4B942]/50 flex items-center justify-between">
           <div className="text-[10px] font-bold uppercase tracking-wider text-white/50 w-12 text-center">THIS OVER</div>
           <div className="flex-1 flex items-center gap-2 overflow-x-auto px-2 no-scrollbar">
             {lastBalls.map((b, i) => (
@@ -169,36 +179,45 @@ export default function ScoringScreen() {
             ))}
             {!lastBalls.length && <div className="text-[12px] font-medium text-white/40 italic">No balls recorded yet in this over</div>}
           </div>
-          <div className="text-[12px] font-black text-white w-8 text-center">{currentOverBalls.length}/6</div>
+          <div className="text-[12px] font-black text-[#F4B942] w-8 text-center">{currentOverBalls.length}/6</div>
         </div>
       </div>
 
       {/* PLAYERS ON FIELD */}
       <div className="px-4 mb-8">
         <div className="grid grid-cols-2 gap-3 mb-3">
-          <button onClick={() => toggleStriker?.()} className="bg-white/10 rounded-[16px] p-4 text-left border border-white/20 relative overflow-hidden active:bg-white/20 transition-colors">
-            <div className="absolute top-0 right-0 w-2 h-full bg-[#0FA968]" />
-            <div className="text-[10px] font-bold text-[#0FA968] uppercase tracking-wider mb-1 flex items-center gap-1">Striker <span>*</span></div>
+          <button onClick={() => toggleStriker?.()} className="bg-white/10 rounded-[16px] p-4 text-left border-2 border-[#F4B942] relative overflow-hidden active:bg-[#F4B942]/20 transition-colors shadow-[0_0_15px_rgba(244,185,66,0.1)]">
+            <div className="absolute top-0 right-0 w-2 h-full bg-[#F4B942]" />
+            <div className="text-[10px] font-bold text-[#F4B942] uppercase tracking-wider mb-1 flex items-center gap-1">Striker <span>*</span></div>
             <div className="text-[16px] font-black text-white truncate mb-2">{striker.name}</div>
             <div className="text-[18px] font-black tabular-nums leading-none">{striker.runs} <span className="text-[12px] text-white/50">({striker.balls})</span></div>
           </button>
           
-          <button onClick={() => toggleStriker?.()} className="bg-white/5 rounded-[16px] p-4 text-left border border-white/10 active:bg-white/10 transition-colors">
+          <button onClick={() => toggleStriker?.()} className="bg-white/5 rounded-[16px] p-4 text-left border border-white/20 active:bg-white/10 transition-colors">
             <div className="text-[10px] font-bold text-white/50 uppercase tracking-wider mb-1">Non-Striker</div>
             <div className="text-[16px] font-bold text-white/80 truncate mb-2">{nonStriker.name}</div>
             <div className="text-[18px] font-black tabular-nums leading-none text-white/80">{nonStriker.runs} <span className="text-[12px] text-white/50">({nonStriker.balls})</span></div>
           </button>
         </div>
 
-        <div className="bg-white/5 rounded-[16px] p-4 border border-white/10 flex items-center justify-between">
+        <div className="bg-white/5 rounded-[16px] p-4 border-2 border-[#F4B942] flex items-center justify-between shadow-[0_0_15px_rgba(244,185,66,0.1)] mb-3">
            <div>
-             <div className="text-[10px] font-bold text-white/50 uppercase tracking-wider mb-1 flex items-center gap-1"><RefreshCw size={10} className="text-[#F4B942]"/> Bowler</div>
+             <div className="text-[10px] font-bold text-[#F4B942] uppercase tracking-wider mb-1 flex items-center gap-1"><RefreshCw size={10}/> Bowler</div>
              <div className="text-[16px] font-black text-white">{currentBowler.name}</div>
            </div>
            <div className="text-right">
-             <div className="text-[12px] font-bold text-white/50 uppercase tracking-wider mb-1">O-M-R-W</div>
+             <div className="text-[12px] font-bold text-[#F4B942] uppercase tracking-wider mb-1">O-M-R-W</div>
              <div className="text-[16px] font-black tabular-nums">{currentBowler.overs}-{currentBowler.maidens}-{currentBowler.runs}-{currentBowler.wickets}</div>
            </div>
+        </div>
+
+        <div className="flex gap-2">
+           <button onClick={() => setOverOpen(true)} className="flex-1 bg-white/10 rounded-[12px] py-3 text-[12px] font-bold uppercase tracking-wider border border-[#F4B942] text-[#F4B942] flex items-center justify-center gap-2 active:bg-[#F4B942]/20">
+             <RefreshCw size={14} /> Change Bowler
+           </button>
+           <button onClick={() => setChangeWkOpen(true)} className="flex-1 bg-white/10 rounded-[12px] py-3 text-[12px] font-bold uppercase tracking-wider border border-[#F4B942] text-[#F4B942] flex items-center justify-center gap-2 active:bg-[#F4B942]/20">
+             <Users size={14} /> Edit WK {currentWk ? `(${currentWk.name.split(' ')[0]})` : ''}
+           </button>
         </div>
       </div>
 
@@ -248,7 +267,6 @@ export default function ScoringScreen() {
       </div>
 
       {/* MODALS */}
-      {/* Same as before but with updated UI class names for Modal components */}
       {dismissalOpen && (
         <Modal title="Record Wicket" danger onClose={() => setDismissalOpen(false)}>
           <div className="bg-white border border-gray-100 rounded-[12px] p-3 mb-4 text-center">
@@ -328,12 +346,14 @@ export default function ScoringScreen() {
       )}
 
       {overOpen && !newBatterOpen && (
-        <Modal title="Over Complete" onClose={() => setOverOpen(false)}>
-          <div className="bg-[#eef2fd] p-4 rounded-[12px] mb-4 text-center">
-            <div className="text-[24px] font-black text-[#2457D6]">{runs}/{wickets}</div>
-            <div className="text-[12px] font-bold text-[#596579]">after {formatOvers(balls)} overs</div>
-          </div>
-          <div className="text-[12px] font-bold uppercase tracking-wider text-[#8a99b0] mb-2">Select next bowler</div>
+        <Modal title={isOverComplete ? "Over Complete" : "Change Bowler"} onClose={() => setOverOpen(false)}>
+          {isOverComplete && (
+            <div className="bg-[#eef2fd] p-4 rounded-[12px] mb-4 text-center">
+              <div className="text-[24px] font-black text-[#2457D6]">{runs}/{wickets}</div>
+              <div className="text-[12px] font-bold text-[#596579]">after {formatOvers(balls)} overs</div>
+            </div>
+          )}
+          <div className="text-[12px] font-bold uppercase tracking-wider text-[#8a99b0] mb-2">Select new bowler</div>
           <div className="flex flex-col gap-2 max-h-60 overflow-y-auto">
             {playingXI.filter(p => /bowler|all-rounder/i.test(p.role || '') && p.id !== lastOverBowlerId).map(player => (
               <button 
@@ -348,6 +368,30 @@ export default function ScoringScreen() {
                 <ChevronRight size={16} className="text-[#d2d8e2]"/>
               </button>
             ))}
+          </div>
+        </Modal>
+      )}
+
+      {changeWkOpen && (
+        <Modal title="Change Wicket Keeper" onClose={() => setChangeWkOpen(false)}>
+          <div className="text-[12px] font-bold uppercase tracking-wider text-[#8a99b0] mb-2">Select new Wicket Keeper</div>
+          <div className="flex flex-col gap-2 max-h-60 overflow-y-auto">
+            {playingXI.map(player => {
+              const isWk = /wicket/i.test(player.role || '');
+              return (
+                <button 
+                  key={player.id} 
+                  onClick={() => selectNewWk(player)}
+                  className={`flex items-center justify-between p-3 rounded-[12px] border transition-colors ${isWk ? 'bg-[#F4B942] border-[#F4B942] text-[#101827]' : 'bg-white border-gray-200 active:bg-gray-50 text-[#101827]'}`}
+                >
+                  <div className="text-left">
+                    <div className="text-[14px] font-bold">{player.name}</div>
+                    <div className={`text-[11px] ${isWk ? 'text-[#101827]/70' : 'text-[#8a99b0]'}`}>{player.role}</div>
+                  </div>
+                  {isWk && <span className="text-[10px] font-bold uppercase tracking-widest bg-white/30 px-2 py-1 rounded">Current WK</span>}
+                </button>
+              );
+            })}
           </div>
         </Modal>
       )}
