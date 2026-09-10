@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 
 /**
  * JDCA PageHeader — consistent section heading across all screens

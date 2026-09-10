@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { ArrowLeft, CalendarDays, MapPin, Radio, ShieldCheck, Trophy, Users, FileText } from 'lucide-react';
 import { useCricket } from '../../context/CricketContext';
 import MatchScorecard from '../ui/MatchScorecard';
@@ -38,7 +38,7 @@ export default function MatchDetailScreen() {
 
   return (
     <div className="pb-[100px] bg-[#F7F8F4] min-h-screen">
-      {/* ── Match Hero ── */}
+      {/* â”€â”€ Match Hero â”€â”€ */}
       <div className={`bg-gradient-to-br ${live ? 'from-[#2457D6] to-[#1b41a8]' : 'from-[#101827] to-[#1e2b41]'} text-white pb-6 pt-[60px] px-4 relative`}>
         <button
           onClick={goBack}
@@ -62,7 +62,7 @@ export default function MatchDetailScreen() {
           <div className="flex items-center justify-center gap-3 mb-6">
             <div className="flex-1 text-right">
               <div className="text-[20px] font-black leading-tight mb-1">{match.teamA?.name || 'JABALPUR'}</div>
-              <div className="text-[32px] font-black text-[#F4B942] tracking-tighter leading-none">{match.teamA?.score || (live ? '142/4' : '186/4')}</div>
+              <div className="text-[32px] font-black text-[#ff6100] tracking-tighter leading-none">{match.teamA?.score || (live ? '142/4' : '186/4')}</div>
               {live && <div className="text-[12px] font-bold text-white/80 mt-1">{match.teamA?.overs || '24.2'} ov</div>}
             </div>
             
@@ -85,13 +85,13 @@ export default function MatchDetailScreen() {
         </div>
       </div>
 
-      {/* ── Tabs ── */}
+      {/* â”€â”€ Tabs â”€â”€ */}
       <div className="pt-4 sticky top-[60px] bg-[#F7F8F4] z-20 shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
         <MatchTabs tabs={tabs} active={activeTab} onChange={setActiveTab} />
       </div>
 
       <div className="px-4 pb-8 space-y-4">
-        {/* ── TAB 1: INFO ── */}
+        {/* â”€â”€ TAB 1: INFO â”€â”€ */}
         {activeTab === 'info' && (
           <div className="space-y-4">
             <div className="bg-white rounded-[16px] shadow-sm border border-gray-100 overflow-hidden">
@@ -102,7 +102,7 @@ export default function MatchDetailScreen() {
               <div className="divide-y divide-gray-50 text-[13px]">
                 <div className="flex justify-between p-4">
                   <span className="text-[#8a99b0] font-medium">Format</span>
-                  <span className="font-bold text-[#101827]">{match.format || '40 Overs'} · {match.ballType || 'White Ball'}</span>
+                  <span className="font-bold text-[#101827]">{match.format || '40 Overs'} Â· {match.ballType || 'White Ball'}</span>
                 </div>
                 <div className="flex justify-between p-4">
                   <span className="text-[#8a99b0] font-medium">Category</span>
@@ -140,17 +140,17 @@ export default function MatchDetailScreen() {
           </div>
         )}
 
-        {/* ── TAB 2: SCORECARD ── */}
+        {/* â”€â”€ TAB 2: SCORECARD â”€â”€ */}
         {activeTab === 'scorecard' && (
           <div className="bg-white rounded-[16px] shadow-sm border border-gray-100 p-4">
             <MatchScorecard match={match} />
           </div>
         )}
 
-        {/* ── TAB 3: HIGHLIGHTS ── */}
+        {/* â”€â”€ TAB 3: HIGHLIGHTS â”€â”€ */}
         {activeTab === 'highlights' && (
           <div className="space-y-4">
-            {[['TOP BATTER', h.topBatter, '#2457D6'], ['TOP BOWLER', h.topBowler, '#F05A47'], ['POTM', h.playerOfMatch, '#F4B942']].map(([label, p, color], i) => (
+            {[['TOP BATTER', h.topBatter, '#2457D6'], ['TOP BOWLER', h.topBowler, '#F05A47'], ['POTM', h.playerOfMatch, '#ff6100']].map(([label, p, color], i) => (
               <div key={label} className="bg-white rounded-[16px] p-5 border border-gray-100 shadow-sm relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-2 h-full" style={{ backgroundColor: color }} />
                 <div className="text-[10px] font-bold tracking-widest uppercase text-[#8a99b0] mb-2">{label}</div>
@@ -161,7 +161,7 @@ export default function MatchDetailScreen() {
           </div>
         )}
 
-        {/* ── TAB 4: MEDIA ── */}
+        {/* â”€â”€ TAB 4: MEDIA â”€â”€ */}
         {activeTab === 'media' && (
           <div className="bg-white rounded-[16px] shadow-sm border border-gray-100 p-4">
             {live ? (

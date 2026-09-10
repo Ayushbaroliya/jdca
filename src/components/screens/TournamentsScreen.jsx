@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+﻿import React, { useMemo, useState } from 'react';
 import { Plus, Trophy, ChevronRight, CheckCircle2 } from 'lucide-react';
 import { useCricket } from '../../context/CricketContext';
 

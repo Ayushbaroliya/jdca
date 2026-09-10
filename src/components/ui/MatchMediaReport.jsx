@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+﻿import React, { useMemo, useState } from 'react';
 import { Copy, Share2, Check, MessageCircle, FileText } from 'lucide-react';
 import { calculateMatchHighlights, generateMatchSummary, generateSocialCaption } from '../../engine/matchSummaryEngine';
 
@@ -22,7 +22,7 @@ export default function MatchMediaReport({ match }) {
         </div>
         
         <div className="p-5">
-          <div className="text-[10px] font-bold tracking-widest uppercase text-[#F4B942] mb-2">{match.stage || match.tournament || 'JDCA FIXTURE'}</div>
+          <div className="text-[10px] font-bold tracking-widest uppercase text-[#ff6100] mb-2">{match.stage || match.tournament || 'JDCA FIXTURE'}</div>
           <h2 className="text-[20px] font-black text-[#101827] leading-tight mb-4">{headline}</h2>
           <p className="text-[14px] text-[#596579] leading-relaxed mb-6 font-medium bg-gray-50 p-4 rounded-xl italic">
             "{summary}"

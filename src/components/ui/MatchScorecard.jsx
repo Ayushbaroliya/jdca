@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 
 // Modern Batting Table
 function BattingTable({ team, players = [] }) {

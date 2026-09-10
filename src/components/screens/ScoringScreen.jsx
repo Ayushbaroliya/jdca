@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+﻿import React, { useEffect, useMemo, useState } from 'react';
 import {
   RotateCcw, FileText, ShieldAlert, AlertTriangle, X,
   ChevronRight, RefreshCw, Radio, CircleHelp, WifiOff,
@@ -170,7 +170,7 @@ export default function ScoringScreen() {
             {lastBalls.map((b, i) => (
               <div key={i} className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-[12px] font-black ${
                 b.wicket ? 'bg-[#F05A47] text-white' :
-                b.extra ? 'bg-[#F4B942] text-black' :
+                b.extra ? 'bg-[#ff6100] text-black' :
                 b.runs >= 4 ? 'bg-[#2457D6] text-white' :
                 'bg-white/10 text-white'
               }`}>
@@ -382,7 +382,7 @@ export default function ScoringScreen() {
                 <button 
                   key={player.id} 
                   onClick={() => selectNewWk(player)}
-                  className={`flex items-center justify-between p-3 rounded-[12px] border transition-colors ${isWk ? 'bg-[#F4B942] border-[#F4B942] text-[#101827]' : 'bg-white border-gray-200 active:bg-gray-50 text-[#101827]'}`}
+                  className={`flex items-center justify-between p-3 rounded-[12px] border transition-colors ${isWk ? 'bg-[#ff6100] border-[#ff6100] text-[#101827]' : 'bg-white border-gray-200 active:bg-gray-50 text-[#101827]'}`}
                 >
                   <div className="text-left">
                     <div className="text-[14px] font-bold">{player.name}</div>

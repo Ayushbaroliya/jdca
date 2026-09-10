@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { useCricket } from '../../context/CricketContext';
 import { Shield, CheckCircle2, Lock, UserCheck, ArrowRight, Award } from 'lucide-react';
 import { ROLE_HOME } from '../ProtectedRoute';
@@ -45,7 +45,7 @@ export default function AuthScreen() {
         {/* Official Association Header */}
         <div className="text-center mb-6">
           <div className="w-16 h-16 rounded-2xl bg-[#101827] border-2 border-amber-400 flex items-center justify-center mx-auto mb-3 shadow-md">
-            <span className="font-extrabold text-xl tracking-wider text-[#F4B942] font-mono">
+            <span className="font-extrabold text-xl tracking-wider text-[#ff6100] font-mono">
               JDCA
             </span>
           </div>

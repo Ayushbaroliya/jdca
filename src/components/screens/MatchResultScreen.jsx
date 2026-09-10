@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+﻿import React, { useMemo } from 'react';
 import { Trophy, ArrowRight, Newspaper, ShieldCheck } from 'lucide-react';
 import { useCricket } from '../../context/CricketContext';
 import MatchScorecard from '../ui/MatchScorecard';
@@ -13,7 +13,7 @@ export default function MatchResultScreen() {
 
   return <div className="match-result-page matches-directory-page">
     <div className="result-hero-light">
-      <div><span className="result-hero-light__kicker"><Trophy size={14}/> OFFICIAL MATCH RESULT</span><h1>{match.resultText || match.result || 'Match completed'}</h1><p>{match.tournament || 'JDCA Fixture'} · {match.venue || 'JDCA Ground'} · {match.date || 'Match Day'}</p></div>
+      <div><span className="result-hero-light__kicker"><Trophy size={14}/> OFFICIAL MATCH RESULT</span><h1>{match.resultText || match.result || 'Match completed'}</h1><p>{match.tournament || 'JDCA Fixture'} Â· {match.venue || 'JDCA Ground'} Â· {match.date || 'Match Day'}</p></div>
       <div className="result-hero-light__scores"><span>{match.teamA?.name}</span><strong>{match.teamA?.score || '—'}</strong><small>{match.teamA?.overs || ''}</small><i>VS</i><span>{match.teamB?.name}</span><strong>{match.teamB?.score || '—'}</strong><small>{match.teamB?.overs || ''}</small></div>
     </div>
 

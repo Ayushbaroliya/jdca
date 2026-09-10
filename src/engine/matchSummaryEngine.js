@@ -1,4 +1,4 @@
-export function parseScore(score = '') {
+﻿export function parseScore(score = '') {
   const match = String(score).match(/(\d+)\/(\d+)/);
   return match ? { runs: Number(match[1]), wickets: Number(match[2]) } : null;
 }
@@ -39,10 +39,10 @@ export function generateMatchSummary(match = {}, highlights = calculateMatchHigh
 export function generateSocialCaption(match = {}, highlights = calculateMatchHighlights(match)) {
   const teamA = match.teamA?.name || 'Team A';
   const teamB = match.teamB?.name || 'Team B';
-  const lines = [`🏏 ${teamA} vs ${teamB}`, `🏆 ${match.resultText || match.result || 'Official result recorded'}`];
-  if (highlights.topBatter?.name) lines.push(`🏏 Top Batter: ${highlights.topBatter.name} — ${highlights.topBatter.stat || ''}`.trim());
-  if (highlights.topBowler?.name) lines.push(`🎯 Top Bowler: ${highlights.topBowler.name} — ${highlights.topBowler.stat || ''}`.trim());
-  if (highlights.playerOfMatch?.name) lines.push(`⭐ Player of the Match: ${highlights.playerOfMatch.name}`);
+  const lines = [`ðŸ ${teamA} vs ${teamB}`, `ðŸ† ${match.resultText || match.result || 'Official result recorded'}`];
+  if (highlights.topBatter?.name) lines.push(`ðŸ Top Batter: ${highlights.topBatter.name} — ${highlights.topBatter.stat || ''}`.trim());
+  if (highlights.topBowler?.name) lines.push(`ðŸŽ¯ Top Bowler: ${highlights.topBowler.name} — ${highlights.topBowler.stat || ''}`.trim());
+  if (highlights.playerOfMatch?.name) lines.push(`â­ Player of the Match: ${highlights.playerOfMatch.name}`);
   lines.push('#JDCA #Cricket #JabalpurDistrictCricketAssociation');
   return lines.join('\n');
 }

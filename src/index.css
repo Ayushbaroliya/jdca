@@ -1,9 +1,9 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 
-/* ═══════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    JDCA DESIGN SYSTEM — TailwindCSS v4 Theme Tokens
    Jabalpur District Cricket Association
-═══════════════════════════════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 @theme {
   /* JDCA Colour Palette */
@@ -30,7 +30,7 @@
   --color-mango-50:    #fef9ea;
   --color-mango-100:   #fdf0c2;
   --color-mango-400:   #f7cc65;
-  --color-mango:       #F4B942;   /* ACHIEVEMENT — Mango Gold */
+  --color-mango:       #ff6100;   /* ACHIEVEMENT — Mango Gold */
   --color-mango-700:   #b88920;
 
   --color-coral-50:    #fef0ee;
@@ -54,9 +54,9 @@
   --radius-xl:  16px;
 }
 
-/* ═══════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    BASE STYLES
-═══════════════════════════════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 @layer base {
   *, *::before, *::after {
@@ -93,11 +93,11 @@
   }
 }
 
-/* ═══════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    JDCA COMPONENT PRIMITIVES
-═══════════════════════════════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
-/* ── Badges ────────────────────────────────────────────── */
+/* â”€â”€ Badges â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .badge {
   display: inline-flex;
   align-items: center;
@@ -142,7 +142,7 @@
   border-color: #fdf0c2;
 }
 
-/* ── LIVE pulse indicator ───────────────────────────────── */
+/* â”€â”€ LIVE pulse indicator â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .live-dot {
   display: inline-block;
   width: 8px;
@@ -157,7 +157,7 @@
   50%       { opacity: 0.5; transform: scale(0.8); }
 }
 
-/* ── Score numbers ─────────────────────────────────────── */
+/* â”€â”€ Score numbers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .score-xl {
   font-size: 3.5rem;
   font-weight: 800;
@@ -182,7 +182,7 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* ── Page section header ─────────────────────────────── */
+/* â”€â”€ Page section header â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .section-label {
   font-size: 11px;
   font-weight: 700;
@@ -191,7 +191,7 @@
   color: #596579;
 }
 
-/* ── Cards ──────────────────────────────────────────────── */
+/* â”€â”€ Cards â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .jdca-card {
   background-color: #ffffff;
   border: 1px solid #e5e8ec;
@@ -211,7 +211,7 @@
   box-shadow: 0 2px 12px rgba(36, 87, 214, 0.08);
 }
 
-/* ── Tables ──────────────────────────────────────────────── */
+/* â”€â”€ Tables â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .jdca-table {
   width: 100%;
   border-collapse: collapse;
@@ -246,7 +246,7 @@
   border-bottom: none;
 }
 
-/* ── Buttons ─────────────────────────────────────────────── */
+/* â”€â”€ Buttons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .btn-primary {
   display: inline-flex;
   align-items: center;
@@ -303,7 +303,7 @@
 }
 .btn-danger:hover { background-color: #b83428; }
 
-/* ── Scoring keypad buttons ──────────────────────────── */
+/* â”€â”€ Scoring keypad buttons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .keypad-btn {
   display: flex;
   align-items: center;
@@ -329,7 +329,7 @@
 .keypad-undo  { background-color: #f1f3f5; color: #596579; border: 1.5px solid #dde1e8; }
 .keypad-action { background-color: #ffffff; color: #101827; border: 1.5px solid #d5d9e0; font-size: 0.75rem; font-weight: 700; }
 
-/* ── Form inputs ─────────────────────────────────────── */
+/* â”€â”€ Form inputs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .jdca-input {
   width: 100%;
   padding: 10px 12px;
@@ -372,7 +372,7 @@
   letter-spacing: 0.02em;
 }
 
-/* ── Navigation ──────────────────────────────────────── */
+/* â”€â”€ Navigation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .sidebar-item {
   display: flex;
   align-items: center;
@@ -401,18 +401,18 @@
   font-weight: 600;
 }
 
-/* ── Scrollbar ───────────────────────────────────────── */
+/* â”€â”€ Scrollbar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* ── Divider ─────────────────────────────────────────── */
+/* â”€â”€ Divider â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .divider {
   height: 1px;
   background-color: #e5e8ec;
   margin: 0;
 }
 
-/* ── Status strip ────────────────────────────────────── */
+/* â”€â”€ Status strip â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .status-bar {
   display: flex;
   align-items: center;
@@ -423,7 +423,7 @@
   text-transform: uppercase;
 }
 
-/* ── Dot pattern (retained) ──────────────────────────── */
+/* â”€â”€ Dot pattern (retained) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .bg-dot-pattern {
   background-image: radial-gradient(rgba(36, 87, 214, 0.1) 1.2px, transparent 1.2px);
   background-size: 14px 14px;
@@ -434,7 +434,7 @@
   background-size: 14px 14px;
 }
 
-/* ── Animations ──────────────────────────────────────── */
+/* â”€â”€ Animations â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -444,32 +444,32 @@
   animation: fadeIn 0.2s ease both;
 }
 
-/* ── Utility ─────────────────────────────────────────── */
+/* â”€â”€ Utility â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .font-tabular { font-variant-numeric: tabular-nums; }
 .text-ink     { color: #101827; }
 .text-cobalt  { color: #2457D6; }
 .text-jade    { color: #0FA968; }
-.text-mango   { color: #F4B942; }
+.text-mango   { color: #ff6100; }
 .text-coral   { color: #F05A47; }
 .text-slate-m { color: #596579; }
 .bg-cloud     { background-color: #F7F8F4; }
 .bg-ink       { background-color: #101827; }
 .bg-cobalt    { background-color: #2457D6; }
 .bg-jade      { background-color: #0FA968; }
-.bg-mango     { background-color: #F4B942; }
+.bg-mango     { background-color: #ff6100; }
 .bg-coral     { background-color: #F05A47; }
 
-/* ═══════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    JDCA VISUAL OVERHAUL — EDITORIAL CRICKET, NOT GENERIC SAAS
    Keep the existing application logic. These tokens reshape the
    visual language into an official cricket-association product.
-═══════════════════════════════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 :root {
   --jdca-cobalt: #2457D6;
   --jdca-ink: #101827;
   --jdca-jade: #0FA968;
-  --jdca-mango: #F4B942;
+  --jdca-mango: #ff6100;
   --jdca-coral: #F05A47;
   --jdca-cloud: #F7F8F4;
   --jdca-line: #dfe3e8;
@@ -515,7 +515,7 @@ main {
 }
 .sidebar-item.active {
   background: #2457D6;
-  border-left-color: #F4B942;
+  border-left-color: #ff6100;
   box-shadow: none;
 }
 
@@ -650,9 +650,9 @@ main {
   }
 }
 
-/* ═══════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    JDCA SCORER CONSOLE — built for fast, low-training scoring
-═══════════════════════════════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .scorer-page { max-width: 920px; margin: 0 auto; padding: 18px 16px 110px; }
 .scorer-topbar { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:12px; }
 .scorer-kicker { font-size:10px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:#596579; }
@@ -662,7 +662,7 @@ main {
 .live-chip { display:inline-flex; align-items:center; gap:6px; padding:7px 10px; border:1px solid #c2edda; background:#e8f8ef; color:#0a7d4e; font-size:11px; font-weight:900; letter-spacing:.06em; }
 .icon-action { width:36px; height:36px; display:flex; align-items:center; justify-content:center; border:1px solid #dfe4ea; background:#fff; color:#596579; cursor:pointer; border-radius:7px; }
 .icon-action:hover { border-color:#abc1f5; color:#2457D6; }
-.learn-strip { display:flex; align-items:center; justify-content:space-between; gap:14px; padding:12px 14px; margin-bottom:12px; background:#101827; color:#fff; border-left:4px solid #F4B942; }
+.learn-strip { display:flex; align-items:center; justify-content:space-between; gap:14px; padding:12px 14px; margin-bottom:12px; background:#101827; color:#fff; border-left:4px solid #ff6100; }
 .learn-copy { display:flex; flex-direction:column; gap:2px; }
 .learn-copy strong { font-size:13px; }
 .learn-copy span { color:#c6cfdb; font-size:11px; }
@@ -952,7 +952,7 @@ main {
 .match-info-list small { color:#7a8595; font-size:8px; text-transform:uppercase; font-weight:800; }
 .match-info-list b { margin-top:3px; font-size:10px; }
 .match-highlight-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
-.match-highlight { min-height:110px; padding:11px; border:1px solid #dfe4e8; border-top:3px solid #f4b942; background:#fff; }
+.match-highlight { min-height:110px; padding:11px; border:1px solid #dfe4e8; border-top:3px solid #ff6100; background:#fff; }
 .match-highlight--1 { border-top-color:#2457D6; }
 .match-highlight--2 { border-top-color:#0FA968; }
 .match-highlight small,.match-highlight strong,.match-highlight span { display:block; }
@@ -999,7 +999,7 @@ main {
 .match-media-report__facts small,.match-media-report__facts b { display:block; }
 .match-media-report__facts small { color:#7a8595; font-size:7px; font-weight:900; letter-spacing:.08em; }
 .match-media-report__facts b { margin-top:3px; font-size:10px; }
-.match-media-report__caption { margin-top:12px; padding:11px; border-left:3px solid #f4b942; background:#fffaf0; }
+.match-media-report__caption { margin-top:12px; padding:11px; border-left:3px solid #ff6100; background:#fffaf0; }
 .match-media-report__caption small { color:#9a761d; font-size:7px; font-weight:900; letter-spacing:.1em; }
 .match-media-report__caption pre { margin:6px 0 0; white-space:pre-wrap; font:10px/1.5 Inter,system-ui,sans-serif; color:#334155; }
 .match-media-report__actions { display:flex; flex-wrap:wrap; gap:7px; padding:10px; border-top:1px solid #dfe4e8; background:#fafbf9; }
@@ -1066,7 +1066,7 @@ main {
 .result-section { margin-top:14px; padding:15px; border:1px solid #dfe4e8; border-radius:11px; background:#fff; }
 .result-highlight-row { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
 .result-highlight-row > div { padding:11px; border:1px solid #e0e4e7; border-top:3px solid #2457D6; background:#fafbf9; }
-.result-highlight-row > div:nth-child(1) { border-top-color:#F4B942; }
+.result-highlight-row > div:nth-child(1) { border-top-color:#ff6100; }
 .result-highlight-row > div:nth-child(3) { border-top-color:#0FA968; }
 .result-highlight-row small,.result-highlight-row b,.result-highlight-row span { display:block; }
 .result-highlight-row small { color:#7a8595; font-size:7px; font-weight:900; letter-spacing:.09em; }

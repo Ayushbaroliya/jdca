@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Check, Edit2, Search, ArrowRight, ArrowLeft, Plus, Trash2, X, Settings2, Users, Coins } from 'lucide-react';
 import { useCricket } from '../../context/CricketContext';
 
@@ -129,7 +129,7 @@ export default function MatchSetupScreen() {
               <label className="block text-[11px] font-bold text-[#8a99b0] uppercase tracking-wider mb-2">Elected To</label>
               <div className="grid grid-cols-2 gap-3">
                 {['Bat', 'Bowl'].map(decision => (
-                  <button key={decision} onClick={() => setMatchSetup(p => ({ ...p, electedTo: decision }))} className={`py-4 rounded-[12px] font-bold text-[14px] border-2 transition-colors ${matchSetup.electedTo === decision ? 'bg-[#F4B942] text-[#101827] border-[#F4B942]' : 'bg-transparent text-[#596579] border-gray-200'}`}>
+                  <button key={decision} onClick={() => setMatchSetup(p => ({ ...p, electedTo: decision }))} className={`py-4 rounded-[12px] font-bold text-[14px] border-2 transition-colors ${matchSetup.electedTo === decision ? 'bg-[#ff6100] text-[#101827] border-[#ff6100]' : 'bg-transparent text-[#596579] border-gray-200'}`}>
                     {decision} First
                   </button>
                 ))}
@@ -151,7 +151,7 @@ export default function MatchSetupScreen() {
                        <div className="font-bold text-[14px] text-[#101827] flex items-center gap-1.5">
                          {p.name} 
                          {p.isCaptain && <span className="bg-[#2457D6] text-white text-[9px] px-1.5 py-0.5 rounded-sm">C</span>}
-                         {p.role.includes('Wicket Keeper') && <span className="bg-[#F4B942] text-[#101827] text-[9px] px-1.5 py-0.5 rounded-sm">WK</span>}
+                         {p.role.includes('Wicket Keeper') && <span className="bg-[#ff6100] text-[#101827] text-[9px] px-1.5 py-0.5 rounded-sm">WK</span>}
                        </div>
                        <div className="text-[11px] font-medium text-[#8a99b0]">{p.role}</div>
                     </div>

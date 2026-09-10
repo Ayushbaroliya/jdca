@@ -1,20 +1,20 @@
-/**
+﻿/**
  * JDCA Cricket App - Comprehensive Mock Data
  * Covers: Players (all categories), Matches (T20/One Day/Test), Scorecards,
  *         Tournaments, Officials, Scouting, Selectors Panels, History, Analytics
  */
 
-// ─────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // HELPER: Generates a generic scoringAreas object
-// ─────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const mkAreas = (off, leg, behind, fine) => ({ offSide: off, legSide: leg, behindSquare: behind, fine });
 
-// ─────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // PLAYER DATABASE — All Categories
-// ─────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export const INITIAL_PLAYERS = [
 
-  // ────── SENIOR PLAYERS ──────
+  // â”€â”€â”€â”€â”€â”€ SENIOR PLAYERS â”€â”€â”€â”€â”€â”€
   {
     id: 'rohan-sharma',
     name: 'Rohan Sharma',
@@ -224,7 +224,7 @@ export const INITIAL_PLAYERS = [
     shortlisted: true,
   },
 
-  // ────── UNDER-19 PLAYERS ──────
+  // â”€â”€â”€â”€â”€â”€ UNDER-19 PLAYERS â”€â”€â”€â”€â”€â”€
   {
     id: 'vikram-singh',
     name: 'Vikram Singh',
@@ -361,7 +361,7 @@ export const INITIAL_PLAYERS = [
     shortlisted: false,
   },
 
-  // ────── UNDER-23 PLAYERS ──────
+  // â”€â”€â”€â”€â”€â”€ UNDER-23 PLAYERS â”€â”€â”€â”€â”€â”€
   {
     id: 'zaheer-u23',
     name: 'Zaheer Khan Jr',
@@ -464,7 +464,7 @@ export const INITIAL_PLAYERS = [
     shortlisted: false,
   },
 
-  // ────── UNDER-26 PLAYERS ──────
+  // â”€â”€â”€â”€â”€â”€ UNDER-26 PLAYERS â”€â”€â”€â”€â”€â”€
   {
     id: 'suresh-u26',
     name: 'Suresh Raina Jr',
@@ -567,7 +567,7 @@ export const INITIAL_PLAYERS = [
     shortlisted: true,
   },
 
-  // ────── UNDER-14 PLAYERS ──────
+  // â”€â”€â”€â”€â”€â”€ UNDER-14 PLAYERS â”€â”€â”€â”€â”€â”€
   {
     id: 'rahul-u14',
     name: 'Rahul Dravid Jr',
@@ -602,7 +602,7 @@ export const INITIAL_PLAYERS = [
     shortlisted: true,
   },
 
-  // ────── UNDER-13 PLAYERS ──────
+  // â”€â”€â”€â”€â”€â”€ UNDER-13 PLAYERS â”€â”€â”€â”€â”€â”€
   {
     id: 'aarav-patel',
     name: 'Aarav Patel',
@@ -706,9 +706,9 @@ export const INITIAL_PLAYERS = [
   },
 ];
 
-// ─────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // MATCH OFFICIALS
-// ─────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export const OFFICIALS = [
   { id: 'off-1', name: 'Rajesh Verma',   initials: 'RV', role: 'On-Field Umpire', level: 'Level 3', experience: '12 Yrs', color: 'bg-blue-600' },
   { id: 'off-2', name: 'Sunil Tiwari',   initials: 'ST', role: 'Square Leg Umpire', level: 'Level 2', experience: '8 Yrs', color: 'bg-amber-500' },
@@ -717,12 +717,12 @@ export const OFFICIALS = [
   { id: 'off-5', name: 'Ramesh Soni',    initials: 'RS', role: 'Scorer',        level: 'Level 2', experience: '6 Yrs',  color: 'bg-rose-500' },
 ];
 
-// ─────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // MATCHES — T20, One Day, Test
-// ─────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export const INITIAL_MATCHES = [
 
-  // ── T20 LIVE ──
+  // â”€â”€ T20 LIVE â”€â”€
   {
     id: 'match-live-1',
     tournament: 'JDCA T20 Blast • Final',
@@ -732,11 +732,11 @@ export const INITIAL_MATCHES = [
     category: 'T20',
     date: '2024-08-17',
     teamA: {
-      name: 'Jabalpur Kings', short: 'JBP', logo: '👑', color: '#1E3A8A',
+      name: 'Jabalpur Kings', short: 'JBP', logo: 'ðŸ‘‘', color: '#1E3A8A',
       score: '142/4', overs: '16.2', totalOvers: 20, tossDecision: 'elected to bat',
     },
     teamB: {
-      name: 'Katni Titans', short: 'KTN', logo: '⚡', color: '#047857',
+      name: 'Katni Titans', short: 'KTN', logo: 'âš¡', color: '#047857',
       score: 'Yet to bat', overs: '0.0', totalOvers: 20,
     },
     crr: 8.75, projected: 175, requiredRate: null,
@@ -753,11 +753,11 @@ export const INITIAL_MATCHES = [
     category: 'T20',
     date: '2024-08-16',
     teamA: {
-      name: 'Chhindwara Eagles', short: 'CHH', logo: '🦅', color: '#1D4ED8',
+      name: 'Chhindwara Eagles', short: 'CHH', logo: 'ðŸ¦…', color: '#1D4ED8',
       score: '168/5', overs: '18.3', totalOvers: 20, tossDecision: 'won the toss & chose to bat',
     },
     teamB: {
-      name: 'Narsinghpur Lions', short: 'NAR', logo: '🦁', color: '#EA580C',
+      name: 'Narsinghpur Lions', short: 'NAR', logo: 'ðŸ¦', color: '#EA580C',
       score: 'Yet to bat', overs: '0.0', totalOvers: 20,
     },
     crr: 9.08, projected: 182, requiredRate: null,
@@ -765,7 +765,7 @@ export const INITIAL_MATCHES = [
     result: null,
   },
 
-  // ── ONE DAY LIVE ──
+  // â”€â”€ ONE DAY LIVE â”€â”€
   {
     id: 'match-od-1',
     tournament: 'JDCA One Day Trophy • QF',
@@ -775,11 +775,11 @@ export const INITIAL_MATCHES = [
     category: 'One Day',
     date: '2024-08-17',
     teamA: {
-      name: 'Mandla Panthers', short: 'MND', logo: '🐆', color: '#7C3AED',
+      name: 'Mandla Panthers', short: 'MND', logo: 'ðŸ†', color: '#7C3AED',
       score: '218/7', overs: '42.1', totalOvers: 50, tossDecision: 'elected to bat',
     },
     teamB: {
-      name: 'Dindori Wolves', short: 'DIN', logo: '🐺', color: '#0E7490',
+      name: 'Dindori Wolves', short: 'DIN', logo: 'ðŸº', color: '#0E7490',
       score: '145/4', overs: '28.0', totalOvers: 50,
     },
     crr: 5.18, projected: 259, requiredRate: 8.04,
@@ -788,7 +788,7 @@ export const INITIAL_MATCHES = [
     result: null,
   },
 
-  // ── TEST LIVE ──
+  // â”€â”€ TEST LIVE â”€â”€
   {
     id: 'match-test-1',
     tournament: 'JDCA Test Championship • Match 1',
@@ -798,11 +798,11 @@ export const INITIAL_MATCHES = [
     category: 'Test',
     date: '2024-08-15',
     teamA: {
-      name: 'Jabalpur XI', short: 'JBP', logo: '🏛️', color: '#0B2545',
+      name: 'Jabalpur XI', short: 'JBP', logo: 'ðŸ›ï¸', color: '#0B2545',
       score: '312/6 & 88/2', overs: 'Day 2', totalOvers: null, tossDecision: 'elected to bat',
     },
     teamB: {
-      name: 'Seoni XI', short: 'SEO', logo: '🏔️', color: '#064E3B',
+      name: 'Seoni XI', short: 'SEO', logo: 'ðŸ”ï¸', color: '#064E3B',
       score: '245/10', overs: 'Day 2', totalOvers: null,
     },
     crr: null, projected: null, requiredRate: null,
@@ -811,7 +811,7 @@ export const INITIAL_MATCHES = [
     testDayInfo: { currentDay: 2, totalDays: 5, session: 'Afternoon', weather: 'Clear' },
   },
 
-  // ── COMPLETED MATCHES ──
+  // â”€â”€ COMPLETED MATCHES â”€â”€
   {
     id: 'match-completed-1',
     tournament: 'JDCA T20 Championship Final',
@@ -902,7 +902,7 @@ export const INITIAL_MATCHES = [
     officials: ['off-1', 'off-2', 'off-3', 'off-4'],
   },
 
-  // ── UPCOMING MATCHES ──
+  // â”€â”€ UPCOMING MATCHES â”€â”€
   {
     id: 'match-upcoming-1',
     tournament: 'JDCA T20 Blast 2024 • Group Stage',
@@ -912,8 +912,8 @@ export const INITIAL_MATCHES = [
     category: 'T20',
     date: '2024-08-20',
     time: '10:00 AM',
-    teamA: { name: 'Pandhurna Strikers', short: 'PAN', logo: '⚔️', color: '#7C3AED' },
-    teamB: { name: 'Balaghat Tigers', short: 'BAL', logo: '🐅', color: '#0E7490' },
+    teamA: { name: 'Pandhurna Strikers', short: 'PAN', logo: 'âš”ï¸', color: '#7C3AED' },
+    teamB: { name: 'Balaghat Tigers', short: 'BAL', logo: 'ðŸ…', color: '#0E7490' },
     officials: ['off-2', 'off-5'],
     result: null,
   },
@@ -927,8 +927,8 @@ export const INITIAL_MATCHES = [
     category: 'One Day',
     date: '2024-08-22',
     time: '09:00 AM',
-    teamA: { name: 'Seoni XI', short: 'SEO', logo: '🏔️', color: '#064E3B' },
-    teamB: { name: 'Mandla Panthers', short: 'MND', logo: '🐆', color: '#7C3AED' },
+    teamA: { name: 'Seoni XI', short: 'SEO', logo: 'ðŸ”ï¸', color: '#064E3B' },
+    teamB: { name: 'Mandla Panthers', short: 'MND', logo: 'ðŸ†', color: '#7C3AED' },
     officials: ['off-1', 'off-3'],
     result: null,
   },
@@ -942,16 +942,16 @@ export const INITIAL_MATCHES = [
     category: 'Test',
     date: '2024-08-25',
     time: '09:30 AM',
-    teamA: { name: 'Balaghat XI', short: 'BAL', logo: '🦎', color: '#78350F' },
-    teamB: { name: 'Katni XI', short: 'KTN', logo: '⚡', color: '#0B57D0' },
+    teamA: { name: 'Balaghat XI', short: 'BAL', logo: 'ðŸ¦Ž', color: '#78350F' },
+    teamB: { name: 'Katni XI', short: 'KTN', logo: 'âš¡', color: '#0B57D0' },
     officials: ['off-1', 'off-2', 'off-3'],
     result: null,
   },
 ];
 
-// ─────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // SCORECARD — Current Active Match
-// ─────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export const INITIAL_SCORECARD = {
   batting: [
     { id: 'b1', name: 'V. Sharma',  status: 'not out',           isStriker: true,  runs: 78,  balls: 42, fours: 6, sixes: 4, strikeRate: 185.7 },
@@ -974,9 +974,9 @@ export const INITIAL_SCORECARD = {
   ],
 };
 
-// ─────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // FIELD DIRECTIONS (Wagon Wheel / Shot Placement)
-// ─────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export const FIELD_DIRECTIONS = [
   { id: 'third_man',   name: 'Third Man',   angle: 45,  label: 'Third Man',   sector: 'Off Side' },
   { id: 'point',       name: 'Point',       angle: 90,  label: 'Point',       sector: 'Off Side' },
@@ -990,9 +990,9 @@ export const FIELD_DIRECTIONS = [
   { id: 'fine_leg',    name: 'Fine Leg',    angle: 315, label: 'Fine Leg',    sector: 'Leg Side' },
 ];
 
-// ─────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // TOURNAMENTS (Future: Tournament Management Screen)
-// ─────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export const TOURNAMENTS = [
   {
     id: 'jdca-t20-2024',
@@ -1057,9 +1057,9 @@ export const TOURNAMENTS = [
   },
 ];
 
-// ─────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // DISTRICT STATS — For District Wise Analysis (Future Screen)
-// ─────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export const DISTRICT_STATS = [
   { district: 'Jabalpur',    totalPlayers: 145, seniorPlayers: 42, u19Players: 38, u23Players: 32, u26Players: 18, u14Players: 15, u13Players: 0, registeredThisSeason: 22, topPlayer: 'Rohan Sharma', grounds: 4 },
   { district: 'Katni',       totalPlayers: 98,  seniorPlayers: 28, u19Players: 24, u23Players: 22, u26Players: 14, u14Players: 10, u13Players: 0, registeredThisSeason: 14, topPlayer: 'Karan Pathak', grounds: 3 },
@@ -1072,9 +1072,9 @@ export const DISTRICT_STATS = [
   { district: 'Pandhurna',   totalPlayers: 72,  seniorPlayers: 20, u19Players: 16, u23Players: 14, u26Players: 10, u14Players: 12, u13Players: 0, registeredThisSeason: 10, topPlayer: 'S. Sharma', grounds: 2 },
 ];
 
-// ─────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // SELECTION HISTORY — For Selectors Panel (Future)
-// ─────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export const SELECTION_HISTORY = [
   {
     id: 'sel-2024-t20',
@@ -1098,12 +1098,12 @@ export const SELECTION_HISTORY = [
   },
 ];
 
-// ─────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // NOTIFICATIONS / ANNOUNCEMENTS (Future: Notifications Screen)
-// ─────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export const ANNOUNCEMENTS = [
-  { id: 'ann-1', type: 'trial', title: 'U-23 Selection Trials', body: 'Selection trials for U-23 team will be held on 25 Aug 2024 at Jabalpur District Stadium.', date: '2024-08-10', icon: '🏏' },
-  { id: 'ann-2', type: 'result', title: 'T20 Blast Final - Match Result', body: 'Jabalpur Kings won the JDCA T20 Blast 2024 Final by 22 runs. Congratulations!', date: '2024-07-28', icon: '🏆' },
-  { id: 'ann-3', type: 'registration', title: 'Player Registration Open', body: 'Player registration for the 2024-25 season is now open. Register by 30 Sep 2024.', date: '2024-08-01', icon: '📝' },
-  { id: 'ann-4', type: 'schedule', title: 'Test Championship Schedule', body: 'The full match schedule for the JDCA Test Championship 2024 has been published.', date: '2024-07-22', icon: '📅' },
+  { id: 'ann-1', type: 'trial', title: 'U-23 Selection Trials', body: 'Selection trials for U-23 team will be held on 25 Aug 2024 at Jabalpur District Stadium.', date: '2024-08-10', icon: 'ðŸ' },
+  { id: 'ann-2', type: 'result', title: 'T20 Blast Final - Match Result', body: 'Jabalpur Kings won the JDCA T20 Blast 2024 Final by 22 runs. Congratulations!', date: '2024-07-28', icon: 'ðŸ†' },
+  { id: 'ann-3', type: 'registration', title: 'Player Registration Open', body: 'Player registration for the 2024-25 season is now open. Register by 30 Sep 2024.', date: '2024-08-01', icon: 'ðŸ“' },
+  { id: 'ann-4', type: 'schedule', title: 'Test Championship Schedule', body: 'The full match schedule for the JDCA Test Championship 2024 has been published.', date: '2024-07-22', icon: 'ðŸ“…' },
 ];

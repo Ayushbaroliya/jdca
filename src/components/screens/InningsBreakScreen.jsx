@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Trophy, ArrowRight, Play, Award, Zap } from 'lucide-react';
 import { useCricket } from '../../context/CricketContext';
 import { CricketBatIcon, CricketBallIcon } from '../CricketIcons';

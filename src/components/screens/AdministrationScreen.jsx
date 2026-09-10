@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import {
   Users, Shield, Settings, MapPin, Trophy, Calendar, Plus,
   Check, X, Edit, Bell, Lock, UserCheck, AlertTriangle
@@ -123,7 +123,7 @@ export default function AdministrationScreen() {
         <TabBar tabs={TABS} active={activeTab} onChange={setActiveTab} />
       </div>
 
-      {/* ── TAB 1: STAFF & USERS ────────────────────────────────────── */}
+      {/* â”€â”€ TAB 1: STAFF & USERS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       {activeTab === 'staff' && (
         <div className="space-y-5">
           {/* Permission Clarity Banner */}
@@ -230,7 +230,7 @@ export default function AdministrationScreen() {
         </div>
       )}
 
-      {/* ── TAB 2: JDCA MANAGEMENT ───────────────────────────────────── */}
+      {/* â”€â”€ TAB 2: JDCA MANAGEMENT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       {activeTab === 'jdca' && (
         <div className="space-y-6">
           {/* Hierarchy Banner */}
@@ -239,18 +239,18 @@ export default function AdministrationScreen() {
               <div className="text-xs font-bold uppercase tracking-wider text-[#2457D6]">Official Association Hierarchy</div>
               <div className="text-sm font-semibold mt-1 flex items-center gap-2 flex-wrap text-slate-700">
                 <span className="text-[#2457D6] font-bold">JDCA (Apex)</span>
-                <span>→</span>
+                <span>â†’</span>
                 <span>9 Districts</span>
-                <span>→</span>
+                <span>â†’</span>
                 <span>District Teams</span>
-                <span>→</span>
+                <span>â†’</span>
                 <span>Registered Players</span>
-                <span>→</span>
+                <span>â†’</span>
                 <span>Tournaments & Matches</span>
               </div>
             </div>
             <div className="hidden sm:block text-right">
-              <span className="text-xs font-bold text-[#F4B942] bg-amber-950/60 px-3 py-1 rounded border border-amber-800/60">
+              <span className="text-xs font-bold text-[#ff6100] bg-amber-950/60 px-3 py-1 rounded border border-amber-800/60">
                 MPCA Affiliated
               </span>
             </div>
@@ -368,7 +368,7 @@ export default function AdministrationScreen() {
         </div>
       )}
 
-      {/* ── TAB 3: SYSTEM & SETTINGS ─────────────────────────────────── */}
+      {/* â”€â”€ TAB 3: SYSTEM & SETTINGS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       {activeTab === 'system' && (
         <div className="space-y-5">
           <div className="jdca-card p-5">
@@ -421,7 +421,7 @@ export default function AdministrationScreen() {
         </div>
       )}
 
-      {/* ── ADD USER MODAL ───────────────────────────────────────────── */}
+      {/* â”€â”€ ADD USER MODAL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       {showAddUserModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-800/80">
           <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6 animate-in fade-in zoom-in-95">

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Radio, Users, ShieldCheck, ChevronRight, Share2, Award, Printer, ArrowLeft } from 'lucide-react';
 import { useCricket } from '../../context/CricketContext';
 import { PageHeader, TabBar } from '../ui/PageHeader';
@@ -83,7 +83,7 @@ export default function ScorecardScreen() {
         {/* Player of Match Highlight */}
         <div className="mt-3 pt-1 flex items-center justify-between text-xs">
           <div className="flex items-center gap-2">
-            <span className="p-1 rounded bg-amber-50 text-[#F4B942] border border-amber-200">
+            <span className="p-1 rounded bg-amber-50 text-[#ff6100] border border-amber-200">
               <Award size={15} />
             </span>
             <span className="text-slate-600 font-medium">

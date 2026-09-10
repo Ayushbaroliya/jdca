@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+﻿import React, { useMemo, useState } from 'react';
 import { Plus, Search, CalendarDays, ArrowRight, MapPin } from 'lucide-react';
 import { useCricket } from '../../context/CricketContext';
 import { MatchStatusBadge } from '../ui/Badge';
@@ -69,7 +69,7 @@ const MatchListItem = ({ match, onClick }) => {
 
       {isLive && (
         <div className="mt-2 text-[12px] font-medium text-white/80">
-          {match.teamA?.overs || '24.2'} overs · {match.format || '40'} overs match
+          {match.teamA?.overs || '24.2'} overs Â· {match.format || '40'} overs match
         </div>
       )}
       

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { 
   ArrowLeft, Star, MapPin, Award, Activity, TrendingUp, Sliders
 } from 'lucide-react';
@@ -69,10 +69,10 @@ export default function PlayerProfileScreen() {
         <button
           onClick={() => toggleShortlist(player.id)}
           className={`absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-full transition-colors ${
-            isShortlisted ? 'bg-amber-50 text-[#F4B942]' : 'bg-gray-50 text-[#8a99b0]'
+            isShortlisted ? 'bg-amber-50 text-[#ff6100]' : 'bg-gray-50 text-[#8a99b0]'
           }`}
         >
-          <Star size={20} strokeWidth={2.5} fill={isShortlisted ? '#F4B942' : 'none'} />
+          <Star size={20} strokeWidth={2.5} fill={isShortlisted ? '#ff6100' : 'none'} />
         </button>
 
         <div className="flex flex-col items-center mt-6 text-center">
@@ -103,7 +103,7 @@ export default function PlayerProfileScreen() {
       {/* Content Area */}
       <div className="px-4 pb-8 space-y-4">
 
-        {/* ── TAB 1: OVERVIEW ── */}
+        {/* â”€â”€ TAB 1: OVERVIEW â”€â”€ */}
         {activeTab === 'Overview' && (
           <>
             <div className="grid grid-cols-2 gap-3">
@@ -125,7 +125,7 @@ export default function PlayerProfileScreen() {
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-[#F4B942] to-[#b88920] rounded-[16px] p-5 text-white shadow-md">
+            <div className="bg-gradient-to-br from-[#ff6100] to-[#b88920] rounded-[16px] p-5 text-white shadow-md">
               <div className="flex items-center gap-2 mb-4">
                 <Award size={20} className="text-white/80" />
                 <h3 className="font-bold text-[14px] uppercase tracking-wider text-white/80">Distinctions</h3>
@@ -142,7 +142,7 @@ export default function PlayerProfileScreen() {
           </>
         )}
 
-        {/* ── TAB 2: BATTING ── */}
+        {/* â”€â”€ TAB 2: BATTING â”€â”€ */}
         {activeTab === 'Batting' && (
           <div className="bg-white rounded-[16px] border border-gray-100 shadow-sm overflow-hidden">
             <div className="p-4 border-b border-gray-50 bg-[#F7F8F4]">
@@ -170,7 +170,7 @@ export default function PlayerProfileScreen() {
           </div>
         )}
 
-        {/* ── TAB 3: BOWLING ── */}
+        {/* â”€â”€ TAB 3: BOWLING â”€â”€ */}
         {activeTab === 'Bowling' && (
           <div className="bg-white rounded-[16px] border border-gray-100 shadow-sm overflow-hidden">
             <div className="p-4 border-b border-gray-50 bg-[#F7F8F4]">
@@ -198,7 +198,7 @@ export default function PlayerProfileScreen() {
           </div>
         )}
 
-        {/* ── TAB 4: SELECTION ── */}
+        {/* â”€â”€ TAB 4: SELECTION â”€â”€ */}
         {activeTab === 'Selection' && (
           <div className="bg-white rounded-[16px] border border-gray-100 shadow-sm overflow-hidden">
             <div className="p-4 border-b border-gray-50">
