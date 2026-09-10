@@ -1,4 +1,4 @@
-﻿/**
+/**
  * JDCA Cricket App - Comprehensive Mock Data
  * Covers: Players (all categories), Matches (T20/One Day/Test), Scorecards,
  *         Tournaments, Officials, Scouting, Selectors Panels, History, Analytics
@@ -720,6 +720,15 @@ export const OFFICIALS = [
 // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // MATCHES — T20, One Day, Test
 // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+export const POINTS_TABLE = [
+  { team: 'Jabalpur Kings', short: 'JBP', logo: 'dY``', color: '#1E3A8A', m: 5, w: 4, l: 1, t: 0, nr: 0, pts: 8, nrr: '+1.452', form: ['W', 'W', 'L', 'W', 'W'] },
+  { team: 'Katni Titans', short: 'KTN', logo: 's', color: '#047857', m: 5, w: 4, l: 1, t: 0, nr: 0, pts: 8, nrr: '+0.875', form: ['W', 'L', 'W', 'W', 'W'] },
+  { team: 'Chhindwara Eagles', short: 'CHH', logo: 'dY.', color: '#1D4ED8', m: 5, w: 3, l: 2, t: 0, nr: 0, pts: 6, nrr: '+0.120', form: ['L', 'W', 'W', 'L', 'W'] },
+  { team: 'Mandla Panthers', short: 'MND', logo: 'dY?+', color: '#7C3AED', m: 5, w: 2, l: 3, t: 0, nr: 0, pts: 4, nrr: '-0.340', form: ['W', 'L', 'L', 'W', 'L'] },
+  { team: 'Seoni Strikers', short: 'SEO', logo: 'dY', color: '#BE123C', m: 5, w: 1, l: 4, t: 0, nr: 0, pts: 2, nrr: '-0.985', form: ['L', 'L', 'W', 'L', 'L'] },
+  { team: 'Dindori Wolves', short: 'DIN', logo: 'dY?', color: '#0E7490', m: 5, w: 1, l: 4, t: 0, nr: 0, pts: 2, nrr: '-1.150', form: ['L', 'L', 'L', 'L', 'W'] },
+];
+
 export const INITIAL_MATCHES = [
 
   // â”€â”€ T20 LIVE â”€â”€

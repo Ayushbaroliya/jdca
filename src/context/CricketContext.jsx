@@ -19,6 +19,7 @@ import {
   DISTRICT_STATS,
   SELECTION_HISTORY,
   ANNOUNCEMENTS,
+  POINTS_TABLE,
 } from '../data/mockData';
 
 const CricketContext = createContext();
@@ -638,6 +639,7 @@ export function CricketProvider({ children }) {
         districtStats: DISTRICT_STATS,
         selectionHistory: SELECTION_HISTORY,
         announcements: ANNOUNCEMENTS,
+        pointsTable: POINTS_TABLE,
       }}
     >
       {children}

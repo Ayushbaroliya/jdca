@@ -1,4 +1,4 @@
-﻿import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Plus, Search, CalendarDays, ArrowRight, MapPin } from 'lucide-react';
 import { useCricket } from '../../context/CricketContext';
 import { MatchStatusBadge } from '../ui/Badge';
@@ -21,7 +21,16 @@ const MatchListItem = ({ match, onClick }) => {
         isLive ? 'bg-gradient-to-br from-[#2457D6] to-[#1b41a8] text-white border-transparent shadow-md' : 'bg-white border-gray-100 shadow-sm'
       }`}
     >
-      <div className="flex items-center justify-between mb-3">
+      {/* Decorative Elements for LIVE cards */}
+      {isLive && (
+        <>
+          <div className="absolute -top-10 -right-10 w-32 h-32 rounded-full border-[12px] border-white/5 pointer-events-none" />
+          <div className="absolute -bottom-12 -left-12 w-40 h-40 rounded-full border-[16px] border-white/5 pointer-events-none" />
+          <div className="absolute top-0 right-0 w-1.5 h-full bg-[#ff6100] pointer-events-none" />
+        </>
+      )}
+
+      <div className="flex items-center justify-between mb-3 relative z-10">
         <span className={`text-[10px] font-bold tracking-wider uppercase ${isLive ? 'text-white/80' : 'text-[#8a99b0]'}`}>
           {match.tournament || 'JDCA Official Fixtures'}
         </span>
