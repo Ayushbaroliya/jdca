@@ -12,7 +12,7 @@ const MatchCard = ({ match, type = 'live', onClick }) => {
     <div 
       onClick={onClick}
       className={`rounded-[16px] p-4 cursor-pointer relative overflow-hidden transition-transform active:scale-[0.98] ${
-        isLive ? 'bg-gradient-to-br from-[#2457D6] to-[#1b41a8] text-white shadow-md' : 'bg-white border border-gray-100 shadow-sm'
+        isLive ? 'bg-gradient-to-br from-[#2457D6] to-[#1b41a8] text-white shadow-md border-2 border-[#F4B942]' : 'bg-white border-2 border-[#F4B942] shadow-sm'
       }`}
     >
       <div className="flex items-center justify-between mb-4">
@@ -111,7 +111,7 @@ export default function HomeScreen() {
       {/* Requires Attention */}
       <div className="px-4 mb-8">
         <h2 className="text-[14px] font-bold uppercase tracking-wider text-[#596579] mb-3">Requires Attention</h2>
-        <div className="bg-white rounded-[16px] shadow-sm border border-gray-100 overflow-hidden">
+        <div className="bg-white rounded-[16px] shadow-sm border-2 border-[#F4B942] overflow-hidden">
           <div className="p-4 border-b border-gray-50 flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-[#fef0ee] text-[#F05A47] flex items-center justify-center">
               <Users size={16} />
@@ -162,7 +162,7 @@ export default function HomeScreen() {
       {/* Primary Hero - Next Match */}
       <div className="px-4 mb-8">
         <h2 className="text-[14px] font-bold uppercase tracking-wider text-[#596579] mb-3">Next Match</h2>
-        <div className="bg-white rounded-[20px] p-5 shadow-sm border border-gray-100 text-center relative overflow-hidden">
+        <div className="bg-white rounded-[20px] p-5 shadow-sm border-2 border-[#F4B942] text-center relative overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-1 bg-[#0FA968]" />
           <div className="text-[12px] font-bold tracking-wider text-[#8a99b0] uppercase mb-4 mt-2">JDCA Senior Division</div>
           
@@ -191,7 +191,7 @@ export default function HomeScreen() {
         <h2 className="text-[14px] font-bold uppercase tracking-wider text-[#596579] mb-3">Recent Scoring Activity</h2>
         <div className="space-y-3">
           {recentMatches.map((m, i) => (
-             <div key={i} className="bg-white rounded-[12px] p-4 flex items-center justify-between border border-gray-100 shadow-sm">
+             <div key={i} className="bg-white rounded-[12px] p-4 flex items-center justify-between border-2 border-[#F4B942] shadow-sm">
                 <div>
                   <div className="text-[14px] font-bold text-[#101827]">{m.teamA?.name || 'JBP'} vs {m.teamB?.name || 'MDL'}</div>
                   <div className="text-[12px] text-[#8a99b0] mt-1">Synced to cloud • Yesterday</div>
@@ -217,7 +217,7 @@ export default function HomeScreen() {
 
       <div className="px-4 mb-8">
         <h2 className="text-[14px] font-bold uppercase tracking-wider text-[#596579] mb-3">Current Selection</h2>
-        <div className="bg-gradient-to-br from-[#101827] to-[#2a3a52] rounded-[20px] p-5 text-white shadow-lg relative overflow-hidden">
+        <div className="bg-gradient-to-br from-[#101827] to-[#2a3a52] rounded-[20px] p-5 text-white shadow-lg relative overflow-hidden border-2 border-[#F4B942]">
           <div className="absolute top-0 right-0 w-32 h-32 bg-white opacity-5 rounded-full -mr-10 -mt-10" />
           <div className="text-[12px] font-bold tracking-wider text-[#8a99b0] uppercase mb-1">Upcoming Event</div>
           <div className="text-[24px] font-black mb-6">Senior Men<br/>District Trials</div>
@@ -239,7 +239,7 @@ export default function HomeScreen() {
         <h2 className="text-[14px] font-bold uppercase tracking-wider text-[#596579] mb-3">Top Performers</h2>
         <div className="space-y-3">
           {[1,2,3].map((i) => (
-             <div key={i} className="bg-white rounded-[12px] p-4 flex items-center justify-between border border-gray-100 shadow-sm" onClick={() => navigateTo('player-profile')}>
+             <div key={i} className="bg-white rounded-[12px] p-4 flex items-center justify-between border-2 border-[#F4B942] shadow-sm" onClick={() => navigateTo('player-profile')}>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center font-bold text-gray-500">{i}</div>
                   <div>
@@ -273,7 +273,7 @@ export default function HomeScreen() {
         {upcomingMatches.length > 0 ? (
           <MatchCard match={upcomingMatches[0]} type="upcoming" onClick={() => {}} />
         ) : (
-          <div className="bg-white rounded-[16px] p-6 text-center border border-gray-100">
+          <div className="bg-white rounded-[16px] p-6 text-center border-2 border-[#F4B942]">
             <Calendar className="mx-auto text-[#d2d8e2] mb-3" size={32} />
             <div className="text-[14px] font-bold text-[#101827]">No upcoming matches</div>
             <div className="text-[12px] text-[#8a99b0] mt-1">Enjoy your rest!</div>
@@ -284,19 +284,19 @@ export default function HomeScreen() {
       <div className="px-4 mb-8">
         <h2 className="text-[14px] font-bold uppercase tracking-wider text-[#596579] mb-3">Season Statistics</h2>
         <div className="grid grid-cols-2 gap-3">
-            <div className="bg-white rounded-[16px] p-4 border border-gray-100 shadow-sm">
+            <div className="bg-white rounded-[16px] p-4 border-2 border-[#F4B942] shadow-sm">
               <div className="text-[28px] font-black text-[#2457D6]">186</div>
               <div className="text-[12px] font-bold text-[#8a99b0] uppercase tracking-wider mt-1">Runs</div>
             </div>
-            <div className="bg-white rounded-[16px] p-4 border border-gray-100 shadow-sm">
+            <div className="bg-white rounded-[16px] p-4 border-2 border-[#F4B942] shadow-sm">
               <div className="text-[28px] font-black text-[#101827]">46.5</div>
               <div className="text-[12px] font-bold text-[#8a99b0] uppercase tracking-wider mt-1">Average</div>
             </div>
-            <div className="bg-white rounded-[16px] p-4 border border-gray-100 shadow-sm">
+            <div className="bg-white rounded-[16px] p-4 border-2 border-[#F4B942] shadow-sm">
               <div className="text-[28px] font-black text-[#101827]">142.1</div>
               <div className="text-[12px] font-bold text-[#8a99b0] uppercase tracking-wider mt-1">Strike Rate</div>
             </div>
-            <div className="bg-white rounded-[16px] p-4 border border-gray-100 shadow-sm">
+            <div className="bg-white rounded-[16px] p-4 border-2 border-[#F4B942] shadow-sm">
               <div className="text-[28px] font-black text-[#F4B942]">2</div>
               <div className="text-[12px] font-bold text-[#8a99b0] uppercase tracking-wider mt-1">Fifties</div>
             </div>

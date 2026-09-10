@@ -152,11 +152,11 @@ export default function ScoringScreen() {
             {runs}<span className="text-[40px] text-white/60">/{wickets}</span>
           </div>
           <div className="flex items-center justify-center gap-4 text-[14px] font-bold">
-            <div className="bg-white/10 px-4 py-1.5 rounded-full border border-[#F4B942]/30">
-              Overs <span className="text-[#F4B942] ml-1">{formatOvers(balls)}</span>
+            <div className="bg-white/10 px-4 py-1.5 rounded-full">
+              Overs <span className="text-white ml-1">{formatOvers(balls)}</span>
             </div>
-            <div className="bg-white/10 px-4 py-1.5 rounded-full border border-[#F4B942]/30">
-              CRR <span className="text-[#F4B942] ml-1">{calculateCRR()}</span>
+            <div className="bg-white/10 px-4 py-1.5 rounded-full">
+              CRR <span className="text-white ml-1">{calculateCRR()}</span>
             </div>
           </div>
         </div>
@@ -164,7 +164,7 @@ export default function ScoringScreen() {
 
       {/* RECENT BALLS */}
       <div className="px-4 mb-6">
-        <div className="bg-white/5 rounded-[16px] p-3 border border-[#F4B942]/50 flex items-center justify-between">
+        <div className="bg-white/5 rounded-[16px] p-3 border border-white/10 flex items-center justify-between">
           <div className="text-[10px] font-bold uppercase tracking-wider text-white/50 w-12 text-center">THIS OVER</div>
           <div className="flex-1 flex items-center gap-2 overflow-x-auto px-2 no-scrollbar">
             {lastBalls.map((b, i) => (
@@ -179,16 +179,16 @@ export default function ScoringScreen() {
             ))}
             {!lastBalls.length && <div className="text-[12px] font-medium text-white/40 italic">No balls recorded yet in this over</div>}
           </div>
-          <div className="text-[12px] font-black text-[#F4B942] w-8 text-center">{currentOverBalls.length}/6</div>
+          <div className="text-[12px] font-black text-white w-8 text-center">{currentOverBalls.length}/6</div>
         </div>
       </div>
 
       {/* PLAYERS ON FIELD */}
       <div className="px-4 mb-8">
         <div className="grid grid-cols-2 gap-3 mb-3">
-          <button onClick={() => toggleStriker?.()} className="bg-white/10 rounded-[16px] p-4 text-left border-2 border-[#F4B942] relative overflow-hidden active:bg-[#F4B942]/20 transition-colors shadow-[0_0_15px_rgba(244,185,66,0.1)]">
-            <div className="absolute top-0 right-0 w-2 h-full bg-[#F4B942]" />
-            <div className="text-[10px] font-bold text-[#F4B942] uppercase tracking-wider mb-1 flex items-center gap-1">Striker <span>*</span></div>
+          <button onClick={() => toggleStriker?.()} className="bg-white/10 rounded-[16px] p-4 text-left border border-white/20 relative overflow-hidden active:bg-white/20 transition-colors">
+            <div className="absolute top-0 right-0 w-2 h-full bg-[#0FA968]" />
+            <div className="text-[10px] font-bold text-[#0FA968] uppercase tracking-wider mb-1 flex items-center gap-1">Striker <span>*</span></div>
             <div className="text-[16px] font-black text-white truncate mb-2">{striker.name}</div>
             <div className="text-[18px] font-black tabular-nums leading-none">{striker.runs} <span className="text-[12px] text-white/50">({striker.balls})</span></div>
           </button>
@@ -200,22 +200,22 @@ export default function ScoringScreen() {
           </button>
         </div>
 
-        <div className="bg-white/5 rounded-[16px] p-4 border-2 border-[#F4B942] flex items-center justify-between shadow-[0_0_15px_rgba(244,185,66,0.1)] mb-3">
+        <div className="bg-white/5 rounded-[16px] p-4 border border-white/10 flex items-center justify-between mb-3">
            <div>
-             <div className="text-[10px] font-bold text-[#F4B942] uppercase tracking-wider mb-1 flex items-center gap-1"><RefreshCw size={10}/> Bowler</div>
+             <div className="text-[10px] font-bold text-white/50 uppercase tracking-wider mb-1 flex items-center gap-1"><RefreshCw size={10}/> Bowler</div>
              <div className="text-[16px] font-black text-white">{currentBowler.name}</div>
            </div>
            <div className="text-right">
-             <div className="text-[12px] font-bold text-[#F4B942] uppercase tracking-wider mb-1">O-M-R-W</div>
+             <div className="text-[12px] font-bold text-white/50 uppercase tracking-wider mb-1">O-M-R-W</div>
              <div className="text-[16px] font-black tabular-nums">{currentBowler.overs}-{currentBowler.maidens}-{currentBowler.runs}-{currentBowler.wickets}</div>
            </div>
         </div>
 
         <div className="flex gap-2">
-           <button onClick={() => setOverOpen(true)} className="flex-1 bg-white/10 rounded-[12px] py-3 text-[12px] font-bold uppercase tracking-wider border border-[#F4B942] text-[#F4B942] flex items-center justify-center gap-2 active:bg-[#F4B942]/20">
+           <button onClick={() => setOverOpen(true)} className="flex-1 bg-white/10 rounded-[12px] py-3 text-[12px] font-bold uppercase tracking-wider border border-white/20 text-white flex items-center justify-center gap-2 active:bg-white/20">
              <RefreshCw size={14} /> Change Bowler
            </button>
-           <button onClick={() => setChangeWkOpen(true)} className="flex-1 bg-white/10 rounded-[12px] py-3 text-[12px] font-bold uppercase tracking-wider border border-[#F4B942] text-[#F4B942] flex items-center justify-center gap-2 active:bg-[#F4B942]/20">
+           <button onClick={() => setChangeWkOpen(true)} className="flex-1 bg-white/10 rounded-[12px] py-3 text-[12px] font-bold uppercase tracking-wider border border-white/20 text-white flex items-center justify-center gap-2 active:bg-white/20">
              <Users size={14} /> Edit WK {currentWk ? `(${currentWk.name.split(' ')[0]})` : ''}
            </button>
         </div>
