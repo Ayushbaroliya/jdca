@@ -1,285 +1,230 @@
 import React, { useState } from 'react';
 import { 
-  Award, 
-  TrendingUp, 
-  MapPin, 
-  Share2, 
-  ArrowLeft, 
-  Star, 
-  CheckCircle2, 
-  Sparkles,
-  Flame,
-  BarChart3,
-  Sliders
+  ArrowLeft, Star, MapPin, Award, Activity, TrendingUp, Sliders
 } from 'lucide-react';
 import { useCricket } from '../../context/CricketContext';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, PieChart, Pie } from 'recharts';
+
+// Simple tab bar for the profile
+const ProfileTabs = ({ tabs, active, onChange }) => (
+  <div className="flex bg-gray-100 p-1 rounded-xl mb-4 mx-4">
+    {tabs.map(tab => (
+      <button
+        key={tab.id}
+        onClick={() => onChange(tab.id)}
+        className={`flex-1 py-2 rounded-lg text-[13px] font-bold transition-all ${active === tab.id ? 'bg-white text-[#101827] shadow-sm' : 'text-[#8a99b0]'}`}
+      >
+        {tab.label}
+      </button>
+    ))}
+  </div>
+);
 
 export default function PlayerProfileScreen() {
-  const { selectedPlayer, setCompareModalOpen, goBack } = useCricket();
+  const { selectedPlayer, goBack, shortlistedIds, toggleShortlist } = useCricket();
   const [activeTab, setActiveTab] = useState('Overview');
-  const [isFollowing, setIsFollowing] = useState(false);
 
-  const player = selectedPlayer;
+  const player = selectedPlayer || {
+    id: 'rohan-sharma',
+    name: 'Rohan Sharma',
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop&q=80',
+    team: 'Jabalpur Kings XI',
+    role: 'Batter',
+    battingStyle: 'Right-Hand Batter',
+    bowlingStyle: 'Right-Arm Off Break',
+    category: 'Senior',
+    district: 'Jabalpur',
+    careerRuns: 4258,
+    battingAvg: 42.5,
+    strikeRate: 145.2,
+    matches: 112,
+    fifties: 28,
+    hundreds: 6,
+    fours: 412,
+    sixes: 85,
+    wickets: 0,
+    awards: ['Best Batter 2023-24', 'POTM - District Final'],
+  };
 
-  // Pie Chart Data
-  const pieData = [
-    { name: 'Off Side', value: player.scoringAreas?.offSide || 25, color: '#0B57D0' },
-    { name: 'Leg Side', value: player.scoringAreas?.legSide || 25, color: '#F59E0B' },
-    { name: 'Behind Sq', value: player.scoringAreas?.behindSquare || 25, color: '#9333EA' },
-    { name: 'Fine', value: player.scoringAreas?.fine || 25, color: '#10B981' },
+  const isShortlisted = shortlistedIds?.includes(player.id);
+
+  const tabs = [
+    { id: 'Overview', label: 'Stats' },
+    { id: 'Batting', label: 'Batting' },
+    { id: 'Bowling', label: 'Bowling' },
+    { id: 'Selection', label: 'History' },
   ];
 
   return (
-    <div className="min-h-[calc(100vh-120px)] bg-slate-100/60 pb-20 px-3.5 pt-3 max-w-xl mx-auto space-y-3.5 animate-in fade-in duration-200">
+    <div className="pb-[100px] bg-[#F7F8F4] min-h-screen">
       
-      {/* 1. Profile Hero Card (Matches Image 1 & 9) */}
-      <div className="rounded-3xl bg-[#0B2545] text-white p-5 sm:p-6 shadow-xl relative overflow-hidden dot-pattern">
-        {/* Decorative ambient blur */}
-        <div className="absolute -right-6 -bottom-6 w-36 h-36 bg-blue-500/20 rounded-full blur-2xl pointer-events-none" />
+      {/* Header Area */}
+      <div className="bg-white border-b border-gray-100 pt-[60px] pb-6 px-4 relative">
+        <button
+          onClick={goBack}
+          className="absolute top-4 left-4 w-9 h-9 flex items-center justify-center rounded-full bg-gray-50 text-[#101827] active:bg-gray-100 transition-colors"
+        >
+          <ArrowLeft size={20} strokeWidth={2.5} />
+        </button>
 
-        <div className="relative z-10 flex items-start space-x-4">
-          {/* Avatar with PRO badge */}
-          <div className="relative">
-            <img
-              src={player.avatar}
-              alt={player.name}
-              className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover border-2 border-white/20 shadow-md"
-            />
-            {player.isPro && (
-              <span className="absolute -bottom-2 -right-1 px-2 py-0.5 rounded-md bg-amber-400 text-slate-950 font-black text-[10px] shadow-sm">
-                PRO
-              </span>
-            )}
+        <button
+          onClick={() => toggleShortlist(player.id)}
+          className={`absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-full transition-colors ${
+            isShortlisted ? 'bg-amber-50 text-[#F4B942]' : 'bg-gray-50 text-[#8a99b0]'
+          }`}
+        >
+          <Star size={20} strokeWidth={2.5} fill={isShortlisted ? '#F4B942' : 'none'} />
+        </button>
+
+        <div className="flex flex-col items-center mt-6 text-center">
+          <img
+            src={player.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop&q=80'}
+            alt={player.name}
+            className="w-24 h-24 rounded-full object-cover border-[3px] border-white shadow-md mb-4"
+          />
+          <h1 className="text-[24px] font-black text-[#101827] leading-tight mb-1">{player.name}</h1>
+          <div className="text-[13px] font-medium text-[#596579] flex items-center justify-center gap-1.5 mb-3">
+            <span>{player.role}</span>
+            <span>•</span>
+            <MapPin size={12} className="text-[#2457D6]" />
+            <span>{player.district}</span>
           </div>
 
-          {/* Info & Badges */}
-          <div className="flex-1">
-            <div className="flex items-center space-x-1.5">
-              <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight font-display">
-                {player.name}
-              </h2>
-              <CheckCircle2 className="w-4 h-4 text-blue-400 inline" />
-            </div>
-
-            <p className="text-xs text-blue-200 font-medium mt-0.5">
-              {player.battingStyle} • {player.team}
-            </p>
-
-            {/* Tag Pills */}
-            <div className="flex flex-wrap gap-1.5 mt-2">
-              {player.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="px-2 py-0.5 rounded-md bg-white/10 text-white text-[10px] font-bold border border-white/15"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-
-            {/* Actions: Follow & Compare */}
-            <div className="flex items-center space-x-2 mt-3.5">
-              <button
-                type="button"
-                onClick={() => setIsFollowing(!isFollowing)}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                  isFollowing
-                    ? 'bg-emerald-600 text-white'
-                    : 'bg-[#0B57D0] hover:bg-blue-600 text-white shadow-sm'
-                }`}
-              >
-                {isFollowing ? '✓ Following' : '+ Follow'}
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setCompareModalOpen(true)}
-                className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white/15 hover:bg-white/25 text-white border border-white/20 transition-all cursor-pointer flex items-center gap-1"
-              >
-                <Sliders className="w-3.5 h-3.5" />
-                <span>Compare</span>
-              </button>
-            </div>
+          <div className="flex gap-2">
+            <span className="px-3 py-1 rounded-full bg-[#eef2fd] text-[#2457D6] text-[11px] font-bold uppercase tracking-wider">{player.category || 'Senior'}</span>
+            <span className="px-3 py-1 rounded-full bg-[#e8f8ef] text-[#0FA968] text-[11px] font-bold uppercase tracking-wider">Registered</span>
           </div>
         </div>
       </div>
 
-      {/* 2. Career Runs Big Banner (Matches Image 1 & 9) */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-4 flex items-center justify-between">
-        <div>
-          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">
-            CAREER RUNS
-          </span>
-          <div className="text-3xl sm:text-4xl font-black text-[#0B57D0] font-display mt-0.5">
-            {player.careerRuns.toLocaleString()}
-          </div>
-          <p className="text-xs text-slate-500 font-medium">Across all sanctioned formats</p>
-        </div>
-
-        <div className="w-14 h-14 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-500 text-2xl shadow-2xs">
-          <Flame className="w-8 h-8 fill-amber-400 text-amber-500" />
-        </div>
+      <div className="pt-4">
+        <ProfileTabs tabs={tabs} active={activeTab} onChange={setActiveTab} />
       </div>
 
-      {/* 3. Primary 4-Stats Grid (Matches Image 1 & 9) */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-        <div className="bg-white p-3.5 rounded-2xl border border-slate-200/90 shadow-2xs">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
-            Batting Avg
-          </span>
-          <span className="text-2xl font-black text-slate-900 mt-1 block">
-            {player.battingAvg}
-          </span>
-        </div>
+      {/* Content Area */}
+      <div className="px-4 pb-8 space-y-4">
 
-        <div className="bg-white p-3.5 rounded-2xl border border-slate-200/90 shadow-2xs">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
-            Strike Rate
-          </span>
-          <span className="text-2xl font-black text-blue-700 mt-1 block">
-            {player.strikeRate}
-          </span>
-        </div>
-
-        <div className="bg-white p-3.5 rounded-2xl border border-slate-200/90 shadow-2xs">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
-            High Score
-          </span>
-          <span className="text-2xl font-black text-slate-900 mt-1 block">
-            {player.highScore}
-          </span>
-        </div>
-
-        <div className="bg-white p-3.5 rounded-2xl border border-slate-200/90 shadow-2xs">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
-            Matches
-          </span>
-          <span className="text-2xl font-black text-slate-900 mt-1 block">
-            {player.matches}
-          </span>
-        </div>
-      </div>
-
-      {/* 4. Runs in Last 5 Matches (Interactive Bar Chart - Matches Image 1) */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-5 space-y-3">
-        <div className="flex items-center justify-between">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
-            Runs in Last 5 Matches
-          </h3>
-          <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">
-            In Prime Form
-          </span>
-        </div>
-
-        {/* Recharts Bar Graph */}
-        <div className="h-48 pt-2">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={player.last5Matches || []}>
-              <XAxis 
-                dataKey="opponent" 
-                axisLine={false} 
-                tickLine={false} 
-                tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 700 }}
-                dy={10}
-              />
-              <Tooltip 
-                cursor={{ fill: '#f1f5f9' }}
-                contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-              />
-              <Bar 
-                dataKey="runs" 
-                radius={[6, 6, 0, 0]}
-                barSize={32}
-              >
-                {(player.last5Matches || []).map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill="url(#colorRuns)" />
-                ))}
-              </Bar>
-              <defs>
-                <linearGradient id="colorRuns" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#0B57D0" stopOpacity={1}/>
-                  <stop offset="95%" stopColor="#60A5FA" stopOpacity={1}/>
-                </linearGradient>
-              </defs>
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-
-      {/* 5. Scoring Areas / Wagon Wheel Distribution (Matches Image 9) */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-5 space-y-4">
-        <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
-          Scoring Areas & Shot Distribution
-        </h3>
-
-        <div className="flex items-center space-x-2">
-          {/* Recharts Pie Chart */}
-          <div className="h-40 w-1/2 -ml-4">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={pieData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={40}
-                  outerRadius={60}
-                  paddingAngle={5}
-                  dataKey="value"
-                  stroke="none"
-                >
-                  {pieData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip 
-                  contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                  itemStyle={{ color: '#0f172a', fontWeight: 'bold' }}
-                />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-
-          {/* Legend */}
-          <div className="w-1/2 space-y-3">
-            {pieData.map((item) => (
-              <div key={item.name} className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: item.color }} />
-                  <span className="text-[10px] font-bold text-slate-600">{item.name}</span>
-                </div>
-                <span className="text-[11px] font-black text-slate-900">{item.value}%</span>
+        {/* ── TAB 1: OVERVIEW ── */}
+        {activeTab === 'Overview' && (
+          <>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="bg-white rounded-[16px] p-4 border border-gray-100 shadow-sm">
+                <div className="text-[28px] font-black text-[#2457D6]">{player.careerRuns || 0}</div>
+                <div className="text-[12px] font-bold text-[#8a99b0] uppercase tracking-wider mt-1">Runs</div>
               </div>
-            ))}
+              <div className="bg-white rounded-[16px] p-4 border border-gray-100 shadow-sm">
+                <div className="text-[28px] font-black text-[#101827]">{player.battingAvg ? player.battingAvg.toFixed(1) : '-'}</div>
+                <div className="text-[12px] font-bold text-[#8a99b0] uppercase tracking-wider mt-1">Average</div>
+              </div>
+              <div className="bg-white rounded-[16px] p-4 border border-gray-100 shadow-sm">
+                <div className="text-[28px] font-black text-[#101827]">{player.strikeRate || '-'}</div>
+                <div className="text-[12px] font-bold text-[#8a99b0] uppercase tracking-wider mt-1">Strike Rate</div>
+              </div>
+              <div className="bg-white rounded-[16px] p-4 border border-gray-100 shadow-sm">
+                <div className="text-[28px] font-black text-[#F05A47]">{player.wickets ?? (player.role === 'Bowler' ? 14 : 0)}</div>
+                <div className="text-[12px] font-bold text-[#8a99b0] uppercase tracking-wider mt-1">Wickets</div>
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-br from-[#F4B942] to-[#b88920] rounded-[16px] p-5 text-white shadow-md">
+              <div className="flex items-center gap-2 mb-4">
+                <Award size={20} className="text-white/80" />
+                <h3 className="font-bold text-[14px] uppercase tracking-wider text-white/80">Distinctions</h3>
+              </div>
+              <ul className="space-y-3">
+                {(player.awards || ['Best District Batter 2024']).map((award, i) => (
+                  <li key={i} className="flex items-start gap-2">
+                    <span className="mt-1 w-1.5 h-1.5 rounded-full bg-white/50 flex-shrink-0" />
+                    <span className="font-bold text-[15px]">{award}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </>
+        )}
+
+        {/* ── TAB 2: BATTING ── */}
+        {activeTab === 'Batting' && (
+          <div className="bg-white rounded-[16px] border border-gray-100 shadow-sm overflow-hidden">
+            <div className="p-4 border-b border-gray-50 bg-[#F7F8F4]">
+              <h3 className="font-bold text-[14px] text-[#101827]">Batting Profile</h3>
+              <p className="text-[12px] text-[#596579]">{player.battingStyle || 'Right-Hand Bat'}</p>
+            </div>
+            <div className="p-4 grid grid-cols-2 gap-4">
+               <div>
+                  <div className="text-[12px] font-bold text-[#8a99b0] uppercase">Matches</div>
+                  <div className="text-[18px] font-black text-[#101827]">{player.matches || 24}</div>
+               </div>
+               <div>
+                  <div className="text-[12px] font-bold text-[#8a99b0] uppercase">Highest Score</div>
+                  <div className="text-[18px] font-black text-[#101827]">{player.highScore || '118*'}</div>
+               </div>
+               <div>
+                  <div className="text-[12px] font-bold text-[#8a99b0] uppercase">50s / 100s</div>
+                  <div className="text-[18px] font-black text-[#101827]">{player.fifties || 0} / {player.hundreds || 0}</div>
+               </div>
+               <div>
+                  <div className="text-[12px] font-bold text-[#8a99b0] uppercase">4s / 6s</div>
+                  <div className="text-[18px] font-black text-[#101827]">{player.fours || 0} / {player.sixes || 0}</div>
+               </div>
+            </div>
           </div>
-        </div>
+        )}
+
+        {/* ── TAB 3: BOWLING ── */}
+        {activeTab === 'Bowling' && (
+          <div className="bg-white rounded-[16px] border border-gray-100 shadow-sm overflow-hidden">
+            <div className="p-4 border-b border-gray-50 bg-[#F7F8F4]">
+              <h3 className="font-bold text-[14px] text-[#101827]">Bowling Profile</h3>
+              <p className="text-[12px] text-[#596579]">{player.bowlingStyle || 'Right-Arm Medium'}</p>
+            </div>
+             <div className="p-4 grid grid-cols-2 gap-4">
+               <div>
+                  <div className="text-[12px] font-bold text-[#8a99b0] uppercase">Wickets</div>
+                  <div className="text-[18px] font-black text-[#F05A47]">{player.wickets || (player.role === 'Bowler' ? 14 : 0)}</div>
+               </div>
+               <div>
+                  <div className="text-[12px] font-bold text-[#8a99b0] uppercase">Economy</div>
+                  <div className="text-[18px] font-black text-[#101827]">{player.economy || (player.role === 'Bowler' ? '6.4' : '-')}</div>
+               </div>
+               <div>
+                  <div className="text-[12px] font-bold text-[#8a99b0] uppercase">Best Figures</div>
+                  <div className="text-[18px] font-black text-[#101827]">{player.bestBowling || (player.role === 'Bowler' ? '4/18' : '-')}</div>
+               </div>
+               <div>
+                  <div className="text-[12px] font-bold text-[#8a99b0] uppercase">Average</div>
+                  <div className="text-[18px] font-black text-[#101827]">{player.average ? player.average.toFixed(1) : '-'}</div>
+               </div>
+            </div>
+          </div>
+        )}
+
+        {/* ── TAB 4: SELECTION ── */}
+        {activeTab === 'Selection' && (
+          <div className="bg-white rounded-[16px] border border-gray-100 shadow-sm overflow-hidden">
+            <div className="p-4 border-b border-gray-50">
+              <h3 className="font-bold text-[14px] text-[#101827]">Selection History</h3>
+            </div>
+            
+            <div className="divide-y divide-gray-100">
+               <div className="p-4">
+                  <div className="flex items-center justify-between mb-1">
+                     <span className="text-[14px] font-bold text-[#101827]">Senior District Trophy</span>
+                     <span className="text-[12px] font-bold text-[#0FA968]">Selected</span>
+                  </div>
+                  <div className="text-[12px] text-[#596579]">2026 • {player.district} District XI</div>
+               </div>
+               <div className="p-4">
+                  <div className="flex items-center justify-between mb-1">
+                     <span className="text-[14px] font-bold text-[#101827]">MPCA Inter-District</span>
+                     <span className="text-[12px] font-bold text-[#8a99b0]">Played</span>
+                  </div>
+                  <div className="text-[12px] text-[#596579]">2025 • Jabalpur Division</div>
+               </div>
+            </div>
+          </div>
+        )}
+
       </div>
-
-      {/* 6. Secondary Career Breakdown Table */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-4">
-        <div className="grid grid-cols-4 gap-2 text-center text-xs">
-          <div className="p-2 rounded-xl bg-slate-50">
-            <span className="text-[10px] text-slate-400 block font-bold">50s / 100s</span>
-            <span className="font-extrabold text-slate-900 text-sm mt-0.5 block">{player.fifties} / {player.hundreds}</span>
-          </div>
-
-          <div className="p-2 rounded-xl bg-slate-50">
-            <span className="text-[10px] text-slate-400 block font-bold">4s / 6s</span>
-            <span className="font-extrabold text-slate-900 text-sm mt-0.5 block">{player.fours} / {player.sixes}</span>
-          </div>
-
-          <div className="p-2 rounded-xl bg-slate-50">
-            <span className="text-[10px] text-slate-400 block font-bold">Innings</span>
-            <span className="font-extrabold text-slate-900 text-sm mt-0.5 block">{player.innings}</span>
-          </div>
-
-          <div className="p-2 rounded-xl bg-slate-50">
-            <span className="text-[10px] text-slate-400 block font-bold">Not Outs</span>
-            <span className="font-extrabold text-slate-900 text-sm mt-0.5 block">{player.notOuts}</span>
-          </div>
-        </div>
-      </div>
-
     </div>
   );
 }

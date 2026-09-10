@@ -1,140 +1,149 @@
 import React from 'react';
-import { 
-  X, 
-  PlayCircle, 
-  Award, 
-  Users, 
-  UserPlus, 
-  Settings, 
-  ShieldCheck, 
-  RefreshCw, 
-  Smartphone,
-  ChevronRight,
-  Sparkles
+import {
+  X, Home, Calendar, Trophy, Users, Clipboard, Radio, Settings, LogOut
 } from 'lucide-react';
 import { useCricket } from '../context/CricketContext';
-import { CricketAppLogo } from './CricketIcons';
+import { RoleBadge } from './ui/Badge';
+import batIcon from '../assets/bat-icon.png';
+
+const ALL_NAV = [
+  { id: 'home',           label: 'Home',          icon: Home,      route: 'home' },
+  { id: 'matches',        label: 'Matches',        icon: Calendar,  route: 'matches' },
+  { id: 'tournaments',    label: 'Tournaments',    icon: Trophy,    route: 'tournaments' },
+  { id: 'players',        label: 'Players',        icon: Users,     route: 'players' },
+  { id: 'selection',      label: 'Player Selection',      icon: Clipboard, route: 'selection' },
+  { id: 'scoring',        label: 'Live Score',   icon: Radio,     route: 'scoring', liveIndicator: true },
+  { id: 'administration', label: 'Administration', icon: Settings,  route: 'administration', adminOnly: true },
+];
+
+const ACTIVE_MAP = {
+  'home': 'home', 'matches': 'matches', 'match-setup': 'matches',
+  'match-overview': 'matches', 'match-result': 'matches', 'innings-break': 'matches',
+  'scoring': 'scoring', 'scorecard': 'scoring',
+  'tournaments': 'tournaments',
+  'players': 'players', 'scouting': 'players', 'player-profile': 'players', 'player-registration': 'players',
+  'selection': 'selection', 'selectors': 'selection',
+  'administration': 'administration', 'access-control': 'administration',
+};
 
 export default function DrawerMenu() {
-  const { 
-    drawerOpen, 
-    setDrawerOpen, 
-    navigateTo, 
-    currentScreen,
-    userRole
-  } = useCricket();
+  const { drawerOpen, setDrawerOpen, navigateTo, currentScreen, userRole, userEmail, setIsAuthenticated } = useCricket();
 
   if (!drawerOpen) return null;
 
-  const screensList = [
-    { id: 'matches', label: 'Matches Hub (Live & Upcoming)', icon: PlayCircle, badge: 'Home' },
-    { id: 'scoring', label: 'Live Scorer (Keypad & Field)', icon: PlayCircle, badge: 'Live' },
-    { id: 'scorecard', label: 'Full Scorecard', icon: Award },
-    { id: 'match-overview', label: 'Match Overview & Umpires', icon: ShieldCheck },
-    { id: 'match-setup', label: 'Match Setup Wizard', icon: Settings },
-    { id: 'innings-break', label: 'Innings Break Screen', icon: RefreshCw },
-    { id: 'match-result', label: 'Match Result & Player of Match', icon: Award },
-    { id: 'scouting', label: 'Scouting & Selection Hub', icon: Users, badge: 'Talent' },
-    { id: 'selectors', label: 'Selectors Panel', icon: Users, badge: 'New' },
-    { id: 'player-profile', label: 'Player Profile & Shot Analysis', icon: Users },
-    { id: 'player-registration', label: 'Register New Player', icon: UserPlus },
-    { id: 'welcome', label: 'Welcome / Auth Screen', icon: Smartphone },
-  ];
+  const activeId = ACTIVE_MAP[currentScreen] || currentScreen;
 
-  const filteredScreensList = screensList.filter(screen => {
-    if (userRole === 'Admin') return true;
-    if (userRole === 'Scorer') {
-      return ['matches', 'scoring', 'scorecard', 'match-overview', 'match-setup', 'innings-break', 'match-result', 'welcome'].includes(screen.id);
-    }
-    if (userRole === 'Selector') {
-      return ['matches', 'scouting', 'selectors', 'player-profile', 'player-registration', 'welcome'].includes(screen.id);
-    }
-    if (userRole === 'Player') {
-      return ['matches', 'player-profile', 'match-result', 'scorecard', 'welcome'].includes(screen.id);
-    }
+  const visible = ALL_NAV.filter(item => {
+    if (item.adminOnly && !['SuperAdmin', 'Admin'].includes(userRole)) return false;
+    if (userRole === 'Scorer')   return ['home','matches','scoring'].includes(item.id);
+    if (userRole === 'Selector') return ['home','players','selection'].includes(item.id);
+    if (userRole === 'Player')   return ['home','matches','players'].includes(item.id);
     return true;
   });
+
+  const handleNav = (route) => {
+    navigateTo(route);
+    setDrawerOpen(false);
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setDrawerOpen(false);
+    navigateTo('welcome');
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex">
       {/* Backdrop */}
-      <div 
-        className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity animate-in fade-in"
+      <div
+        className="fixed inset-0"
+        style={{ background: 'rgba(16,24,39,0.65)', backdropFilter: 'blur(2px)' }}
         onClick={() => setDrawerOpen(false)}
       />
 
-      {/* Drawer Content */}
-      <div className="relative w-full max-w-xs bg-white h-full shadow-2xl flex flex-col z-10 animate-in slide-in-from-left duration-200">
-        
-        {/* Drawer Header */}
-        <div className="p-5 bg-gradient-to-r from-blue-700 to-blue-800 text-white flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <CricketAppLogo className="w-10 h-10 drop-shadow" isMini={true} />
+      {/* Drawer panel */}
+      <div
+        className="relative flex flex-col h-full shadow-2xl z-10 fade-in-up"
+        style={{
+          width: 260,
+          background: '#101827',
+          borderRight: '1px solid rgba(255,255,255,0.07)',
+          animation: 'slideInLeft 0.2s ease both',
+        }}
+      >
+        {/* Header */}
+        <div
+          className="flex items-center justify-between px-5 py-4"
+          style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}
+        >
+          <div className="flex items-center gap-2.5">
+            <div className="jdca-brand-mark flex items-center justify-center" style={{ width: 40, height: 40 }}>
+              <img src={batIcon} alt="" style={{ width: 29, height: 29, objectFit: 'contain' }} />
+            </div>
             <div>
-              <h2 className="font-bold text-lg leading-tight">Cricket Scorer</h2>
-              <p className="text-xs text-blue-100/80">Pro Match & Talent Suite</p>
+              <div className="font-bold text-white" style={{ fontSize: 14 }}>JDCA</div>
+              <div style={{ fontSize: 10, color: '#8a99b0' }}>Jabalpur District Cricket Association</div>
             </div>
           </div>
-          <button 
+          <button
             onClick={() => setDrawerOpen(false)}
-            className="p-1.5 rounded-full hover:bg-white/20 text-white transition-colors cursor-pointer"
+            className="flex items-center justify-center w-8 h-8 rounded-lg cursor-pointer"
+            style={{ background: 'rgba(255,255,255,0.08)', border: 'none' }}
+            id="drawer-close-btn"
           >
-            <X className="w-5 h-5" />
+            <X size={17} style={{ color: '#8a99b0' }} />
           </button>
         </div>
 
-        {/* Screen Links */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-1.5">
-          <div className="px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-400">
-            Application Screens ({userRole})
+        {/* Nav items */}
+        <nav className="flex-1 px-3 py-4 overflow-y-auto no-scrollbar space-y-0.5">
+          <div className="section-label px-3 mb-3" style={{ color: '#4a5568', fontSize: 10 }}>
+            SECTIONS
           </div>
-
-          {filteredScreensList.map((item) => {
+          {visible.map((item) => {
             const Icon = item.icon;
-            const isCurrent = currentScreen === item.id;
-
+            const isActive = activeId === item.id;
             return (
               <button
                 key={item.id}
-                onClick={() => {
-                  navigateTo(item.id);
-                  setDrawerOpen(false);
-                }}
-                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all text-left cursor-pointer ${
-                  isCurrent 
-                    ? 'bg-blue-50 text-blue-700 font-bold border border-blue-200/80 shadow-2xs' 
-                    : 'text-slate-700 hover:bg-slate-50 hover:text-blue-700'
-                }`}
+                id={`drawer-nav-${item.id}`}
+                onClick={() => handleNav(item.route)}
+                className={`sidebar-item ${isActive ? 'active' : ''}`}
               >
-                <div className="flex items-center space-x-3">
-                  <Icon className={`w-4 h-4 ${isCurrent ? 'text-blue-600' : 'text-slate-400'}`} />
-                  <span>{item.label}</span>
-                </div>
-                <div className="flex items-center space-x-1.5">
-                  {item.badge && (
-                    <span className="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-800">
-                      {item.badge}
-                    </span>
-                  )}
-                  <ChevronRight className="w-4 h-4 text-slate-300" />
-                </div>
+                <Icon size={17} strokeWidth={isActive ? 2.5 : 2} className="flex-shrink-0" />
+                <span className="flex-1 text-left" style={{ fontSize: 14 }}>{item.label}</span>
+                {item.liveIndicator && <span className="live-dot" style={{ width: 6, height: 6 }} />}
               </button>
             );
           })}
-        </div>
+        </nav>
 
-        {/* Footer info */}
-        <div className="p-4 border-t border-slate-100 bg-slate-50/70 text-xs text-slate-500">
-          <div className="flex items-center justify-between mb-1">
-            <span className="font-semibold text-slate-700">Cricket Scorer v2.4</span>
-            <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 font-semibold text-[10px]">
-              Ready
-            </span>
+        {/* User footer */}
+        <div className="px-3 pb-5 pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
+          <div className="px-3 py-2.5 rounded-lg mb-2" style={{ background: 'rgba(255,255,255,0.05)' }}>
+            <div className="font-semibold text-white mb-1.5" style={{ fontSize: 12 }}>
+              {userEmail || 'JDCA Official'}
+            </div>
+            <RoleBadge role={userRole} />
           </div>
-          <p className="text-[11px] text-slate-400">Responsive live scoring & player analytics</p>
+          <button
+            onClick={handleLogout}
+            className="sidebar-item w-full"
+            style={{ color: '#8a99b0', fontSize: 13 }}
+            id="drawer-logout-btn"
+          >
+            <LogOut size={15} strokeWidth={2} />
+            <span>Sign Out</span>
+          </button>
         </div>
-
       </div>
+
+      <style>{`
+        @keyframes slideInLeft {
+          from { transform: translateX(-100%); }
+          to   { transform: translateX(0); }
+        }
+      `}</style>
     </div>
   );
 }

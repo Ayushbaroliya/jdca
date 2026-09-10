@@ -56,7 +56,7 @@ export default function SelectorsScreen() {
           <div>
             <div className="flex items-center space-x-2">
               <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight font-display">
-                Selectors Panel
+                Selection Panel
               </h2>
             </div>
             <p className="text-xs text-slate-500 font-medium mt-0.5">
@@ -65,6 +65,33 @@ export default function SelectorsScreen() {
           </div>
         </div>
       </div>
+
+      {/* Selected Students List */}
+      {shortlistedIds.length > 0 && (
+        <div className="bg-emerald-50 rounded-2xl border border-emerald-100 p-4">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-800 mb-3">
+            Selected Students ({shortlistedIds.length})
+          </h3>
+          <div className="flex space-x-3 overflow-x-auto pb-2 no-scrollbar">
+            {players.filter(p => shortlistedIds.includes(p.id)).map(player => (
+              <div 
+                key={player.id} 
+                onClick={() => handlePlayerClick(player)}
+                className="flex flex-col items-center space-y-1.5 min-w-[60px] cursor-pointer"
+              >
+                <img 
+                  src={player.avatar} 
+                  alt={player.name} 
+                  className="w-12 h-12 rounded-full object-cover border-2 border-emerald-500 shadow-sm"
+                />
+                <span className="text-[10px] font-bold text-slate-800 truncate w-14 text-center">
+                  {player.name.split(' ')[0]}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Category Tabs */}
       <div className="flex items-center space-x-2 overflow-x-auto no-scrollbar py-1">

@@ -1,168 +1,79 @@
-import React, { useState } from 'react';
-import { 
-  Menu, 
-  Search, 
-  MoreVertical, 
-  ArrowLeft, 
-  Share2, 
-  Sparkles,
-  Layers,
-  ChevronDown
-} from 'lucide-react';
+import React from 'react';
+import { ArrowLeft, Search, Bell } from 'lucide-react';
 import { useCricket } from '../context/CricketContext';
-import { CricketAppLogo } from './CricketIcons';
+
+// Screen-level titles
+const SCREEN_TITLES = {
+  'home':              { title: 'JDCA',                 showBack: false },
+  'matches':           { title: 'Matches',              showBack: false },
+  'match-setup':       { title: 'Match Setup',          showBack: true },
+  'scoring':           { title: 'Live Score',         showBack: true },
+  'scorecard':         { title: 'Scorecard',            showBack: true },
+  'match-overview':    { title: 'Match Overview',       showBack: true },
+  'innings-break':     { title: 'Innings Break',        showBack: true },
+  'match-result':      { title: 'Match Result',         showBack: true },
+  'tournaments':       { title: 'Tournaments',          showBack: false },
+  'players':           { title: 'Players',              showBack: false },
+  'scouting':          { title: 'Players',              showBack: false },
+  'player-profile':    { title: 'Player Profile',       showBack: true },
+  'player-registration':{ title: 'Add Player',          showBack: true },
+  'selection':         { title: 'Selection Desk',            showBack: false },
+  'selectors':         { title: 'Selection Desk',            showBack: false },
+  'administration':    { title: 'Administration',       showBack: false },
+  'access-control':    { title: 'Administration',       showBack: false },
+};
 
 export default function Header() {
-  const { 
-    currentScreen, 
-    navigateTo, 
-    goBack, 
-    setDrawerOpen 
-  } = useCricket();
+  const { currentScreen, goBack, userRole, navigateTo } = useCricket();
 
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [copiedToast, setCopiedToast] = useState(false);
+  if (currentScreen === 'welcome') return null;
 
-  const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({ title: 'Cricket Scorer', url: window.location.href }).catch(() => {});
-    } else {
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(window.location.href).catch(() => {});
-      }
-      setCopiedToast(true);
-      setTimeout(() => setCopiedToast(false), 2500);
-    }
-  };
-
-  // Screen titles matching the images
-  const getHeaderInfo = () => {
-    switch (currentScreen) {
-      case 'welcome':
-        return { title: 'Cricket Scorer', showBack: false, showLogo: true };
-      case 'matches':
-        return { title: 'Cricket Scorer', showBack: false, showLogo: false, showMenu: true, showSearch: true };
-      case 'match-setup':
-        return { title: 'Match Setup', showBack: true, showLogo: false, showDots: true };
-      case 'scoring':
-        return { title: 'Cricket Scorer', showBack: false, showLogo: true, showDots: true };
-      case 'scorecard':
-        return { title: 'Cricket Scorer', showBack: false, showLogo: true, showDots: true };
-      case 'match-overview':
-        return { title: 'Cricket Scorer', showBack: false, showMenu: true, showDots: true };
-      case 'innings-break':
-        return { title: 'Innings Break', showBack: true, showDots: true };
-      case 'match-result':
-        return { title: 'Match Summary', showBack: true, showDots: true };
-      case 'scouting':
-        return { title: 'Selection Hub', showBack: false, showMenu: true, showDots: true };
-      case 'player-profile':
-        return { title: 'Player Profile', showBack: true, showShare: true };
-      case 'player-registration':
-        return { title: 'Player Registration', showBack: true, showDots: false };
-      default:
-        return { title: 'Cricket Scorer', showBack: false, showLogo: true, showDots: true };
-    }
-  };
-
-  const info = getHeaderInfo();
-
-  // Quick switch dropdown options
-  const screenOptions = [
-    { id: 'matches', label: 'Matches Hub (Live Now)' },
-    { id: 'scoring', label: 'Live Scoring (Keypad & Wagon Wheel)' },
-    { id: 'scorecard', label: 'Full Scorecard (Bat & Bowl Tables)' },
-    { id: 'match-overview', label: 'Match Overview & Officials' },
-    { id: 'match-setup', label: 'Match Setup (Teams & Toss)' },
-    { id: 'innings-break', label: 'Innings Complete Modal' },
-    { id: 'match-result', label: 'Final Result & Player of Match' },
-    { id: 'scouting', label: 'Scouting / Selection Hub' },
-    { id: 'player-profile', label: 'Player Profile & Shot Analysis' },
-    { id: 'player-registration', label: 'Player Registration Form' },
-    { id: 'welcome', label: 'Welcome / Login Screen' },
-  ];
-
-  if (currentScreen === 'welcome') {
-    return null; // The welcome screen has its own clean layout
-  }
+  const info = SCREEN_TITLES[currentScreen] || { title: 'JDCA', showBack: false };
 
   return (
-    <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-4 py-3 transition-all">
-      <div className="max-w-xl mx-auto flex items-center justify-between">
-        
-        {/* Left Action */}
-        <div className="flex items-center space-x-3">
-          {info.showBack ? (
-            <button
-              onClick={goBack}
-              className="p-1.5 -ml-1 text-slate-700 hover:text-blue-700 hover:bg-slate-100 rounded-full transition-colors cursor-pointer"
-              aria-label="Back"
-            >
-              <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
-            </button>
-          ) : (
-            <button
-              onClick={() => setDrawerOpen(true)}
-              className="p-1.5 -ml-1 text-slate-700 hover:text-blue-700 hover:bg-slate-100 rounded-full transition-colors cursor-pointer"
-              aria-label="Open Drawer Menu"
-            >
-              <Menu className="w-5 h-5 stroke-[2.2]" />
-            </button>
-          )}
-
-          {/* Cricket Icon Badge */}
-          {info.showLogo && (
-            <div className="flex items-center justify-center -ml-1">
-              <CricketAppLogo className="w-7 h-7" isMini={true} />
-            </div>
-          )}
-
-          {/* Header Title */}
-          <h1 className="text-lg font-bold text-[#0B57D0] tracking-tight">
-            {info.title}
-          </h1>
-        </div>
-
-        {/* Right Actions */}
-        <div className="flex items-center space-x-1.5 relative">
-          
-
-
-          {info.showSearch && (
-            <button 
-              onClick={() => navigateTo('scouting')}
-              className="p-1.5 text-slate-600 hover:text-blue-700 hover:bg-slate-100 rounded-full transition-colors cursor-pointer"
-              aria-label="Search"
-            >
-              <Search className="w-5 h-5 stroke-[2.2]" />
-            </button>
-          )}
-
-          {info.showShare && (
-            <button 
-              onClick={handleShare}
-              className="p-1.5 text-slate-600 hover:text-blue-700 hover:bg-slate-100 rounded-full transition-colors cursor-pointer"
-              aria-label="Share"
-            >
-              <Share2 className="w-5 h-5 stroke-[2.2]" />
-            </button>
-          )}
-
-          {copiedToast && (
-            <div className="absolute right-0 top-12 px-3 py-1.5 bg-slate-900 text-white text-[11px] font-semibold rounded-lg shadow-lg animate-in fade-in zoom-in-95 z-50 whitespace-nowrap">
-              ✓ Link copied to clipboard!
-            </div>
-          )}
-
+    <header className="lg:hidden sticky top-0 z-40 bg-white border-b border-gray-100 pt-safe px-4 shadow-[0_2px_10px_rgba(0,0,0,0.02)] h-[60px] flex items-center justify-between">
+      {/* Left: back button or Logo */}
+      <div className="flex items-center gap-3">
+        {info.showBack ? (
           <button
-            onClick={() => setDrawerOpen(true)}
-            className="p-1.5 text-slate-600 hover:text-blue-700 hover:bg-slate-100 rounded-full transition-colors cursor-pointer"
-            aria-label="More Options"
+            onClick={goBack}
+            className="flex items-center justify-center w-9 h-9 rounded-full bg-gray-50 text-[#101827] active:bg-gray-100 transition-colors outline-none tap-highlight-transparent cursor-pointer"
+            aria-label="Back"
           >
-            <MoreVertical className="w-5 h-5 stroke-[2.2]" />
+            <ArrowLeft size={20} strokeWidth={2.5} />
           </button>
-        </div>
+        ) : (
+          <div className="flex items-center justify-center w-8 h-8 rounded-[10px] bg-[#2457D6] text-white font-bold text-xs shadow-sm">
+            JD
+          </div>
+        )}
+        <h1 className="font-bold text-[#101827] text-[18px] tracking-tight">
+          {info.title}
+        </h1>
+      </div>
 
+      {/* Right: Actions */}
+      <div className="flex items-center gap-2">
+        <span className="hidden sm:flex text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded bg-[#eef2fd] text-[#2457D6]">
+          {userRole}
+        </span>
+        
+        {currentScreen === 'home' && (
+          <button
+            className="flex items-center justify-center w-9 h-9 rounded-full text-[#8a99b0] active:bg-gray-50 transition-colors outline-none tap-highlight-transparent cursor-pointer relative"
+          >
+            <Bell size={20} strokeWidth={2} />
+            {userRole === 'Admin' && <span className="absolute top-2 right-2 w-2 h-2 bg-[#F05A47] rounded-full border-2 border-white" />}
+          </button>
+        )}
+
+        <button
+          onClick={() => navigateTo('players')}
+          className="flex items-center justify-center w-9 h-9 rounded-full text-[#8a99b0] active:bg-gray-50 transition-colors outline-none tap-highlight-transparent cursor-pointer"
+          aria-label="Search players"
+        >
+          <Search size={20} strokeWidth={2} />
+        </button>
       </div>
     </header>
   );

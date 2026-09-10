@@ -1,633 +1,355 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  RotateCcw, 
-  MoreHorizontal, 
-  ChevronRight, 
-  User, 
-  ShieldAlert, 
-  Sliders,
-  Check,
-  X,
-  Sparkles,
-  Zap,
-  AlertTriangle
+import React, { useEffect, useMemo, useState } from 'react';
+import {
+  RotateCcw, FileText, ShieldAlert, AlertTriangle, X,
+  ChevronRight, RefreshCw, Radio, CircleHelp, WifiOff,
+  MoreHorizontal
 } from 'lucide-react';
 import { useCricket } from '../../context/CricketContext';
-import { FIELD_DIRECTIONS } from '../../data/mockData';
 import { FREE_HIT_ALLOWED_DISMISSALS } from '../../engine/validationSchemas';
-import { 
-  CricketBatIcon, 
-  CricketBatAsset,
-  CricketBallIcon, 
-  CricketKeeperGloveIcon 
-} from '../CricketIcons';
+
+const DISMISSALS = ['Bowled', 'Caught', 'LBW', 'Run Out', 'Stumped', 'Hit Wicket', 'Other'];
+const QUICK_RUNS = [0, 1, 2, 3, 4, 6];
+
+function Modal({ title, children, onClose, danger = false }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-[#101827]/65 p-3 sm:p-5">
+      <div className="w-full max-w-lg bg-white rounded-t-[24px] sm:rounded-2xl shadow-2xl overflow-hidden animate-slide-up sm:animate-none">
+        <div className={`px-5 py-4 border-b flex items-center justify-between ${danger ? 'border-coral-100 bg-[#fef0ee]' : 'border-gray-100 bg-gray-50'}`}>
+          <h3 className={`text-[16px] font-black ${danger ? 'text-[#F05A47]' : 'text-[#101827]'}`}>{title}</h3>
+          <button onClick={onClose} className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm">
+            <X size={16} className={danger ? 'text-[#F05A47]' : 'text-[#596579]'} />
+          </button>
+        </div>
+        <div className="p-5">{children}</div>
+      </div>
+    </div>
+  );
+}
 
 export default function ScoringScreen() {
   const {
-    runs,
-    wickets,
-    balls,
-    formatOvers,
-    calculateCRR,
-    calculateProjectedScore,
-    currentOverBalls,
-    striker,
-    nonStriker,
-    currentBowler,
-    isFreeHit,
-    validationError,
-    setValidationError,
-    matchStatus,
-    toggleStriker,
-    recordRuns,
-    recordExtra,
-    recordWicket,
-    undoLastAction,
-    selectedDirection,
-    setSelectedDirection,
-    dismissalModalOpen,
-    setDismissalModalOpen,
-    extrasModalOpen,
-    setExtrasModalOpen,
-    innings,
-    navigateTo
+    runs, wickets, balls, formatOvers, calculateCRR, calculateProjectedScore,
+    currentOverBalls, striker, nonStriker, currentBowler, isFreeHit, toggleStriker,
+    validationError, setValidationError, matchStatus, recordRuns, recordExtra,
+    recordWicket, undoLastAction, innings, navigateTo, activeMatchId, matches,
+    matchSetup, replaceStriker, continueAfterOver, lastOverBowlerId,
+    deliveryLog = [], scoringFirstRunDone, markScoringFirstRunDone, goBack
   } = useCricket();
 
+  const [dismissalOpen, setDismissalOpen] = useState(false);
   const [selectedDismissal, setSelectedDismissal] = useState('Caught');
-  const [fielderName, setFielderName] = useState('P. Cummins');
+  const [fielder, setFielder] = useState('');
+  const [runOutPlayer, setRunOutPlayer] = useState('');
+  const [newBatterOpen, setNewBatterOpen] = useState(false);
+  const [overOpen, setOverOpen] = useState(false);
+  const [extrasOpen, setExtrasOpen] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
+  const [practiceStep, setPracticeStep] = useState(0);
 
-  // If Free Hit becomes active, auto-default to 'Run Out'
+  const activeMatch = matches?.find(m => m.id === activeMatchId);
+  const teamAName = activeMatch?.teamA?.name || activeMatch?.teamA || 'Jabalpur';
+  const teamBName = activeMatch?.teamB?.name || activeMatch?.teamB || 'Mandla';
+  const tournamentName = activeMatch?.tournament || 'JDCA District Cricket';
+  const playingXI = matchSetup?.playingXI || [];
+
+  const batters = useMemo(() => playingXI.filter(p => p?.name && p.name !== striker?.name && p.name !== nonStriker?.name), [playingXI, striker?.name, nonStriker?.name]);
+  const lastBalls = deliveryLog.length ? deliveryLog.slice(-6) : currentOverBalls.map((b, i) => ({ ...b, id: `mock-${i}`, runs: Number(b.value) || 0, wicket: b.type === 'wicket', extra: b.type === 'extra' }));
+  const isOverComplete = matchStatus === 'OVER_COMPLETE';
+
   useEffect(() => {
-    if (isFreeHit && !FREE_HIT_ALLOWED_DISMISSALS.includes(selectedDismissal)) {
-      setSelectedDismissal('Run Out');
+    if (isOverComplete) setOverOpen(true);
+  }, [isOverComplete]);
+
+  const doRun = (value) => {
+    recordRuns(value);
+    if (!scoringFirstRunDone) markScoringFirstRunDone?.();
+  };
+
+  const submitWicket = () => {
+    let outName = striker.name;
+    if (selectedDismissal === 'Run Out') outName = runOutPlayer || striker.name;
+
+    let wk = '';
+    if (selectedDismissal === 'Stumped') {
+      wk = matchSetup?.playingXI?.find(p => /wicket/i.test(p.role))?.name || fielder;
     }
-  }, [isFreeHit]);
 
-  const allDismissalTypes = ['Bowled', 'Caught', 'LBW', 'Run Out', 'Stumped', 'Hit Wicket', 'Obstructing Field', 'Other'];
-
-  const handleRunClick = (amount) => {
-    recordRuns(amount, selectedDirection);
+    recordWicket(selectedDismissal, outName, fielder, wk);
+    setDismissalOpen(false);
+    setFielder('');
+    setRunOutPlayer('');
+    setNewBatterOpen(true);
   };
 
-  const handleDismissalSubmit = () => {
-    recordWicket(selectedDismissal, striker.name, fielderName);
+  const selectNewBatter = (player) => {
+    if (player) replaceStriker?.({ ...player, runs: 0, balls: 0, fours: 0, sixes: 0, strikeRate: '0.0' });
+    setNewBatterOpen(false);
   };
 
+  const selectNextBowler = (player) => {
+    if (!player) return;
+    if (lastOverBowlerId && player.id === lastOverBowlerId) {
+      setValidationError('The same bowler cannot bowl two consecutive overs.');
+      return;
+    }
+    continueAfterOver?.(player);
+    setOverOpen(false);
+  };
+
+  const practiceActions = [
+    { label: 'Tap 1 run', hint: 'The score and striker update automatically.' },
+    { label: 'Tap a dot ball', hint: 'The ball is counted, but no run is added.' },
+    { label: 'Tap 4 runs', hint: 'The batter gets the runs and the boundary is recorded.' },
+    { label: 'Tap Wide', hint: 'The extra is recorded and the ball does not count as legal.' },
+  ];
+  
   return (
-    <div className="min-h-[calc(100vh-120px)] bg-slate-100/60 pb-20 px-3.5 pt-3 max-w-xl mx-auto space-y-3.5 animate-in fade-in duration-200">
+    <div className="pb-[100px] bg-[#101827] min-h-screen text-white">
       
-      {/* Dynamic Validation Alert Toast */}
+      {/* HEADER */}
+      <div className="px-4 pt-[60px] pb-4 bg-gradient-to-b from-black/20 to-transparent">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <span className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-white/20 text-white text-[10px] font-bold uppercase tracking-wider">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#0FA968] animate-pulse" />
+              LIVE SCORING
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+             <button onClick={() => setShowHelp(true)} className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center"><CircleHelp size={16}/></button>
+             <button onClick={() => navigateTo('match-detail')} className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center"><X size={16}/></button>
+          </div>
+        </div>
+
+        <div className="text-[11px] font-bold tracking-widest uppercase text-white/50 mb-1">{tournamentName}</div>
+        <div className="text-[16px] font-black">{teamAName} <span className="text-white/40">vs</span> {teamBName}</div>
+      </div>
+
       {validationError && (
-        <div className="bg-amber-500 text-white px-4 py-3 rounded-2xl shadow-lg flex items-center justify-between animate-in slide-in-from-top duration-300">
-          <div className="flex items-center space-x-2.5">
-            <AlertTriangle className="w-5 h-5 flex-shrink-0 text-white animate-bounce" />
-            <span className="text-xs font-bold tracking-wide">{validationError}</span>
-          </div>
-          <button 
-            onClick={() => setValidationError(null)}
-            className="p-1 rounded-full hover:bg-amber-600 transition-colors"
-          >
-            <X className="w-4 h-4 text-white" />
-          </button>
+        <div className="mx-4 mb-4 bg-[#F05A47] text-white p-3 rounded-[12px] flex items-center justify-between text-[12px] font-bold">
+          <div className="flex items-center gap-2"><AlertTriangle size={16} /> {validationError}</div>
+          <button onClick={() => setValidationError(null)} className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center"><X size={12} /></button>
         </div>
       )}
 
-      {/* Free Hit Active Banner */}
-      {isFreeHit && (
-        <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white px-4 py-2.5 rounded-2xl shadow-md flex items-center justify-between animate-pulse">
-          <div className="flex items-center space-x-2">
-            <Zap className="w-5 h-5 fill-white text-yellow-200" />
-            <span className="text-xs font-extrabold uppercase tracking-wider">
-              FREE HIT ACTIVE (Law 21.18)
-            </span>
+      {/* SCORE AREA */}
+      <div className="px-4 mb-6">
+        <div className="text-center">
+          <div className="text-[12px] font-bold uppercase tracking-wider text-white/70 mb-2">
+            {innings === 1 ? '1st Innings' : '2nd Innings'} • {innings === 1 ? teamAName : teamBName}
           </div>
-          <span className="text-[11px] font-semibold bg-white/20 px-2 py-0.5 rounded-full">
-            No Dismissals except Run Out
-          </span>
-        </div>
-      )}
-
-      {/* 1. Score Summary Banner Card (Matches Image 7 / 27) */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs overflow-hidden">
-        {/* Top multi-color strip */}
-        <div className="h-1.5 bg-gradient-to-r from-red-500 via-amber-400 to-blue-600" />
-        
-        <div className="p-4 sm:p-5">
-          {/* Innings & Match header */}
-          <div className="flex items-center justify-between text-xs font-semibold text-slate-500 mb-1">
-            <div className="flex items-center space-x-1.5">
-              <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
-              <span className="font-bold text-red-600 tracking-wide">
-                {innings === 1 ? '1st Innings' : '2nd Innings'}
-              </span>
+          <div className="text-[80px] font-black leading-none tracking-tighter tabular-nums mb-2 text-white">
+            {runs}<span className="text-[40px] text-white/60">/{wickets}</span>
+          </div>
+          <div className="flex items-center justify-center gap-4 text-[14px] font-bold">
+            <div className="bg-white/10 px-4 py-1.5 rounded-full">
+              Overs <span className="text-white ml-1">{formatOvers(balls)}</span>
             </div>
-            <span className="text-slate-500 font-medium uppercase tracking-wider">
-              IND vs AUS (T20)
-            </span>
-          </div>
-
-          {/* Main Huge Runs & Wickets */}
-          <div className="flex items-baseline space-x-1 mt-1 mb-3">
-            <span className="text-4xl sm:text-5xl font-extrabold text-[#0B57D0] tracking-tight font-display">
-              {runs}
-            </span>
-            <span className="text-2xl sm:text-3xl font-bold text-slate-400">
-              /{wickets}
-            </span>
-          </div>
-
-          {/* Overs & CRR Row */}
-          <div className="flex items-center justify-between text-xs sm:text-sm font-semibold text-slate-600 mb-3 border-t border-slate-100 pt-2.5">
-            <div>
-              <span className="text-[11px] uppercase tracking-wider text-slate-400 block font-bold">
-                OVERS
-              </span>
-              <span className="text-slate-900 font-bold text-base">
-                {formatOvers(balls)} <span className="text-slate-400 font-normal">/ 20</span>
-              </span>
-            </div>
-
-            <div className="text-right">
-              <span className="text-[11px] uppercase tracking-wider text-slate-400 block font-bold">
-                CRR
-              </span>
-              <span className="text-slate-900 font-bold text-base">
-                {calculateCRR()}
-              </span>
+            <div className="bg-white/10 px-4 py-1.5 rounded-full">
+              CRR <span className="text-white ml-1">{calculateCRR()}</span>
             </div>
           </div>
-
-          {/* Projected Score Blue Highlight Bar */}
-          <div className="py-2.5 px-3.5 rounded-xl bg-blue-50/70 border border-blue-100 flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-600">
-              Proj. Score
-            </span>
-            <span className="text-sm font-extrabold text-[#0B57D0]">
-              {calculateProjectedScore()}
-            </span>
-          </div>
-
         </div>
       </div>
 
-      {/* 2. Batters & Bowler Card (Matches Image 7 / 27) */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-4 space-y-3.5">
-        
-        {/* Batters section header */}
-        <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-slate-400">
-          <div className="flex items-center space-x-1.5">
-            <CricketBatAsset className="w-3.5 h-3.5 object-contain" />
-            <span>BATTERS (TAP TO SELECT STRIKER)</span>
-          </div>
-          <span className="text-[10px] text-blue-600 lowercase bg-blue-50 px-2 py-0.5 rounded font-semibold">
-            tap to switch strike
-          </span>
-        </div>
-
-        {/* Striker Batters Row (Click to toggle) */}
-        <div className="space-y-2">
-          {/* Striker */}
-          <div 
-            onClick={toggleStriker}
-            className="flex items-center justify-between p-2.5 rounded-xl bg-blue-50/80 border border-blue-200/80 cursor-pointer transition-colors"
-          >
-            <div className="flex items-center space-x-2.5">
-              <div className="w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center shadow-2xs p-1">
-                <CricketBatAsset className="w-4 h-4 object-contain brightness-0 invert" />
-              </div>
-              <span className="font-bold text-sm text-slate-900">
-                {striker.name} <span className="text-blue-600 font-extrabold">*</span>
-              </span>
-            </div>
-            <div className="text-sm font-bold text-slate-900">
-              {striker.runs} <span className="text-xs font-normal text-slate-500">({striker.balls})</span>
-            </div>
-          </div>
-
-          {/* Non-Striker */}
-          <div 
-            onClick={toggleStriker}
-            className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-150 cursor-pointer transition-colors"
-          >
-            <div className="flex items-center space-x-2.5">
-              <div className="w-7 h-7 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center p-1">
-                <CricketBatAsset className="w-4 h-4 object-contain opacity-70" />
-              </div>
-              <span className="font-semibold text-sm text-slate-700">
-                {nonStriker.name}
-              </span>
-            </div>
-            <div className="text-sm font-bold text-slate-800">
-              {nonStriker.runs} <span className="text-xs font-normal text-slate-500">({nonStriker.balls})</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Bowler Details */}
-        <div className="pt-2 border-t border-slate-100">
-          <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
-            <span>BOWLER</span>
-            <span className="flex items-center gap-1">
-              <CricketKeeperGloveIcon className="w-3.5 h-3.5 text-blue-600 inline" />
-              WK: {currentBowler.wk}
-            </span>
-          </div>
-
-          <div className="flex items-center justify-between bg-slate-50/90 p-2.5 rounded-xl border border-slate-100">
-            <div className="flex items-center space-x-2">
-              <div className="w-6 h-6 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center">
-                <CricketBallIcon className="w-3.5 h-3.5" />
-              </div>
-              <span className="font-bold text-sm text-slate-800">
-                {currentBowler.name}
-              </span>
-            </div>
-            <div className="text-right">
-              <span className="text-[10px] text-slate-400 uppercase tracking-widest block font-bold">
-                O-M-R-W
-              </span>
-              <span className="text-xs sm:text-sm font-bold text-slate-900">
-                {currentBowler.overs}-{currentBowler.maidens}-{currentBowler.runs}-{currentBowler.wickets}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Current Over Balls Array */}
-        <div className="pt-1">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">
-            CURRENT OVER ({formatOvers(balls)})
-          </div>
-
-          <div className="flex items-center space-x-2">
-            {/* Render recorded balls */}
-            {currentOverBalls.map((b, idx) => {
-              const isWicket = b.type === 'wicket' || b.value === 'W';
-              const isFour = b.value === 4 || b.label === '4';
-              const isSix = b.value === 6 || b.label === '6';
-
-              return (
-                <div
-                  key={idx}
-                  className={`w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold transition-transform ${
-                    isWicket
-                      ? 'bg-red-100 text-red-700 border-2 border-red-400'
-                      : isFour || isSix
-                      ? 'bg-amber-100 text-amber-800 border-2 border-amber-300'
-                      : 'bg-slate-100 text-slate-700 border border-slate-200'
-                  }`}
-                >
-                  {b.label}
-                </div>
-              );
-            })}
-
-            {/* Empty slots for remaining balls in over */}
-            {Array.from({ length: Math.max(0, 6 - currentOverBalls.length) }).map((_, i) => (
-              <div
-                key={`empty-${i}`}
-                className="w-9 h-9 rounded-full border border-dashed border-slate-300 flex items-center justify-center text-slate-300 text-xs"
-              >
-                •
+      {/* RECENT BALLS */}
+      <div className="px-4 mb-6">
+        <div className="bg-white/5 rounded-[16px] p-3 border border-white/10 flex items-center justify-between">
+          <div className="text-[10px] font-bold uppercase tracking-wider text-white/50 w-12 text-center">THIS OVER</div>
+          <div className="flex-1 flex items-center gap-2 overflow-x-auto px-2 no-scrollbar">
+            {lastBalls.map((b, i) => (
+              <div key={i} className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-[12px] font-black ${
+                b.wicket ? 'bg-[#F05A47] text-white' :
+                b.extra ? 'bg-[#F4B942] text-black' :
+                b.runs >= 4 ? 'bg-[#2457D6] text-white' :
+                'bg-white/10 text-white'
+              }`}>
+                {b.label || b.runs || 0}
               </div>
             ))}
+            {!lastBalls.length && <div className="text-[12px] font-medium text-white/40 italic">No balls recorded yet in this over</div>}
           </div>
+          <div className="text-[12px] font-black text-white w-8 text-center">{currentOverBalls.length}/6</div>
         </div>
-
       </div>
 
-      {/* 3. Ball Direction / Wagon Wheel Field Map (Matches Image 7) */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-4">
-        <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-3">
-          <span>BALL DIRECTION</span>
-          <span className="text-blue-600 font-semibold lowercase">
-            zone: <strong className="uppercase">{selectedDirection}</strong>
-          </span>
-        </div>
-
-        {/* Circular Cricket Ground & Pitch Diagram */}
-        <div className="relative w-56 h-56 mx-auto flex items-center justify-center my-1">
-          {/* Outer Boundary Circle */}
-          <div className="absolute inset-0 rounded-full border-2 border-dashed border-slate-300 bg-slate-50/50" />
+      {/* PLAYERS ON FIELD */}
+      <div className="px-4 mb-8">
+        <div className="grid grid-cols-2 gap-3 mb-3">
+          <button onClick={() => toggleStriker?.()} className="bg-white/10 rounded-[16px] p-4 text-left border border-white/20 relative overflow-hidden active:bg-white/20 transition-colors">
+            <div className="absolute top-0 right-0 w-2 h-full bg-[#0FA968]" />
+            <div className="text-[10px] font-bold text-[#0FA968] uppercase tracking-wider mb-1 flex items-center gap-1">Striker <span>*</span></div>
+            <div className="text-[16px] font-black text-white truncate mb-2">{striker.name}</div>
+            <div className="text-[18px] font-black tabular-nums leading-none">{striker.runs} <span className="text-[12px] text-white/50">({striker.balls})</span></div>
+          </button>
           
-          {/* Inner 30-yard Circle */}
-          <div className="absolute inset-8 rounded-full border border-slate-200 bg-white/70" />
+          <button onClick={() => toggleStriker?.()} className="bg-white/5 rounded-[16px] p-4 text-left border border-white/10 active:bg-white/10 transition-colors">
+            <div className="text-[10px] font-bold text-white/50 uppercase tracking-wider mb-1">Non-Striker</div>
+            <div className="text-[16px] font-bold text-white/80 truncate mb-2">{nonStriker.name}</div>
+            <div className="text-[18px] font-black tabular-nums leading-none text-white/80">{nonStriker.runs} <span className="text-[12px] text-white/50">({nonStriker.balls})</span></div>
+          </button>
+        </div>
 
-          {/* Central Pitch Rectangle */}
-          <div className="relative z-10 w-8 h-24 bg-amber-100/80 border border-amber-300 rounded-sm flex items-center justify-center shadow-xs">
-            <div className="w-1 h-16 border-x border-dashed border-amber-400/80" />
-          </div>
-
-          {/* Sector Labels & Interactive Click Zones */}
-          {FIELD_DIRECTIONS.map((dir) => {
-            const isSelected = selectedDirection === dir.name;
-            
-            // Positioning coordinates around the circle
-            let posClass = '';
-            if (dir.id === 'third_man') posClass = 'top-3 left-8';
-            else if (dir.id === 'fine_leg') posClass = 'top-3 right-8';
-            else if (dir.id === 'point') posClass = 'top-20 left-2';
-            else if (dir.id === 'square_leg') posClass = 'top-20 right-2';
-            else if (dir.id === 'cover') posClass = 'bottom-16 left-3';
-            else if (dir.id === 'mid_wicket') posClass = 'bottom-16 right-3';
-            else if (dir.id === 'long_off') posClass = 'bottom-2 left-10';
-            else if (dir.id === 'long_on') posClass = 'bottom-2 right-10';
-
-            return (
-              <button
-                key={dir.id}
-                type="button"
-                onClick={() => setSelectedDirection(dir.name)}
-                className={`absolute ${posClass} text-[10px] font-bold transition-all px-1.5 py-0.5 rounded cursor-pointer z-20 ${
-                  isSelected
-                    ? 'bg-[#0B57D0] text-white scale-110 shadow-sm'
-                    : 'text-slate-600 hover:text-blue-700 hover:bg-white/80'
-                }`}
-              >
-                {dir.name}
-              </button>
-            );
-          })}
+        <div className="bg-white/5 rounded-[16px] p-4 border border-white/10 flex items-center justify-between">
+           <div>
+             <div className="text-[10px] font-bold text-white/50 uppercase tracking-wider mb-1 flex items-center gap-1"><RefreshCw size={10} className="text-[#F4B942]"/> Bowler</div>
+             <div className="text-[16px] font-black text-white">{currentBowler.name}</div>
+           </div>
+           <div className="text-right">
+             <div className="text-[12px] font-bold text-white/50 uppercase tracking-wider mb-1">O-M-R-W</div>
+             <div className="text-[16px] font-black tabular-nums">{currentBowler.overs}-{currentBowler.maidens}-{currentBowler.runs}-{currentBowler.wickets}</div>
+           </div>
         </div>
       </div>
 
-      {/* 4. Score Action Keypad (Matches Image 7 / 27) */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-4 space-y-3">
-        
-        {/* Action Header with Undo & Extras */}
-        <div className="flex items-center justify-between">
-          <h3 className="text-base font-extrabold text-slate-900 font-display">
-            Score Action
-          </h3>
-
-          <div className="flex items-center space-x-2">
-            {/* Undo Button */}
-            <button
-              onClick={undoLastAction}
-              className="flex items-center space-x-1 px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
-            >
-              <RotateCcw className="w-3.5 h-3.5" />
-              <span>Undo</span>
-            </button>
-
-            {/* Extras Button */}
-            <button
-              onClick={() => setExtrasModalOpen(true)}
-              className="px-3.5 py-1.5 rounded-lg border border-blue-200 bg-blue-50 text-xs font-bold text-blue-700 hover:bg-blue-100 transition-colors cursor-pointer"
-            >
-              Extras
-            </button>
+      {/* SCORING PAD */}
+      <div className="bg-white rounded-t-[32px] p-6 text-[#101827] shadow-[0_-10px_40px_rgba(0,0,0,0.1)]">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h3 className="text-[18px] font-black">Record Ball</h3>
+            <div className="text-[12px] font-medium text-[#8a99b0]">Tap the result of the delivery</div>
           </div>
-        </div>
-
-        {/* Keypad Grid 1: 0, 1, 2, 3, 4, 5 */}
-        <div className="grid grid-cols-3 gap-2.5">
-          {/* 0 */}
-          <button
-            onClick={() => handleRunClick(0)}
-            className="py-4 bg-slate-200 hover:bg-slate-300 active:scale-95 text-slate-900 font-extrabold text-xl rounded-xl shadow-2xs transition-all cursor-pointer"
-          >
-            0
-          </button>
-
-          {/* 1 */}
-          <button
-            onClick={() => handleRunClick(1)}
-            className="py-4 bg-[#0A57C2] hover:bg-blue-700 active:scale-95 text-white font-extrabold text-xl rounded-xl shadow-2xs transition-all cursor-pointer"
-          >
-            1
-          </button>
-
-          {/* 2 */}
-          <button
-            onClick={() => handleRunClick(2)}
-            className="py-4 bg-[#0A57C2] hover:bg-blue-700 active:scale-95 text-white font-extrabold text-xl rounded-xl shadow-2xs transition-all cursor-pointer"
-          >
-            2
-          </button>
-
-          {/* 3 */}
-          <button
-            onClick={() => handleRunClick(3)}
-            className="py-4 bg-[#0A57C2] hover:bg-blue-700 active:scale-95 text-white font-extrabold text-xl rounded-xl shadow-2xs transition-all cursor-pointer"
-          >
-            3
-          </button>
-
-          {/* 4 (Yellow) */}
-          <button
-            onClick={() => handleRunClick(4)}
-            className="py-4 bg-[#FABB05] hover:bg-amber-500 active:scale-95 text-slate-950 font-extrabold text-xl rounded-xl shadow-2xs transition-all cursor-pointer"
-          >
-            4
-          </button>
-
-          {/* 5 */}
-          <button
-            onClick={() => handleRunClick(5)}
-            className="py-4 bg-slate-200 hover:bg-slate-300 active:scale-95 text-slate-900 font-extrabold text-xl rounded-xl shadow-2xs transition-all cursor-pointer"
-          >
-            5
+          <button onClick={undoLastAction} disabled={!deliveryLog.length} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-100 text-[#596579] text-[12px] font-bold disabled:opacity-50">
+            <RotateCcw size={14} /> Undo
           </button>
         </div>
 
-        {/* Keypad Grid 2: 6 (Yellow) & OUT (Red) */}
-        <div className="grid grid-cols-3 gap-2.5">
-          <button
-            onClick={() => handleRunClick(6)}
-            className="col-span-2 py-4 bg-[#FABB05] hover:bg-amber-500 active:scale-95 text-slate-950 font-black text-2xl rounded-xl shadow-2xs transition-all cursor-pointer"
-          >
-            6
-          </button>
-
-          <button
-            onClick={() => setDismissalModalOpen(true)}
-            className="py-4 bg-[#DC2626] hover:bg-red-700 active:scale-95 text-white font-black text-sm flex flex-col items-center justify-center rounded-xl shadow-2xs transition-all cursor-pointer"
-          >
-            <ShieldAlert className="w-5 h-5 mb-0.5" />
-            <span>OUT</span>
-          </button>
+        <div className="grid grid-cols-3 gap-3 mb-3">
+          {QUICK_RUNS.map(value => (
+            <button 
+              key={value} 
+              onClick={() => doRun(value)} 
+              className={`h-16 rounded-[16px] flex items-center justify-center text-[24px] font-black shadow-sm active:scale-[0.98] transition-transform ${
+                value === 0 ? 'bg-gray-100 text-[#596579]' : 
+                value >= 4 ? 'bg-gradient-to-b from-[#2457D6] to-[#1b41a8] text-white shadow-md' : 
+                'bg-white border border-gray-200 text-[#101827]'
+              }`}
+            >
+              {value}
+            </button>
+          ))}
         </div>
 
-        {/* Extras Quick Row: Wide, No Ball, Leg Bye */}
-        <div className="grid grid-cols-3 gap-2.5 pt-1">
-          <button
-            onClick={() => recordExtra('wide', 0)}
-            className="py-3 bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-800 font-bold text-xs rounded-xl border border-slate-200 transition-all cursor-pointer"
-          >
-            Wide
-          </button>
-
-          <button
-            onClick={() => recordExtra('no_ball', 0)}
-            className="py-3 bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-800 font-bold text-xs rounded-xl border border-slate-200 transition-all cursor-pointer"
-          >
-            No Ball
-          </button>
-
-          <button
-            onClick={() => recordExtra('leg_bye', 1)}
-            className="py-3 bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-800 font-bold text-xs rounded-xl border border-slate-200 transition-all cursor-pointer"
-          >
-            Leg Bye
-          </button>
+        <div className="grid grid-cols-4 gap-2 mb-4">
+           <button onClick={() => recordExtra('wide', 0)} className="h-12 rounded-[12px] bg-gray-100 text-[#101827] text-[12px] font-black uppercase tracking-wider active:bg-gray-200">WD</button>
+           <button onClick={() => recordExtra('no_ball', 0)} className="h-12 rounded-[12px] bg-gray-100 text-[#101827] text-[12px] font-black uppercase tracking-wider active:bg-gray-200">NB</button>
+           <button onClick={() => recordExtra('bye', 1)} className="h-12 rounded-[12px] bg-gray-100 text-[#101827] text-[12px] font-black uppercase tracking-wider active:bg-gray-200">B</button>
+           <button onClick={() => recordExtra('leg_bye', 1)} className="h-12 rounded-[12px] bg-gray-100 text-[#101827] text-[12px] font-black uppercase tracking-wider active:bg-gray-200">LB</button>
         </div>
 
+        <div className="grid grid-cols-2 gap-3">
+           <button onClick={() => setDismissalOpen(true)} className="h-14 rounded-[16px] bg-[#F05A47] text-white flex items-center justify-center gap-2 text-[16px] font-black shadow-md active:bg-[#d64a39]">
+             <ShieldAlert size={18} /> WICKET
+           </button>
+           <button onClick={() => setExtrasOpen(true)} className="h-14 rounded-[16px] bg-white border border-gray-200 text-[#101827] flex items-center justify-center gap-2 text-[14px] font-bold active:bg-gray-50">
+             <MoreHorizontal size={18} /> MORE EXTRAS
+           </button>
+        </div>
       </div>
 
-      {/* Dismissal / Out Modal Sheet */}
-      {dismissalModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 animate-in fade-in">
-          <div className="bg-white w-full max-w-md rounded-3xl p-5 shadow-2xl space-y-4 animate-in slide-in-from-bottom duration-200">
-            
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <div>
-                <h3 className="font-extrabold text-lg text-slate-900">Record Dismissal</h3>
-                <p className="text-xs text-slate-500">Batter: <strong className="text-slate-800">{striker.name}</strong></p>
-              </div>
-              <button
-                onClick={() => setDismissalModalOpen(false)}
-                className="p-1.5 rounded-full hover:bg-slate-100 text-slate-500"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
+      {/* MODALS */}
+      {/* Same as before but with updated UI class names for Modal components */}
+      {dismissalOpen && (
+        <Modal title="Record Wicket" danger onClose={() => setDismissalOpen(false)}>
+          <div className="bg-white border border-gray-100 rounded-[12px] p-3 mb-4 text-center">
+            <span className="text-[14px] font-bold text-[#101827]">{striker.name}</span> <span className="text-[12px] text-[#596579]">is on strike</span>
+          </div>
+          <div className="text-[12px] font-bold uppercase tracking-wider text-[#8a99b0] mb-2">How out?</div>
+          <div className="grid grid-cols-2 gap-2 mb-4">
+            {DISMISSALS.map(type => {
+              const blocked = isFreeHit && !FREE_HIT_ALLOWED_DISMISSALS.includes(type);
+              const selected = selectedDismissal === type;
+              return (
+                <button 
+                  key={type} 
+                  disabled={blocked} 
+                  className={`py-3 rounded-[12px] text-[13px] font-bold border transition-colors ${
+                    selected ? 'bg-[#101827] text-white border-[#101827]' : 
+                    blocked ? 'opacity-30 bg-gray-50 border-gray-100 cursor-not-allowed' : 
+                    'bg-white text-[#596579] border-gray-200 active:bg-gray-50'
+                  }`}
+                  onClick={() => setSelectedDismissal(type)}
+                >
+                  {type}
+                </button>
+              );
+            })}
+          </div>
 
-            {/* Free Hit Info Banner inside Modal */}
-            {isFreeHit && (
-              <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-900 text-xs flex items-center space-x-2">
-                <Zap className="w-4 h-4 text-amber-600 flex-shrink-0" />
-                <span>
-                  <strong>MCC Law 21.18:</strong> Only Run Out / Obstructing Field is permitted during a Free Hit.
-                </span>
-              </div>
-            )}
-
-            {/* Dismissal Types Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-              {allDismissalTypes.map((type) => {
-                const isBlocked = isFreeHit && !FREE_HIT_ALLOWED_DISMISSALS.includes(type);
-
-                return (
-                  <button
-                    key={type}
-                    type="button"
-                    disabled={isBlocked}
-                    onClick={() => !isBlocked && setSelectedDismissal(type)}
-                    className={`py-3 px-2 rounded-xl text-xs font-bold transition-all relative ${
-                      isBlocked
-                        ? 'bg-slate-100/60 text-slate-300 border border-dashed border-slate-200 cursor-not-allowed line-through'
-                        : selectedDismissal === type
-                        ? 'bg-red-600 text-white shadow-md cursor-pointer'
-                        : 'bg-slate-100 text-slate-700 hover:bg-slate-200 cursor-pointer'
-                    }`}
+          {selectedDismissal === 'Caught' && (
+            <div className="mb-4">
+              <label className="text-[12px] font-bold uppercase tracking-wider text-[#8a99b0] mb-2 block">Caught by</label>
+              <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto pr-1">
+                {playingXI.filter(p => p.name !== striker.name && p.name !== nonStriker.name).map(p => (
+                  <button 
+                    key={p.id} 
+                    className={`py-2 px-2 rounded-[8px] text-[12px] font-bold border transition-colors ${fielder === p.name ? 'bg-[#2457D6] text-white border-[#2457D6]' : 'bg-gray-50 text-[#596579] border-gray-100'}`} 
+                    onClick={() => setFielder(p.name)}
                   >
-                    {type}
-                    {isBlocked && (
-                      <span className="block text-[9px] font-normal no-underline text-amber-700 mt-0.5">
-                        Free Hit Rule
-                      </span>
-                    )}
+                    {p.name} {/wicket/i.test(p.role) ? '(WK)' : ''}
                   </button>
-                );
-              })}
-            </div>
-
-            {/* Fielder Name if caught or run out */}
-            {(selectedDismissal === 'Caught' || selectedDismissal === 'Run Out' || selectedDismissal === 'Stumped') && (
-              <div>
-                <label className="text-xs font-bold text-slate-600 block mb-1">
-                  Fielder / Wicket Keeper Name
-                </label>
-                <input
-                  type="text"
-                  value={fielderName}
-                  onChange={(e) => setFielderName(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:ring-2 focus:ring-red-500 outline-none"
-                />
+                ))}
               </div>
-            )}
-
-            {/* Action Buttons */}
-            <div className="flex items-center space-x-3 pt-2">
-              <button
-                type="button"
-                onClick={() => setDismissalModalOpen(false)}
-                className="flex-1 py-3 rounded-xl border border-slate-300 font-bold text-xs text-slate-600 hover:bg-slate-50"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={handleDismissalSubmit}
-                className="flex-1 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-xs shadow-md"
-              >
-                Confirm Wicket
-              </button>
             </div>
+          )}
 
+          <div className="flex gap-2 mt-6">
+            <button className="flex-1 py-3 rounded-[12px] font-bold bg-gray-100 text-[#596579]" onClick={() => setDismissalOpen(false)}>Cancel</button>
+            <button 
+              className="flex-1 py-3 rounded-[12px] font-bold bg-[#F05A47] text-white disabled:opacity-50" 
+              onClick={submitWicket} 
+              disabled={(selectedDismissal === 'Caught' || selectedDismissal === 'Run Out') && !fielder}
+            >
+              Confirm Wicket
+            </button>
           </div>
-        </div>
+        </Modal>
       )}
 
-      {/* Extras Details Modal */}
-      {extrasModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 animate-in fade-in">
-          <div className="bg-white w-full max-w-md rounded-3xl p-5 shadow-2xl space-y-4 animate-in slide-in-from-bottom duration-200">
-            
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="font-extrabold text-lg text-slate-900">Custom Extras</h3>
-              <button
-                onClick={() => setExtrasModalOpen(false)}
-                className="p-1.5 rounded-full hover:bg-slate-100 text-slate-500"
+      {newBatterOpen && wickets < 10 && (
+        <Modal title="New Batter" onClose={() => setNewBatterOpen(false)}>
+          <p className="text-[13px] text-[#596579] mb-4">Select the next batter. The wicket has been recorded.</p>
+          <div className="flex flex-col gap-2 max-h-60 overflow-y-auto">
+            {batters.map(player => (
+              <button 
+                key={player.id} 
+                onClick={() => selectNewBatter(player)}
+                className="flex items-center justify-between p-3 rounded-[12px] bg-white border border-gray-200 active:bg-gray-50 transition-colors"
               >
-                <X className="w-5 h-5" />
+                <div>
+                  <div className="text-[14px] font-bold text-[#101827] text-left">{player.name}</div>
+                  <div className="text-[11px] text-[#8a99b0] text-left">{player.role || 'Batter'}</div>
+                </div>
+                <ChevronRight size={16} className="text-[#d2d8e2]"/>
               </button>
-            </div>
-
-            <div className="space-y-3 text-xs font-semibold">
-              <div className="p-3 rounded-xl bg-slate-50 flex items-center justify-between">
-                <span>Wide + 4 (5 Wides)</span>
-                <button
-                  onClick={() => {
-                    recordExtra('wide', 4);
-                    setExtrasModalOpen(false);
-                  }}
-                  className="px-3 py-1.5 bg-[#0B57D0] text-white rounded-lg font-bold"
-                >
-                  +5 Wide
-                </button>
-              </div>
-
-              <div className="p-3 rounded-xl bg-slate-50 flex items-center justify-between">
-                <span>No Ball + Boundary (1+4 = 5 Runs)</span>
-                <button
-                  onClick={() => {
-                    recordExtra('no_ball', 4);
-                    setExtrasModalOpen(false);
-                  }}
-                  className="px-3 py-1.5 bg-[#0B57D0] text-white rounded-lg font-bold"
-                >
-                  +5 No Ball
-                </button>
-              </div>
-
-              <div className="p-3 rounded-xl bg-slate-50 flex items-center justify-between">
-                <span>Byes (4 Byes)</span>
-                <button
-                  onClick={() => {
-                    recordExtra('bye', 4);
-                    setExtrasModalOpen(false);
-                  }}
-                  className="px-3 py-1.5 bg-slate-800 text-white rounded-lg font-bold"
-                >
-                  +4 Byes
-                </button>
-              </div>
-            </div>
-
+            ))}
           </div>
-        </div>
+        </Modal>
+      )}
+
+      {overOpen && !newBatterOpen && (
+        <Modal title="Over Complete" onClose={() => setOverOpen(false)}>
+          <div className="bg-[#eef2fd] p-4 rounded-[12px] mb-4 text-center">
+            <div className="text-[24px] font-black text-[#2457D6]">{runs}/{wickets}</div>
+            <div className="text-[12px] font-bold text-[#596579]">after {formatOvers(balls)} overs</div>
+          </div>
+          <div className="text-[12px] font-bold uppercase tracking-wider text-[#8a99b0] mb-2">Select next bowler</div>
+          <div className="flex flex-col gap-2 max-h-60 overflow-y-auto">
+            {playingXI.filter(p => /bowler|all-rounder/i.test(p.role || '') && p.id !== lastOverBowlerId).map(player => (
+              <button 
+                key={player.id} 
+                onClick={() => selectNextBowler(player)}
+                className="flex items-center justify-between p-3 rounded-[12px] bg-white border border-gray-200 active:bg-gray-50 transition-colors"
+              >
+                <div>
+                  <div className="text-[14px] font-bold text-[#101827] text-left">{player.name}</div>
+                  <div className="text-[11px] text-[#8a99b0] text-left">{player.role}</div>
+                </div>
+                <ChevronRight size={16} className="text-[#d2d8e2]"/>
+              </button>
+            ))}
+          </div>
+        </Modal>
       )}
 
     </div>

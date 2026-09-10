@@ -26,6 +26,7 @@ export default function ScoutingHubScreen() {
   const [selectedRoleFilter, setSelectedRoleFilter] = useState('Top Batsmen');
   const [selectedDistrict, setSelectedDistrict] = useState('All Districts');
   const [searchQuery, setSearchQuery] = useState('');
+  const [showOnlyShortlisted, setShowOnlyShortlisted] = useState(false);
 
   const ageCategories = ['Under-13', 'Under-16', 'Under-19', 'Senior/Open'];
   const roleFilters = ['Top Batsmen', 'Top Bowlers', 'All-Rounders'];
@@ -52,7 +53,9 @@ export default function ScoutingHubScreen() {
                           player.battingStyle.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           player.district.toLowerCase().includes(searchQuery.toLowerCase());
 
-    return matchesCategory && matchesRole && matchesDistrict && matchesSearch;
+    const matchesShortlist = showOnlyShortlisted ? shortlistedIds.includes(player.id) : true;
+
+    return matchesCategory && matchesRole && matchesDistrict && matchesSearch && matchesShortlist;
   });
 
   const handlePlayerClick = (player) => {
@@ -158,6 +161,27 @@ export default function ScoutingHubScreen() {
         </div>
       </div>
 
+      {/* 4.5. Shortlisted Filter Toggle */}
+      <div className="flex items-center justify-between bg-white px-4 py-2.5 rounded-xl border border-slate-200/90 shadow-2xs">
+        <span className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+          <Star className={`w-4 h-4 ${showOnlyShortlisted ? 'text-amber-500 fill-amber-500' : 'text-slate-400'}`} />
+          Show Shortlisted Trials Only ({shortlistedIds.length})
+        </span>
+        <button
+          type="button"
+          onClick={() => setShowOnlyShortlisted(!showOnlyShortlisted)}
+          className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors cursor-pointer ${
+            showOnlyShortlisted ? 'bg-amber-500' : 'bg-slate-300'
+          }`}
+        >
+          <span
+            className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${
+              showOnlyShortlisted ? 'translate-x-4' : 'translate-x-1'
+            }`}
+          />
+        </button>
+      </div>
+
       {/* 5. Player Cards List (Matches Image 11 & 13) */}
       <div className="space-y-3">
         {filteredPlayers.length === 0 ? (
@@ -169,6 +193,7 @@ export default function ScoutingHubScreen() {
                 setSelectedDistrict('All Districts');
                 setSelectedRoleFilter('Top Batsmen');
                 setSearchQuery('');
+                setShowOnlyShortlisted(false);
               }}
               className="mt-2 px-4 py-2 bg-blue-50 text-blue-700 text-xs font-bold rounded-xl"
             >

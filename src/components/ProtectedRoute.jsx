@@ -4,37 +4,29 @@ import { useCricket } from '../context/CricketContext';
 
 // ─── Role → Allowed Routes ─────────────────────────────────────────────────
 export const ROLE_PERMISSIONS = {
-  Admin: '*', // full access
+  SuperAdmin: '*', // full access
+  Admin: '*',      // full access
   Scorer: [
-    '/matches',
-    '/match-overview',
-    '/scoring',
-    '/scorecard',
-    '/innings-break',
-    '/match-result',
+    '/home', '/matches', '/match-setup', '/match-overview',
+    '/scoring', '/scorecard', '/innings-break', '/match-result',
   ],
   Selector: [
-    '/matches',
-    '/match-overview',
-    '/scorecard',
-    '/scouting',
-    '/player-profile',
-    '/selectors',
+    '/home', '/matches', '/match-overview', '/scorecard',
+    '/players', '/scouting', '/player-profile', '/player-registration',
+    '/selection', '/selectors',
   ],
   Player: [
-    '/matches',
-    '/match-overview',
-    '/scorecard',
-    '/player-profile',
+    '/home', '/matches', '/match-overview', '/scorecard', '/player-profile',
   ],
 };
 
 // ─── Role → Default Landing Page After Login ──────────────────────────────
 export const ROLE_HOME = {
-  Admin:    '/matches',
-  Scorer:   '/matches',
-  Selector: '/scouting',
-  Player:   '/matches',
+  SuperAdmin: '/home',
+  Admin:      '/home',
+  Scorer:     '/home',
+  Selector:   '/home',
+  Player:     '/home',
 };
 
 // ─── Helper: does a role have access to a given path? ────────────────────
@@ -49,14 +41,10 @@ export function roleCanAccess(role, path) {
 export default function ProtectedRoute({ path, element }) {
   const { isAuthenticated, userRole } = useCricket();
 
-  // Not logged in → go to auth
-  if (!isAuthenticated) {
-    return <Navigate to="/" replace />;
-  }
+  if (!isAuthenticated) return <Navigate to="/" replace />;
 
-  // Logged in but not allowed → go to role home
   if (!roleCanAccess(userRole, path)) {
-    return <Navigate to={ROLE_HOME[userRole] || '/matches'} replace />;
+    return <Navigate to={ROLE_HOME[userRole] || '/home'} replace />;
   }
 
   return element;

@@ -32,6 +32,7 @@ export const BallEventSchema = z.object({
   dismissalType: z.enum(DISMISSAL_TYPES).nullable().optional(),
   outPlayerName: z.string().optional(),
   fielderName: z.string().optional(),
+  wicketkeeperName: z.string().optional(),
   wagonZone: z.string().optional(),
   pitchCoord: z.object({ x: z.number(), y: z.number() }).optional(),
 }).superRefine((data, ctx) => {

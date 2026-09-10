@@ -33,24 +33,39 @@ export function CricketProvider({ children }) {
   if (currentScreen === '') currentScreen = 'welcome';
   
   const activeTabMap = {
+    'home': 'home',
     'scoring': 'scoring',
-    'scorecard': 'scorecard',
-    'scouting': 'analysis',
-    'selectors': 'analysis',
-    'player-profile': 'analysis',
-    'player-registration': 'analysis',
+    'scorecard': 'scoring',
+    'scouting': 'players',
+    'players': 'players',
+    'selectors': 'selection',
+    'selection': 'selection',
+    'player-profile': 'players',
+    'player-registration': 'players',
     'matches': 'matches',
     'match-overview': 'matches',
     'match-setup': 'matches',
     'match-result': 'matches',
-    'innings-break': 'matches'
+    'innings-break': 'matches',
+    'tournaments': 'tournaments',
+    'administration': 'administration',
+    'access-control': 'administration',
   };
-  const activeTab = activeTabMap[currentScreen] || 'matches';
+  const activeTab = activeTabMap[currentScreen] || 'home';
 
   // Authentication State
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userEmail, setUserEmail] = useState('');
-  const [userRole, setUserRole] = useState('Admin'); // Admin, Scorer, Selector, Player
+  const [userRole, setUserRole] = useState('Admin'); // SuperAdmin, Admin, Scorer, Selector, Player
+
+  // Registered Users (Super Admin access)
+  const [registeredUsers, setRegisteredUsers] = useState([
+    { id: 'usr_001', name: 'Rohan (Super Admin)', email: 'superadmin@jdca.com', password: 'password123', role: 'SuperAdmin' },
+    { id: 'usr_002', name: 'Admin User', email: 'admin@jdca.com', password: 'password123', role: 'Admin' },
+    { id: 'usr_003', name: 'Scorer One', email: 'scorer@jdca.com', password: 'password123', role: 'Scorer' },
+    { id: 'usr_004', name: 'Selector Lead', email: 'selector@jdca.com', password: 'password123', role: 'Selector' },
+    { id: 'usr_005', name: 'Player Virat', email: 'player@jdca.com', password: 'password123', role: 'Player' }
+  ]);
 
   // Players & Scouting
   const [players, setPlayers] = useState(INITIAL_PLAYERS);
@@ -150,6 +165,12 @@ export function CricketProvider({ children }) {
   // Ball Direction / Shot Sector & State Machine Attributes
   const [selectedDirection, setSelectedDirection] = useState('Cover');
   const [ballHistory, setBallHistory] = useState([]);
+  // Permanent-in-session delivery events: the raw source for scorecards and future analytics.
+  const [deliveryLog, setDeliveryLog] = useState([]);
+  const [lastOverBowlerId, setLastOverBowlerId] = useState(null);
+  const [scoringFirstRunDone, setScoringFirstRunDone] = useState(() => {
+    try { return localStorage.getItem('jdca-scoring-first-run') === '1'; } catch { return false; }
+  });
   const [isFreeHit, setIsFreeHit] = useState(false);
   const [validationError, setValidationError] = useState(null);
   const [matchStatus, setMatchStatus] = useState('IN_PROGRESS');
@@ -176,6 +197,7 @@ export function CricketProvider({ children }) {
   const navigateTo = (screenName, tabName = null) => {
     const routeMap = {
       'welcome': '/',
+      'home': '/home',
       'matches': '/matches',
       'match-setup': '/match-setup',
       'scoring': '/scoring',
@@ -183,12 +205,17 @@ export function CricketProvider({ children }) {
       'match-overview': '/match-overview',
       'innings-break': '/innings-break',
       'match-result': '/match-result',
-      'scouting': '/scouting',
-      'selectors': '/selectors',
+      'tournaments': '/tournaments',
+      'players': '/players',
+      'scouting': '/players',
       'player-profile': '/player-profile',
-      'player-registration': '/player-registration'
+      'player-registration': '/player-registration',
+      'selection': '/selection',
+      'selectors': '/selection',
+      'administration': '/administration',
+      'access-control': '/administration',
     };
-    navigate(routeMap[screenName] || '/matches');
+    navigate(routeMap[screenName] || '/home');
   };
 
   const goBack = () => {
@@ -231,6 +258,7 @@ export function CricketProvider({ children }) {
     innings,
     matchStatus,
     scorecard: JSON.parse(JSON.stringify(scorecard)),
+    lastOverBowlerId,
   });
 
   // Apply State Machine Result
@@ -254,6 +282,7 @@ export function CricketProvider({ children }) {
     setIsFreeHit(newState.isFreeHit);
     setScorecard(newState.scorecard);
     setMatchStatus(newState.matchStatus);
+    if (newState.lastOverBowlerId !== undefined) setLastOverBowlerId(newState.lastOverBowlerId);
     setValidationError(null);
 
     // Check innings or match termination
@@ -264,6 +293,59 @@ export function CricketProvider({ children }) {
     }
 
     return true;
+  };
+
+  const recordDeliveryEvent = (event) => {
+    const eventId = `delivery-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+    setDeliveryLog((prev) => [...prev, {
+      id: eventId,
+      timestamp: new Date().toISOString(),
+      matchId: activeMatchId,
+      innings,
+      over: formatOvers(balls),
+      strikerId: striker.id,
+      striker: striker.name,
+      nonStrikerId: nonStriker.id,
+      nonStriker: nonStriker.name,
+      bowlerId: currentBowler.id,
+      bowler: currentBowler.name,
+      ...event,
+    }]);
+  };
+
+  const markScoringFirstRunDone = () => {
+    setScoringFirstRunDone(true);
+    try { localStorage.setItem('jdca-scoring-first-run', '1'); } catch {}
+  };
+
+  const replaceStriker = (player) => {
+    if (!player) return;
+    setStriker((prev) => ({
+      id: player.id || prev.id,
+      name: player.name || prev.name,
+      runs: Number.isFinite(player.runs) ? player.runs : 0,
+      balls: Number.isFinite(player.balls) ? player.balls : 0,
+      fours: Number.isFinite(player.fours) ? player.fours : 0,
+      sixes: Number.isFinite(player.sixes) ? player.sixes : 0,
+      strikeRate: player.strikeRate || '0.0',
+    }));
+  };
+
+  const continueAfterOver = (bowler) => {
+    if (!bowler) return;
+    setCurrentBowler((prev) => ({
+      id: bowler.id,
+      name: bowler.name,
+      overs: 0,
+      ballsBowled: 0,
+      maidens: 0,
+      runs: 0,
+      wickets: 0,
+      economy: '0.00',
+      wk: '',
+    }));
+    setMatchStatus(MATCH_STATES.IN_PROGRESS);
+    setCurrentOverBalls([]);
   };
 
   // 1. Add Runs Action (0..6)
@@ -281,6 +363,7 @@ export function CricketProvider({ children }) {
       innings,
       totalMatchOvers: matchSetup.totalOvers,
       scorecard,
+      lastOverBowlerId,
     };
 
     const result = processDelivery(currentState, {
@@ -290,6 +373,9 @@ export function CricketProvider({ children }) {
     });
 
     const ok = applyStateResult(result);
+    if (ok) {
+      recordDeliveryEvent({ type: 'run', runs: runAmount, runsOffBat: runAmount, totalRuns: runAmount, label: String(runAmount), wagonZone: direction });
+    }
     if (ok && runAmount === 6) {
       confetti({
         particleCount: 40,
@@ -315,6 +401,7 @@ export function CricketProvider({ children }) {
       innings,
       totalMatchOvers: matchSetup.totalOvers,
       scorecard,
+      lastOverBowlerId,
     };
 
     const result = processDelivery(currentState, {
@@ -323,11 +410,15 @@ export function CricketProvider({ children }) {
       extraRuns: runsWithExtra,
     });
 
-    applyStateResult(result);
+    const ok = applyStateResult(result);
+    if (ok) {
+      const totalRuns = type === 'wide' || type === 'no_ball' ? 1 + runsWithExtra : runsWithExtra;
+      recordDeliveryEvent({ type: 'extra', extraType: type, extraRuns: runsWithExtra, totalRuns, label: type === 'wide' ? `${totalRuns}Wd` : type === 'no_ball' ? `${totalRuns}Nb` : `${totalRuns}${type === 'bye' ? 'B' : 'Lb'}` });
+    }
   };
 
   // 3. Record Wicket / Dismissal (Bowled, Caught, LBW, Run Out, Stumped, etc.)
-  const recordWicket = (dismissalType, outPlayerName = striker.name, fielder = '') => {
+  const recordWicket = (dismissalType, outPlayerName = striker.name, fielder = '', wicketkeeper = '') => {
     const currentState = {
       runs,
       wickets,
@@ -341,6 +432,7 @@ export function CricketProvider({ children }) {
       innings,
       totalMatchOvers: matchSetup.totalOvers,
       scorecard,
+      lastOverBowlerId,
     };
 
     const result = processDelivery(currentState, {
@@ -348,10 +440,12 @@ export function CricketProvider({ children }) {
       dismissalType,
       outPlayerName,
       fielderName: fielder,
+      wicketkeeperName: wicketkeeper,
     });
 
     const ok = applyStateResult(result);
     if (ok) {
+      recordDeliveryEvent({ type: 'wicket', wicket: true, dismissalType, outPlayerName, fielderName: fielder, wicketkeeperName: wicketkeeper, totalRuns: 0, label: 'W' });
       setDismissalModalOpen(false);
     }
   };
@@ -371,6 +465,8 @@ export function CricketProvider({ children }) {
     setIsFreeHit(previousState.isFreeHit);
     setInnings(previousState.innings);
     setMatchStatus(previousState.matchStatus || 'IN_PROGRESS');
+    setLastOverBowlerId(previousState.lastOverBowlerId || null);
+    setDeliveryLog((prev) => prev.slice(0, -1));
     if (previousState.scorecard) {
       setScorecard(previousState.scorecard);
     }
@@ -443,6 +539,8 @@ export function CricketProvider({ children }) {
         setUserEmail,
         userRole,
         setUserRole,
+        registeredUsers,
+        setRegisteredUsers,
         players,
         setPlayers,
         selectedPlayer,
@@ -495,6 +593,12 @@ export function CricketProvider({ children }) {
         setDrawerOpen,
         scorecard,
         setScorecard,
+        deliveryLog,
+        lastOverBowlerId,
+        replaceStriker,
+        continueAfterOver,
+        scoringFirstRunDone,
+        markScoringFirstRunDone,
         officials: OFFICIALS,
         tournaments: TOURNAMENTS,
         districtStats: DISTRICT_STATS,
