@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   RotateCcw, FileText, ShieldAlert, AlertTriangle, X,
   ChevronRight, RefreshCw, Radio, CircleHelp, WifiOff,
@@ -32,7 +32,7 @@ export default function ScoringScreen() {
     currentOverBalls, striker, nonStriker, currentBowler, isFreeHit, toggleStriker,
     validationError, setValidationError, matchStatus, recordRuns, recordExtra,
     recordWicket, undoLastAction, innings, navigateTo, activeMatchId, matches,
-    matchSetup, setMatchSetup, replaceStriker, continueAfterOver, lastOverBowlerId,
+    matchSetup, setMatchSetup, replaceStriker, replaceBatter, handleRetireBatter, continueAfterOver, lastOverBowlerId,
     deliveryLog = [], scoringFirstRunDone, markScoringFirstRunDone, goBack
   } = useCricket();
 
@@ -41,6 +41,10 @@ export default function ScoringScreen() {
   const [fielder, setFielder] = useState('');
   const [runOutPlayer, setRunOutPlayer] = useState('');
   const [newBatterOpen, setNewBatterOpen] = useState(false);
+  const [replacingBatterType, setReplacingBatterType] = useState('striker');
+  const [retireModalOpen, setRetireModalOpen] = useState(false);
+  const [retiringBatter, setRetiringBatter] = useState('striker');
+  const [retireType, setRetireType] = useState('hurt');
   const [overOpen, setOverOpen] = useState(false);
   const [changeWkOpen, setChangeWkOpen] = useState(false);
   const [extrasOpen, setExtrasOpen] = useState(false);
@@ -74,6 +78,7 @@ export default function ScoringScreen() {
       wk = matchSetup?.playingXI?.find(p => /wicket/i.test(p.role))?.name || fielder;
     }
 
+    setReplacingBatterType(outName === nonStriker.name ? 'nonStriker' : 'striker');
     recordWicket(selectedDismissal, outName, fielder, wk);
     setDismissalOpen(false);
     setFielder('');
@@ -81,9 +86,19 @@ export default function ScoringScreen() {
     setNewBatterOpen(true);
   };
 
+  const submitRetire = () => {
+    handleRetireBatter(retiringBatter === 'striker', retireType === 'out');
+    setRetireModalOpen(false);
+    setReplacingBatterType(retiringBatter);
+    setNewBatterOpen(true);
+  };
+
   const selectNewBatter = (player) => {
-    if (player) replaceStriker?.({ ...player, runs: 0, balls: 0, fours: 0, sixes: 0, strikeRate: '0.0' });
+    if (player) {
+      replaceBatter(replacingBatterType === 'striker', { ...player, runs: 0, balls: 0, fours: 0, sixes: 0, strikeRate: '0.0' });
+    }
     setNewBatterOpen(false);
+    setReplacingBatterType('striker'); // reset
   };
 
   const selectNextBowler = (player) => {
@@ -256,12 +271,15 @@ export default function ScoringScreen() {
            <button onClick={() => recordExtra('leg_bye', 1)} className="h-12 rounded-[12px] bg-gray-100 text-[#101827] text-[12px] font-black uppercase tracking-wider active:bg-gray-200">LB</button>
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
-           <button onClick={() => setDismissalOpen(true)} className="h-14 rounded-[16px] bg-[#F05A47] text-white flex items-center justify-center gap-2 text-[16px] font-black shadow-md active:bg-[#d64a39]">
-             <ShieldAlert size={18} /> WICKET
+        <div className="grid grid-cols-3 gap-3">
+           <button onClick={() => setDismissalOpen(true)} className="h-14 rounded-[16px] bg-[#F05A47] text-white flex items-center justify-center gap-2 text-[14px] font-black shadow-md active:bg-[#d64a39]">
+             <ShieldAlert size={16} /> WICKET
            </button>
-           <button onClick={() => setExtrasOpen(true)} className="h-14 rounded-[16px] bg-white border border-gray-200 text-[#101827] flex items-center justify-center gap-2 text-[14px] font-bold active:bg-gray-50">
-             <MoreHorizontal size={18} /> MORE EXTRAS
+           <button onClick={() => setRetireModalOpen(true)} className="h-14 rounded-[16px] bg-gray-100 text-[#101827] flex items-center justify-center gap-2 text-[14px] font-black active:bg-gray-200">
+             RETIRE
+           </button>
+           <button onClick={() => setExtrasOpen(true)} className="h-14 rounded-[16px] bg-white border border-gray-200 text-[#101827] flex items-center justify-center gap-2 text-[12px] font-bold active:bg-gray-50">
+             <MoreHorizontal size={16} /> EXTRAS
            </button>
         </div>
       </div>
@@ -319,6 +337,56 @@ export default function ScoringScreen() {
               disabled={(selectedDismissal === 'Caught' || selectedDismissal === 'Run Out') && !fielder}
             >
               Confirm Wicket
+            </button>
+          </div>
+        </Modal>
+      )}
+
+      {retireModalOpen && (
+        <Modal title="Retire Batter" onClose={() => setRetireModalOpen(false)}>
+          <div className="mb-4">
+            <label className="text-[12px] font-bold uppercase tracking-wider text-[#8a99b0] mb-2 block">Who is retiring?</label>
+            <div className="grid grid-cols-2 gap-2">
+              <button 
+                onClick={() => setRetiringBatter('striker')}
+                className={`py-3 rounded-[12px] text-[13px] font-bold border transition-colors ${retiringBatter === 'striker' ? 'bg-[#101827] text-white border-[#101827]' : 'bg-white text-[#596579] border-gray-200'}`}
+              >
+                {striker.name} (Striker)
+              </button>
+              <button 
+                onClick={() => setRetiringBatter('nonStriker')}
+                className={`py-3 rounded-[12px] text-[13px] font-bold border transition-colors ${retiringBatter === 'nonStriker' ? 'bg-[#101827] text-white border-[#101827]' : 'bg-white text-[#596579] border-gray-200'}`}
+              >
+                {nonStriker.name} (Non-Striker)
+              </button>
+            </div>
+          </div>
+
+          <div className="mb-6">
+            <label className="text-[12px] font-bold uppercase tracking-wider text-[#8a99b0] mb-2 block">Reason</label>
+            <div className="grid grid-cols-2 gap-2">
+              <button 
+                onClick={() => setRetireType('hurt')}
+                className={`py-3 px-2 rounded-[12px] text-[13px] font-bold border transition-colors flex flex-col items-center justify-center gap-1 ${retireType === 'hurt' ? 'bg-[#ff6100] text-white border-[#ff6100]' : 'bg-white text-[#596579] border-gray-200'}`}
+              >
+                <span>Retired Hurt</span><span className="text-[10px] font-normal opacity-80">(No Wicket)</span>
+              </button>
+              <button 
+                onClick={() => setRetireType('out')}
+                className={`py-3 px-2 rounded-[12px] text-[13px] font-bold border transition-colors flex flex-col items-center justify-center gap-1 ${retireType === 'out' ? 'bg-[#F05A47] text-white border-[#F05A47]' : 'bg-white text-[#596579] border-gray-200'}`}
+              >
+                <span>Retired Out</span><span className="text-[10px] font-normal opacity-80">(Counts as Wicket)</span>
+              </button>
+            </div>
+          </div>
+
+          <div className="flex gap-2">
+            <button className="flex-1 py-3 rounded-[12px] font-bold bg-gray-100 text-[#596579]" onClick={() => setRetireModalOpen(false)}>Cancel</button>
+            <button 
+              className="flex-1 py-3 rounded-[12px] font-bold bg-[#0FA968] text-white" 
+              onClick={submitRetire}
+            >
+              Confirm Retire
             </button>
           </div>
         </Modal>

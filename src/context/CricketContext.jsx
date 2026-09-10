@@ -331,6 +331,38 @@ export function CricketProvider({ children }) {
     }));
   };
 
+  const replaceBatter = (isStriker, player) => {
+    if (!player) return;
+    const newBatter = {
+      id: player.id || `temp-${Date.now()}`,
+      name: player.name || 'Unknown',
+      runs: Number.isFinite(player.runs) ? player.runs : 0,
+      balls: Number.isFinite(player.balls) ? player.balls : 0,
+      fours: Number.isFinite(player.fours) ? player.fours : 0,
+      sixes: Number.isFinite(player.sixes) ? player.sixes : 0,
+      strikeRate: player.strikeRate || '0.0',
+    };
+    if (isStriker) {
+      setStriker(newBatter);
+    } else {
+      setNonStriker(newBatter);
+    }
+  };
+
+  const handleRetireBatter = (isStriker, isRetiredOut) => {
+    const outName = isStriker ? striker.name : nonStriker.name;
+    const dismissalType = isRetiredOut ? 'Retired Out' : 'Retired Hurt';
+    
+    setBallHistory((prev) => [...prev, captureSnapshot()]);
+    
+    if (isRetiredOut) {
+      setWickets((prev) => prev + 1);
+      recordDeliveryEvent({ type: 'wicket', wicket: true, dismissalType, outPlayerName: outName, totalRuns: 0, label: 'W' });
+    } else {
+      recordDeliveryEvent({ type: 'retire', dismissalType, outPlayerName: outName, totalRuns: 0, label: 'RH' });
+    }
+  };
+
   const continueAfterOver = (bowler) => {
     if (!bowler) return;
     setCurrentBowler((prev) => ({
@@ -596,6 +628,8 @@ export function CricketProvider({ children }) {
         deliveryLog,
         lastOverBowlerId,
         replaceStriker,
+        replaceBatter,
+        handleRetireBatter,
         continueAfterOver,
         scoringFirstRunDone,
         markScoringFirstRunDone,
