@@ -1,20 +1,43 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# JDCA - Jabalpur District Cricket Association
 
-# Run and deploy your AI Studio app
+A premium, mobile-first management and scoring application for the Jabalpur District Cricket Association.
 
-This contains everything you need to run your app locally.
+## Features
 
-View your app in AI Studio: https://ai.studio/apps/4406db42-f90d-4b78-b58f-009159642602
+- **Role-based Dashboards:** Dedicated experiences for Admins, Scorers, Selectors, and Players.
+- **Tournament Browser:** Professional, hierarchical competition listing.
+- **Match Setup & Scoring Console:** Powerful thumb-friendly mobile scoring pad for real-time match tracking.
+- **Player Registry:** Comprehensive player profiles with native mobile app UI aesthetics.
+- **Media Reports:** Auto-generated, shareable official match reports.
 
-## Run Locally
+## Technology Stack
 
-**Prerequisites:**  Node.js
+- **Framework:** React + Vite
+- **Styling:** Tailwind CSS & Custom UI Tokens
+- **State Management:** React Context (`CricketContext`)
+- **Backend (Upcoming):** Supabase
 
+## Setup
 
 1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+   ```bash
+   npm install
+   ```
+
+2. Run development server:
+   ```bash
+   npm run dev
+   ```
+
+3. Build for production:
+   ```bash
+   npm run build
+   ```
+
+## Design Philosophy
+
+The application follows a premium sports-app design language characterized by:
+- Soft light backgrounds (`#F7F8F4`) and clean white content surfaces.
+- High-contrast primary actions (Deep Blue `#2457D6`, Green `#0FA968`, Coral Red `#F05A47`).
+- Minimalist "no-scrollbar" horizontal scrolling lists.
+- Information density optimized for mobile screens.
