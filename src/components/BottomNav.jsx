@@ -1,6 +1,7 @@
 import React from 'react';
 import { useCricket } from '../context/CricketContext';
 import { Home, Calendar, Radio, Users, Settings, MoreHorizontal, User, ClipboardList, LayoutGrid } from 'lucide-react';
+import { motion } from 'motion/react';
 
 export default function BottomNav() {
   const { currentScreen, navigateTo, userRole, drawerOpen, setDrawerOpen } = useCricket();
@@ -73,8 +74,8 @@ export default function BottomNav() {
   const tabs = getNavItems();
 
   return (
-    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 pb-safe shadow-[0_-4px_16px_rgba(0,0,0,0.04)] h-[68px]">
-      <div className="flex items-stretch justify-around h-full px-1">
+    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-t border-gray-200 pb-safe shadow-[0_-4px_24px_rgba(0,0,0,0.06)] h-[68px]">
+      <div className="flex items-stretch justify-around h-full px-2 relative">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeId === tab.id;
@@ -92,20 +93,27 @@ export default function BottomNav() {
             <button
               key={tab.id}
               onClick={handleClick}
-              className="flex flex-col items-center justify-center flex-1 space-y-1 transition-all duration-200 cursor-pointer outline-none tap-highlight-transparent"
+              className="flex flex-col items-center justify-center flex-1 space-y-1 transition-all duration-200 cursor-pointer outline-none tap-highlight-transparent relative"
             >
-              <div className={`relative flex items-center justify-center w-10 h-8 rounded-full transition-colors ${isActive && !isMore ? 'bg-[#eef2fd] text-[#2457D6]' : 'text-[#8a99b0]'}`}>
+              <div className={`relative flex items-center justify-center w-12 h-8 rounded-full z-10 transition-colors ${isActive && !isMore ? 'text-[#2457D6]' : 'text-[#8a99b0]'}`}>
+                {isActive && !isMore && (
+                  <motion.div
+                    layoutId="bottom-nav-indicator"
+                    className="absolute inset-0 bg-[#eef2fd] rounded-full -z-10"
+                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                  />
+                )}
                 <Icon
                   size={isActive ? 22 : 20}
                   strokeWidth={isActive ? 2.5 : 2}
                   className={`transition-colors ${isMore && drawerOpen ? 'text-[#101827]' : ''}`}
                 />
                 {tab.liveIndicator && (
-                  <span className="absolute top-0 right-1 w-2 h-2 bg-[#0FA968] rounded-full shadow-[0_0_0_2px_white] animate-pulse" />
+                  <span className="absolute top-0 right-2 w-2 h-2 bg-[#0FA968] rounded-full shadow-[0_0_0_2px_white] animate-pulse" />
                 )}
               </div>
               <span
-                className={`text-[10px] tracking-wide transition-colors ${isActive && !isMore ? 'font-bold text-[#2457D6]' : 'font-medium text-[#8a99b0]'} ${isMore && drawerOpen ? 'text-[#101827]' : ''}`}
+                className={`text-[10px] tracking-wide transition-colors z-10 ${isActive && !isMore ? 'font-bold text-[#2457D6]' : 'font-medium text-[#8a99b0]'} ${isMore && drawerOpen ? 'text-[#101827]' : ''}`}
               >
                 {tab.label}
               </span>

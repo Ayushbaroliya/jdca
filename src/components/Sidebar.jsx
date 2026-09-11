@@ -6,6 +6,7 @@ import {
 import { useCricket } from '../context/CricketContext';
 import { RoleBadge } from './ui/Badge';
 import batIcon from '../assets/bat-icon.png';
+import { motion } from 'motion/react';
 
 const NAV_ITEMS = [
   { id: 'home',           label: 'Home',          icon: Home,      route: 'home' },
@@ -48,7 +49,7 @@ export default function Sidebar() {
 
   return (
     <aside
-      className="hidden lg:flex flex-col h-screen sticky top-0 flex-shrink-0"
+      className="hidden lg:flex flex-col h-screen sticky top-0 flex-shrink-0 relative z-20"
       style={{ width: 228, background: '#101827', borderRight: '1px solid rgba(255,255,255,0.06)' }}
     >
       {/* Brand */}
@@ -68,7 +69,7 @@ export default function Sidebar() {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 py-4 overflow-y-auto no-scrollbar space-y-0.5">
+      <nav className="flex-1 px-3 py-4 overflow-y-auto no-scrollbar space-y-1">
         <div className="sidebar-kicker px-3 mb-3">JDCA / SEASON 2026</div>
 
         {visible.map((item) => {
@@ -79,12 +80,20 @@ export default function Sidebar() {
               key={item.id}
               id={`sidebar-nav-${item.id}`}
               onClick={() => navigateTo(item.route)}
-              className={`sidebar-item ${isActive ? 'active' : ''}`}
+              className={`relative flex items-center gap-3 px-3 py-2.5 rounded-lg w-full transition-colors ${isActive ? 'text-white' : 'text-[#8a99b0] hover:text-white hover:bg-white/5'}`}
             >
+              {isActive && (
+                <motion.div
+                  layoutId="sidebar-active-indicator"
+                  className="absolute inset-0 bg-[#2457D6] rounded-lg -z-10"
+                  initial={false}
+                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                />
+              )}
               <Icon size={17} strokeWidth={isActive ? 2.5 : 2} className="flex-shrink-0" />
-              <span className="flex-1 text-left" style={{ fontSize: 14 }}>{item.label}</span>
+              <span className={`flex-1 text-left ${isActive ? 'font-semibold' : 'font-medium'}`} style={{ fontSize: 14 }}>{item.label}</span>
               {item.liveIndicator && (
-                <span className="live-dot flex-shrink-0" style={{ width: 6, height: 6 }} />
+                <span className="flex-shrink-0 w-1.5 h-1.5 bg-[#0FA968] rounded-full animate-pulse shadow-[0_0_0_2px_rgba(15,169,104,0.3)]" />
               )}
             </button>
           );
@@ -111,12 +120,11 @@ export default function Sidebar() {
         </div>
         <button
           onClick={handleLogout}
-          className="sidebar-item w-full"
-          style={{ color: '#8a99b0' }}
+          className="flex items-center gap-3 px-3 py-2 w-full text-[#8a99b0] hover:text-white hover:bg-white/5 rounded-lg transition-colors"
           id="sidebar-logout-btn"
         >
           <LogOut size={15} strokeWidth={2} />
-          <span style={{ fontSize: 13 }}>Sign Out</span>
+          <span style={{ fontSize: 13 }} className="font-medium">Sign Out</span>
         </button>
       </div>
     </aside>

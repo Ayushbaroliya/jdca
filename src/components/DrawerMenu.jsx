@@ -5,6 +5,7 @@ import {
 import { useCricket } from '../context/CricketContext';
 import { RoleBadge } from './ui/Badge';
 import batIcon from '../assets/bat-icon.png';
+import { motion, AnimatePresence } from 'motion/react';
 
 const ALL_NAV = [
   { id: 'home',           label: 'Home',          icon: Home,      route: 'home' },
@@ -29,8 +30,6 @@ const ACTIVE_MAP = {
 export default function DrawerMenu() {
   const { drawerOpen, setDrawerOpen, navigateTo, currentScreen, userRole, userEmail, setIsAuthenticated } = useCricket();
 
-  if (!drawerOpen) return null;
-
   const activeId = ACTIVE_MAP[currentScreen] || currentScreen;
 
   const visible = ALL_NAV.filter(item => {
@@ -53,97 +52,107 @@ export default function DrawerMenu() {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex">
-      {/* Backdrop */}
-      <div
-        className="fixed inset-0"
-        style={{ background: 'rgba(16,24,39,0.65)', backdropFilter: 'blur(2px)' }}
-        onClick={() => setDrawerOpen(false)}
-      />
-
-      {/* Drawer panel */}
-      <div
-        className="relative flex flex-col h-full shadow-2xl z-10 fade-in-up"
-        style={{
-          width: 260,
-          background: '#101827',
-          borderRight: '1px solid rgba(255,255,255,0.07)',
-          animation: 'slideInLeft 0.2s ease both',
-        }}
-      >
-        {/* Header */}
-        <div
-          className="flex items-center justify-between px-5 py-4"
-          style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}
-        >
-          <div className="flex items-center gap-2.5">
-            <div className="jdca-brand-mark flex items-center justify-center" style={{ width: 40, height: 40 }}>
-              <img src={batIcon} alt="" style={{ width: 29, height: 29, objectFit: 'contain' }} />
-            </div>
-            <div>
-              <div className="font-bold text-white" style={{ fontSize: 14 }}>JDCA</div>
-              <div style={{ fontSize: 10, color: '#8a99b0' }}>Jabalpur District Cricket Association</div>
-            </div>
-          </div>
-          <button
+    <AnimatePresence>
+      {drawerOpen && (
+        <div className="fixed inset-0 z-50 flex">
+          {/* Backdrop */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm"
             onClick={() => setDrawerOpen(false)}
-            className="flex items-center justify-center w-8 h-8 rounded-lg cursor-pointer"
-            style={{ background: 'rgba(255,255,255,0.08)', border: 'none' }}
-            id="drawer-close-btn"
-          >
-            <X size={17} style={{ color: '#8a99b0' }} />
-          </button>
-        </div>
+          />
 
-        {/* Nav items */}
-        <nav className="flex-1 px-3 py-4 overflow-y-auto no-scrollbar space-y-0.5">
-          <div className="section-label px-3 mb-3" style={{ color: '#4a5568', fontSize: 10 }}>
-            SECTIONS
-          </div>
-          {visible.map((item) => {
-            const Icon = item.icon;
-            const isActive = activeId === item.id;
-            return (
+          {/* Drawer panel */}
+          <motion.div
+            initial={{ x: '-100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '-100%' }}
+            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            className="relative flex flex-col h-full shadow-2xl z-10"
+            style={{
+              width: 280,
+              background: 'rgba(16, 24, 39, 0.85)',
+              backdropFilter: 'blur(16px)',
+              borderRight: '1px solid rgba(255,255,255,0.1)',
+            }}
+          >
+            {/* Header */}
+            <div
+              className="flex items-center justify-between px-5 py-4"
+              style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}
+            >
+              <div className="flex items-center gap-2.5">
+                <div className="jdca-brand-mark flex items-center justify-center" style={{ width: 40, height: 40 }}>
+                  <img src={batIcon} alt="" style={{ width: 29, height: 29, objectFit: 'contain' }} />
+                </div>
+                <div>
+                  <div className="font-bold text-white" style={{ fontSize: 14 }}>JDCA</div>
+                  <div style={{ fontSize: 10, color: '#8a99b0' }}>Jabalpur District Cricket Association</div>
+                </div>
+              </div>
               <button
-                key={item.id}
-                id={`drawer-nav-${item.id}`}
-                onClick={() => handleNav(item.route)}
-                className={`sidebar-item ${isActive ? 'active' : ''}`}
+                onClick={() => setDrawerOpen(false)}
+                className="flex items-center justify-center w-8 h-8 rounded-lg cursor-pointer transition-colors hover:bg-white/10"
+                style={{ background: 'rgba(255,255,255,0.08)', border: 'none' }}
+                id="drawer-close-btn"
               >
-                <Icon size={17} strokeWidth={isActive ? 2.5 : 2} className="flex-shrink-0" />
-                <span className="flex-1 text-left" style={{ fontSize: 14 }}>{item.label}</span>
-                {item.liveIndicator && <span className="live-dot" style={{ width: 6, height: 6 }} />}
+                <X size={17} style={{ color: '#8a99b0' }} />
               </button>
-            );
-          })}
-        </nav>
-
-        {/* User footer */}
-        <div className="px-3 pb-5 pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
-          <div className="px-3 py-2.5 rounded-lg mb-2" style={{ background: 'rgba(255,255,255,0.05)' }}>
-            <div className="font-semibold text-white mb-1.5" style={{ fontSize: 12 }}>
-              {userEmail || 'JDCA Official'}
             </div>
-            <RoleBadge role={userRole} />
-          </div>
-          <button
-            onClick={handleLogout}
-            className="sidebar-item w-full"
-            style={{ color: '#8a99b0', fontSize: 13 }}
-            id="drawer-logout-btn"
-          >
-            <LogOut size={15} strokeWidth={2} />
-            <span>Sign Out</span>
-          </button>
-        </div>
-      </div>
 
-      <style>{`
-        @keyframes slideInLeft {
-          from { transform: translateX(-100%); }
-          to   { transform: translateX(0); }
-        }
-      `}</style>
-    </div>
+            {/* Nav items */}
+            <nav className="flex-1 px-4 py-6 overflow-y-auto no-scrollbar space-y-1.5">
+              <div className="px-3 mb-4 font-bold tracking-wider" style={{ color: '#8a99b0', fontSize: 11 }}>
+                MENU
+              </div>
+              {visible.map((item) => {
+                const Icon = item.icon;
+                const isActive = activeId === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    id={`drawer-nav-${item.id}`}
+                    onClick={() => handleNav(item.route)}
+                    className={`relative flex items-center gap-3 px-3 py-3 rounded-xl w-full transition-colors ${isActive ? 'text-white' : 'text-[#8a99b0] hover:text-white hover:bg-white/5'}`}
+                  >
+                    {isActive && (
+                      <motion.div
+                        layoutId="drawer-active-indicator"
+                        className="absolute inset-0 bg-[#2457D6] rounded-xl -z-10 shadow-[0_0_15px_rgba(36,87,214,0.3)]"
+                        transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                      />
+                    )}
+                    <Icon size={18} strokeWidth={isActive ? 2.5 : 2} className="flex-shrink-0" />
+                    <span className={`flex-1 text-left ${isActive ? 'font-bold' : 'font-medium'}`} style={{ fontSize: 15 }}>{item.label}</span>
+                    {item.liveIndicator && <span className="w-1.5 h-1.5 bg-[#0FA968] rounded-full animate-pulse shadow-[0_0_6px_rgba(15,169,104,0.5)]" />}
+                  </button>
+                );
+              })}
+            </nav>
+
+            {/* User footer */}
+            <div className="px-4 pb-6 pt-4" style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
+              <div className="px-3 py-3 rounded-xl mb-3 border border-white/5" style={{ background: 'rgba(255,255,255,0.05)' }}>
+                <div className="font-bold text-white mb-1.5" style={{ fontSize: 13 }}>
+                  {userEmail || 'JDCA Official'}
+                </div>
+                <RoleBadge role={userRole} />
+              </div>
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-3 px-3 py-2.5 w-full text-[#8a99b0] hover:text-white hover:bg-white/5 rounded-xl transition-colors"
+                id="drawer-logout-btn"
+              >
+                <LogOut size={16} strokeWidth={2} />
+                <span className="font-medium" style={{ fontSize: 14 }}>Sign Out</span>
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
   );
 }

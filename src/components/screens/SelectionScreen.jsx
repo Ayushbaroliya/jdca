@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { 
   Search, 
   MapPin, 
@@ -16,6 +16,20 @@ import { useCricket } from '../../context/CricketContext';
 import { PageHeader, SectionLabel } from '../ui/PageHeader';
 import { Badge } from '../ui/Badge';
 import StatCard from '../ui/StatCard';
+import { motion, AnimatePresence } from 'motion/react';
+
+const listVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.05 }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, scale: 0.95 },
+  visible: { opacity: 1, scale: 1, transition: { type: 'spring', stiffness: 300, damping: 24 } }
+};
 
 const JDCA_DISTRICTS = [
   'All Districts',
@@ -182,25 +196,32 @@ export default function SelectionScreen() {
           </div>
 
           <div className="flex items-center gap-3 overflow-x-auto pb-1 no-scrollbar">
-            {selectedSquad.map((player) => (
-              <div
-                key={player.id}
-                onClick={() => handlePlayerClick(player)}
-                className="group relative flex flex-col items-center min-w-[72px] cursor-pointer rounded-xl p-2 bg-white border border-emerald-100 shadow-2xs hover:shadow-xs transition"
-              >
-                <img
-                  src={player.avatar || `https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80`}
-                  alt={player.name}
-                  className="w-11 h-11 rounded-full object-cover border-2 border-emerald-500 shadow-2xs"
-                />
-                <span className="text-[11px] font-bold text-gray-900 truncate w-16 text-center mt-1">
-                  {player.name ? player.name.split(' ')[0] : 'Player'}
-                </span>
-                <span className="text-[9px] text-gray-400 truncate max-w-[64px]">
-                  {player.district}
-                </span>
-              </div>
-            ))}
+            <AnimatePresence mode="popLayout">
+              {selectedSquad.map((player) => (
+                <motion.div
+                  key={player.id}
+                  layout
+                  initial={{ opacity: 0, scale: 0.5, filter: 'blur(10px)' }}
+                  animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+                  exit={{ opacity: 0, scale: 0.5, filter: 'blur(10px)' }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+                  onClick={() => handlePlayerClick(player)}
+                  className="group relative flex flex-col items-center min-w-[72px] cursor-pointer rounded-xl p-2 bg-white/60 backdrop-blur-md border border-emerald-100 shadow-2xs hover:shadow-xs transition"
+                >
+                  <img
+                    src={player.avatar || `https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80`}
+                    alt={player.name}
+                    className="w-11 h-11 rounded-full object-cover border-2 border-emerald-500 shadow-2xs"
+                  />
+                  <span className="text-[11px] font-bold text-gray-900 truncate w-16 text-center mt-1">
+                    {player.name ? player.name.split(' ')[0] : 'Player'}
+                  </span>
+                  <span className="text-[9px] text-gray-400 truncate max-w-[64px]">
+                    {player.district}
+                  </span>
+                </motion.div>
+              ))}
+            </AnimatePresence>
           </div>
         </div>
       )}
@@ -278,17 +299,24 @@ export default function SelectionScreen() {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <motion.div 
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+            variants={listVariants}
+            initial="hidden"
+            animate="visible"
+          >
             {filteredPlayers.map((player) => {
               const isShortlisted = shortlistedIds.includes(player.id);
 
               return (
-                <div
+                <motion.div
+                  variants={itemVariants}
+                  whileHover={{ scale: 1.02, y: -4 }}
                   key={player.id}
                   className={`jdca-card p-4.5 flex flex-col justify-between transition-all duration-200 ${
                     isShortlisted
-                      ? 'border-emerald-300 ring-2 ring-emerald-500/20 bg-emerald-50/15'
-                      : 'hover:border-cobalt-200 hover:shadow-sm'
+                      ? 'border-emerald-300 ring-2 ring-emerald-500/20 bg-emerald-50/40 backdrop-blur-md'
+                      : 'hover:border-cobalt-200 hover:shadow-md bg-white/80 backdrop-blur-md'
                   }`}
                 >
                   {/* Top: Avatar, Names, Badges */}
@@ -406,10 +434,10 @@ export default function SelectionScreen() {
                       )}
                     </button>
                   </div>
-                </div>
+                </motion.div>
               );
             })}
-          </div>
+          </motion.div>
         )}
       </div>
     </div>

@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { useCricket } from '../../context/CricketContext';
 import { FREE_HIT_ALLOWED_DISMISSALS } from '../../engine/validationSchemas';
+import { motion } from 'motion/react';
 
 const DISMISSALS = ['Bowled', 'Caught', 'LBW', 'Run Out', 'Stumped', 'Hit Wicket', 'Other'];
 const QUICK_RUNS = [0, 1, 2, 3, 4, 6];
@@ -163,8 +164,25 @@ export default function ScoringScreen() {
           <div className="text-[12px] font-bold uppercase tracking-wider text-white/70 mb-2">
             {innings === 1 ? '1st Innings' : '2nd Innings'} • {innings === 1 ? teamAName : teamBName}
           </div>
-          <div className="text-[80px] font-black leading-none tracking-tighter tabular-nums mb-2 text-white">
-            {runs}<span className="text-[40px] text-white/60">/{wickets}</span>
+          <div className="text-[80px] font-black leading-none tracking-tighter tabular-nums mb-2 text-white flex items-baseline justify-center">
+            <motion.span
+              key={runs}
+              initial={{ opacity: 0, y: -20, scale: 0.8 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+            >
+              {runs}
+            </motion.span>
+            <span className="text-[40px] text-white/60 mx-1">/</span>
+            <motion.span
+              key={`w-${wickets}`}
+              initial={{ opacity: 0, y: -20, scale: 0.8 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+              className="text-[40px] text-white/60"
+            >
+              {wickets}
+            </motion.span>
           </div>
           <div className="flex items-center justify-center gap-4 text-[14px] font-bold">
             <div className="bg-white/10 px-4 py-1.5 rounded-full">

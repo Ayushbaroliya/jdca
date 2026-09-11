@@ -1,67 +1,63 @@
-﻿import React from 'react';
+import React from 'react';
 import {
   Users, Trophy, MapPin, Radio, Calendar, Plus,
   TrendingUp, ArrowRight, Megaphone, AlertCircle, ChevronRight, Activity, Award
 } from 'lucide-react';
 import { useCricket } from '../../context/CricketContext';
+import { motion } from 'motion/react';
 
-// Helper component for match cards
-const MatchCard = ({ match, type = 'live', onClick }) => {
+const listVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { type: 'spring', stiffness: 300, damping: 24 }
+  }
+};
+
+// Compact widget for matches on home screen
+const CompactMatchWidget = ({ match, type = 'live', onClick }) => {
   const isLive = type === 'live';
   return (
-    <div 
+    <motion.div 
+      variants={itemVariants}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
       onClick={onClick}
-      className={`rounded-[16px] p-4 cursor-pointer relative overflow-hidden transition-transform active:scale-[0.98] ${
-        isLive ? 'bg-gradient-to-br from-[#2457D6] to-[#1b41a8] text-white shadow-md border-2 border-[#ff6100]' : 'bg-white border-2 border-[#ff6100] shadow-sm'
+      className={`rounded-xl p-3 cursor-pointer flex items-center justify-between border shadow-sm transition-colors ${
+        isLive ? 'bg-gradient-to-r from-[#2457D6]/10 to-transparent border-[#2457D6]/30 hover:border-[#2457D6]' : 'bg-white border-gray-200 hover:border-[#ff6100]'
       }`}
     >
-      <div className="flex items-center justify-between mb-4">
-        <span className={`text-[10px] font-bold tracking-wider uppercase ${isLive ? 'text-white/80' : 'text-[#8a99b0]'}`}>
-          {match.tournament || 'JDCA Senior Division'}
-        </span>
-        {isLive && (
-          <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white/20 text-white text-[10px] font-bold">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#0FA968] animate-pulse" />
-            LIVE
-          </span>
+      <div className="flex items-center gap-3">
+        {isLive ? (
+          <div className="w-8 h-8 rounded-full bg-[#2457D6]/10 text-[#2457D6] flex items-center justify-center relative">
+            <Radio size={14} />
+            <span className="absolute top-0 right-0 w-2 h-2 rounded-full bg-[#0FA968] animate-pulse" />
+          </div>
+        ) : (
+          <div className="w-8 h-8 rounded-full bg-gray-50 text-gray-400 flex items-center justify-center">
+            <Calendar size={14} />
+          </div>
         )}
-      </div>
-      
-      <div className="flex items-center justify-between">
-        <div className="flex-1">
-          <div className={`text-[18px] font-bold ${isLive ? 'text-white' : 'text-[#101827]'}`}>
-            {match.teamA?.name || match.teamA || 'JABALPUR'}
+        <div>
+          <div className="text-[13px] font-bold text-[#101827]">
+            {match.teamA?.name || match.teamA || 'JABALPUR'} <span className="text-gray-400 font-normal mx-1">vs</span> {match.teamB?.name || match.teamB || 'MANDLA'}
           </div>
-          {isLive && (
-            <div className="text-[20px] font-black tracking-tight mt-0.5">
-              {match.teamA?.score || '142/4'} <span className="text-[12px] font-medium text-white/80 tracking-normal ml-1">({match.teamA?.overs || '24.2'} ov)</span>
-            </div>
-          )}
-        </div>
-        <div className={`text-[11px] font-black uppercase tracking-widest px-3 ${isLive ? 'text-white/50' : 'text-[#d2d8e2]'}`}>VS</div>
-        <div className="flex-1 text-right">
-          <div className={`text-[18px] font-bold ${isLive ? 'text-white' : 'text-[#101827]'}`}>
-            {match.teamB?.name || match.teamB || 'MANDLA'}
+          <div className="text-[11px] font-medium text-[#8a99b0]">
+            {isLive ? 'Live Score: ' + (match.teamA?.score || '0/0') : 'Upcoming • ' + (match.venue || 'Ranital Ground')}
           </div>
-          {isLive && (
-            <div className="text-[13px] font-medium text-white/60 mt-1">
-              Yet to bat
-            </div>
-          )}
         </div>
       </div>
-      
-      <div className={`mt-4 pt-3 flex items-center justify-between text-[11px] font-medium ${isLive ? 'border-t border-white/10 text-white/80' : 'border-t border-gray-100 text-[#8a99b0]'}`}>
-        <div className="flex items-center gap-1.5">
-          <MapPin size={12} />
-          {match.venue || 'Ranital Cricket Ground'}
-        </div>
-        <div className="flex items-center gap-1 uppercase tracking-wide font-bold">
-          {isLive ? 'View Match' : 'Match Details'}
-          <ArrowRight size={14} />
-        </div>
-      </div>
-    </div>
+      <ChevronRight size={16} className={isLive ? 'text-[#2457D6]' : 'text-[#d2d8e2]'} />
+    </motion.div>
   );
 };
 
@@ -95,24 +91,34 @@ export default function HomeScreen() {
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-[14px] font-bold uppercase tracking-wider text-[#596579]">Live Matches</h2>
           </div>
-          <div className="space-y-4">
+          <motion.div 
+            className="space-y-4"
+            variants={listVariants}
+            initial="hidden"
+            animate="visible"
+          >
             {liveMatches.map(match => (
-              <MatchCard 
+              <CompactMatchWidget 
                 key={match.id} 
                 match={match} 
                 type="live" 
                 onClick={() => { setActiveMatchId(match.id); navigateTo('scoring'); }} 
               />
             ))}
-          </div>
+          </motion.div>
         </div>
       )}
 
       {/* Requires Attention */}
       <div className="px-4 mb-8">
         <h2 className="text-[14px] font-bold uppercase tracking-wider text-[#596579] mb-3">Requires Attention</h2>
-        <div className="bg-white rounded-[16px] shadow-sm border-2 border-[#ff6100] overflow-hidden">
-          <div className="p-4 border-b border-gray-50 flex items-center gap-3">
+        <motion.div 
+          className="bg-white rounded-[16px] shadow-sm border border-gray-200 overflow-hidden"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+          <div className="p-4 border-b border-gray-50 flex items-center gap-3 hover:bg-gray-50 cursor-pointer transition-colors">
             <div className="w-8 h-8 rounded-full bg-[#fef0ee] text-[#F05A47] flex items-center justify-center">
               <Users size={16} />
             </div>
@@ -122,7 +128,7 @@ export default function HomeScreen() {
             </div>
             <ArrowRight size={16} className="text-[#d2d8e2]" />
           </div>
-          <div className="p-4 flex items-center gap-3">
+          <div className="p-4 flex items-center gap-3 hover:bg-gray-50 cursor-pointer transition-colors">
             <div className="w-8 h-8 rounded-full bg-[#fef9ea] text-[#ff6100] flex items-center justify-center">
               <AlertCircle size={16} />
             </div>
@@ -132,18 +138,23 @@ export default function HomeScreen() {
             </div>
             <ArrowRight size={16} className="text-[#d2d8e2]" />
           </div>
-        </div>
+        </motion.div>
       </div>
 
       {/* Today's Matches */}
       {upcomingMatches.length > 0 && (
         <div className="px-4 mb-8">
           <h2 className="text-[14px] font-bold uppercase tracking-wider text-[#596579] mb-3">Today's Matches</h2>
-          <div className="space-y-3">
+          <motion.div 
+            className="space-y-3"
+            variants={listVariants}
+            initial="hidden"
+            animate="visible"
+          >
             {upcomingMatches.map(match => (
-              <MatchCard key={match.id} match={match} type="upcoming" onClick={() => {}} />
+              <CompactMatchWidget key={match.id} match={match} type="upcoming" onClick={() => {}} />
             ))}
-          </div>
+          </motion.div>
         </div>
       )}
     </div>
@@ -161,37 +172,40 @@ export default function HomeScreen() {
 
       {/* Primary Hero - Next Match */}
       <div className="px-4 mb-8">
-        <h2 className="text-[14px] font-bold uppercase tracking-wider text-[#596579] mb-3">Next Match</h2>
-        <div className="bg-white rounded-[20px] p-5 shadow-sm border-2 border-[#ff6100] text-center relative overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-1 bg-[#0FA968]" />
-          <div className="text-[12px] font-bold tracking-wider text-[#8a99b0] uppercase mb-4 mt-2">JDCA Senior Division</div>
-          
-          <div className="flex items-center justify-center gap-4 mb-6">
-            <div className="text-[22px] font-black text-[#101827]">JABALPUR</div>
-            <div className="text-[12px] font-black text-[#d2d8e2] px-2">VS</div>
-            <div className="text-[22px] font-black text-[#101827]">MANDLA</div>
-          </div>
-          
-          <div className="flex items-center justify-center gap-3 text-[12px] font-medium text-[#596579] mb-6">
-            <div className="flex items-center gap-1 bg-[#F7F8F4] px-3 py-1.5 rounded-full"><Calendar size={14} /> 10:00 AM</div>
-            <div className="flex items-center gap-1 bg-[#F7F8F4] px-3 py-1.5 rounded-full"><MapPin size={14} /> Ranital Ground</div>
+        <h2 className="text-[14px] font-bold uppercase tracking-wider text-[#596579] mb-3">Next Assignment</h2>
+        <motion.div 
+          className="bg-white rounded-xl p-4 shadow-sm border border-gray-200"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ type: "spring", stiffness: 300, damping: 25 }}
+        >
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <div className="text-[14px] font-bold text-[#101827]">JABALPUR vs MANDLA</div>
+              <div className="text-[12px] font-medium text-[#596579]">Today • 10:00 AM • Ranital Ground</div>
+            </div>
+            <div className="w-10 h-10 rounded-full bg-[#0FA968]/10 text-[#0FA968] flex items-center justify-center">
+              <Radio size={18} />
+            </div>
           </div>
 
-          <button 
+          <motion.button 
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             onClick={() => navigateTo('scoring')}
-            className="w-full bg-[#0FA968] text-white rounded-[12px] py-4 font-bold text-[16px] shadow-md active:bg-[#0a7d4e] transition-colors flex items-center justify-center gap-2"
+            className="w-full bg-[#0FA968] text-white rounded-[10px] py-3 font-bold text-[14px] shadow-sm active:bg-[#0a7d4e] transition-colors flex items-center justify-center gap-2"
           >
-            <Radio size={20} /> START SCORING
-          </button>
-        </div>
+            START SCORING
+          </motion.button>
+        </motion.div>
       </div>
 
       {/* Recent Activity */}
       <div className="px-4 mb-8">
         <h2 className="text-[14px] font-bold uppercase tracking-wider text-[#596579] mb-3">Recent Scoring Activity</h2>
-        <div className="space-y-3">
+        <motion.div className="space-y-3" variants={listVariants} initial="hidden" animate="visible">
           {recentMatches.map((m, i) => (
-             <div key={i} className="bg-white rounded-[12px] p-4 flex items-center justify-between border-2 border-[#ff6100] shadow-sm">
+             <motion.div variants={itemVariants} key={i} className="bg-white rounded-[12px] p-4 flex items-center justify-between border border-gray-200 shadow-sm">
                 <div>
                   <div className="text-[14px] font-bold text-[#101827]">{m.teamA?.name || 'JBP'} vs {m.teamB?.name || 'MDL'}</div>
                   <div className="text-[12px] text-[#8a99b0] mt-1">Synced to cloud • Yesterday</div>
@@ -199,9 +213,9 @@ export default function HomeScreen() {
                 <div className="w-8 h-8 rounded-full bg-[#e8f8ef] text-[#0FA968] flex items-center justify-center">
                   <Activity size={16} />
                 </div>
-             </div>
+             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </div>
   );
@@ -217,7 +231,11 @@ export default function HomeScreen() {
 
       <div className="px-4 mb-8">
         <h2 className="text-[14px] font-bold uppercase tracking-wider text-[#596579] mb-3">Current Selection</h2>
-        <div className="bg-gradient-to-br from-[#101827] to-[#2a3a52] rounded-[20px] p-5 text-white shadow-lg relative overflow-hidden border-2 border-[#ff6100]">
+        <motion.div 
+          className="bg-gradient-to-br from-[#101827] to-[#2a3a52] rounded-[20px] p-5 text-white shadow-lg relative overflow-hidden"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
           <div className="absolute top-0 right-0 w-32 h-32 bg-white opacity-5 rounded-full -mr-10 -mt-10" />
           <div className="text-[12px] font-bold tracking-wider text-[#8a99b0] uppercase mb-1">Upcoming Event</div>
           <div className="text-[24px] font-black mb-6">Senior Men<br/>District Trials</div>
@@ -232,14 +250,21 @@ export default function HomeScreen() {
               <div className="text-[11px] font-medium text-white/70 uppercase tracking-wider">Shortlisted</div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
 
       <div className="px-4 mb-8">
         <h2 className="text-[14px] font-bold uppercase tracking-wider text-[#596579] mb-3">Top Performers</h2>
-        <div className="space-y-3">
+        <motion.div className="space-y-3" variants={listVariants} initial="hidden" animate="visible">
           {[1,2,3].map((i) => (
-             <div key={i} className="bg-white rounded-[12px] p-4 flex items-center justify-between border-2 border-[#ff6100] shadow-sm" onClick={() => navigateTo('player-profile')}>
+             <motion.div 
+                variants={itemVariants} 
+                whileHover={{ scale: 1.02 }} 
+                whileTap={{ scale: 0.98 }} 
+                key={i} 
+                className="bg-white rounded-[12px] p-4 flex items-center justify-between border border-gray-200 hover:border-[#ff6100] cursor-pointer shadow-sm transition-colors" 
+                onClick={() => navigateTo('player-profile')}
+             >
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center font-bold text-gray-500">{i}</div>
                   <div>
@@ -251,9 +276,9 @@ export default function HomeScreen() {
                   <div className="text-[15px] font-black text-[#2457D6]">412</div>
                   <div className="text-[10px] uppercase font-bold text-[#8a99b0]">Runs</div>
                 </div>
-             </div>
+             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </div>
   );
@@ -271,36 +296,45 @@ export default function HomeScreen() {
       <div className="px-4 mb-8">
         <h2 className="text-[14px] font-bold uppercase tracking-wider text-[#596579] mb-3">Next Match</h2>
         {upcomingMatches.length > 0 ? (
-          <MatchCard match={upcomingMatches[0]} type="upcoming" onClick={() => {}} />
+          <CompactMatchWidget match={upcomingMatches[0]} type="upcoming" onClick={() => {}} />
         ) : (
-          <div className="bg-white rounded-[16px] p-6 text-center border-2 border-[#ff6100]">
+          <motion.div 
+            className="bg-white rounded-[16px] p-6 text-center border border-gray-200"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+          >
             <Calendar className="mx-auto text-[#d2d8e2] mb-3" size={32} />
             <div className="text-[14px] font-bold text-[#101827]">No upcoming matches</div>
             <div className="text-[12px] text-[#8a99b0] mt-1">Enjoy your rest!</div>
-          </div>
+          </motion.div>
         )}
       </div>
 
       <div className="px-4 mb-8">
         <h2 className="text-[14px] font-bold uppercase tracking-wider text-[#596579] mb-3">Season Statistics</h2>
-        <div className="grid grid-cols-2 gap-3">
-            <div className="bg-white rounded-[16px] p-4 border-2 border-[#ff6100] shadow-sm">
+        <motion.div 
+          className="grid grid-cols-2 gap-3"
+          variants={listVariants}
+          initial="hidden"
+          animate="visible"
+        >
+            <motion.div variants={itemVariants} className="bg-white rounded-[16px] p-4 border border-gray-200 shadow-sm">
               <div className="text-[28px] font-black text-[#2457D6]">186</div>
               <div className="text-[12px] font-bold text-[#8a99b0] uppercase tracking-wider mt-1">Runs</div>
-            </div>
-            <div className="bg-white rounded-[16px] p-4 border-2 border-[#ff6100] shadow-sm">
+            </motion.div>
+            <motion.div variants={itemVariants} className="bg-white rounded-[16px] p-4 border border-gray-200 shadow-sm">
               <div className="text-[28px] font-black text-[#101827]">46.5</div>
               <div className="text-[12px] font-bold text-[#8a99b0] uppercase tracking-wider mt-1">Average</div>
-            </div>
-            <div className="bg-white rounded-[16px] p-4 border-2 border-[#ff6100] shadow-sm">
+            </motion.div>
+            <motion.div variants={itemVariants} className="bg-white rounded-[16px] p-4 border border-gray-200 shadow-sm">
               <div className="text-[28px] font-black text-[#101827]">142.1</div>
               <div className="text-[12px] font-bold text-[#8a99b0] uppercase tracking-wider mt-1">Strike Rate</div>
-            </div>
-            <div className="bg-white rounded-[16px] p-4 border-2 border-[#ff6100] shadow-sm">
+            </motion.div>
+            <motion.div variants={itemVariants} className="bg-white rounded-[16px] p-4 border border-gray-200 shadow-sm">
               <div className="text-[28px] font-black text-[#ff6100]">2</div>
               <div className="text-[12px] font-bold text-[#8a99b0] uppercase tracking-wider mt-1">Fifties</div>
-            </div>
-        </div>
+            </motion.div>
+        </motion.div>
       </div>
     </div>
   );
