@@ -711,13 +711,13 @@ export default function HomeScreen() {
                           className={`p-3.5 rounded-2xl ${bg} border hover:scale-[1.02] transition-all relative overflow-hidden`}
                         >
                           <div className="flex items-center justify-between">
-                            <span className="text-[10px] font-black uppercase tracking-wider text-white bg-black/20 px-2 py-0.5 rounded-md backdrop-blur-xs">
+                            <span className="text-[10px] font-black uppercase tracking-wider bg-black/5 text-slate-800 px-2 py-0.5 rounded-md backdrop-blur-xs">
                               {ann.type}
                             </span>
-                            <span className="text-[10px] text-white/80 font-medium">{ann.date}</span>
+                            <span className="text-[10px] opacity-70 font-bold">{ann.date}</span>
                           </div>
-                          <div className="text-xs font-black text-white mt-1.5">{ann.title}</div>
-                          <p className="text-[11px] text-white/90 mt-0.5 leading-relaxed font-medium">{ann.body}</p>
+                          <div className="text-sm font-black mt-1.5 leading-tight">{ann.title}</div>
+                          <p className="text-[11px] opacity-80 mt-1 leading-relaxed font-semibold">{ann.body}</p>
                         </div>
                       );
                     })}
