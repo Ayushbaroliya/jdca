@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { ChevronDown, ChevronRight, FileText, Info, Trophy, Newspaper, Radio } from 'lucide-react';
 import { MatchStatusBadge } from './Badge';
 
@@ -8,8 +8,8 @@ export default function MatchFolder({ match, onOpen }) {
   const completed = match.status === 'COMPLETED' || match.status === 'FINISHED';
   const teamA = match.teamA?.name || match.teamA || 'Jabalpur XI';
   const teamB = match.teamB?.name || match.teamB || 'Katni XI';
-  const scoreA = match.teamA?.score || '—';
-  const scoreB = match.teamB?.score || '—';
+  const scoreA = match.teamA?.score || '�';
+  const scoreB = match.teamB?.score || '�';
 
   return (
     <section className={`match-folder-tile ${live ? 'match-folder-tile--live' : ''}`}>
@@ -20,13 +20,13 @@ export default function MatchFolder({ match, onOpen }) {
         </div>
         
         <div className="match-folder-tile__details">
-          <span className="match-folder-tile__eyebrow">{match.matchNumber || 'MATCH'} Â· {match.format || match.category || 'T20'}</span>
+          <span className="match-folder-tile__eyebrow">{match.matchNumber || 'MATCH'} · {match.format || match.category || 'T20'}</span>
           <div className="match-folder-tile__teams">
             <div><strong>{teamA}</strong> <span>{scoreA}</span></div>
             <div className="vs">vs</div>
             <div><strong>{teamB}</strong> <span>{scoreB}</span></div>
           </div>
-          <span className="match-folder-tile__meta">{match.venue || 'JDCA Ground'} Â· {match.date || 'Fixture'}</span>
+          <span className="match-folder-tile__meta">{match.venue || 'JDCA Ground'} · {match.date || 'Fixture'}</span>
         </div>
         
         <div className="match-folder-tile__footer">

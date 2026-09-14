@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { 
   Search, 
   MapPin, 
@@ -186,7 +186,7 @@ export default function SelectorsScreen() {
                           )}
                         </div>
                         <p className="text-xs text-slate-500 font-medium">
-                          {player.primaryRole || player.role} • {player.battingStyle}
+                          {player.primaryRole || player.role} � {player.battingStyle}
                         </p>
                         <div className="flex items-center space-x-1 text-[11px] text-slate-400 mt-0.5">
                           <MapPin className="w-3 h-3 text-slate-400" />

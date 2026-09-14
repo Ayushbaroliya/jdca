@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { Radio, Users, ShieldCheck, ChevronRight, Share2, Award, Printer, ArrowLeft } from 'lucide-react';
 import { useCricket } from '../../context/CricketContext';
 import { PageHeader, TabBar } from '../ui/PageHeader';
@@ -162,7 +162,7 @@ export default function ScorecardScreen() {
             <span className="text-slate-600 font-medium">12 (wd 6, nb 2, b 2, lb 2)</span>
           </div>
           <div className="font-tabular font-extrabold text-sm text-slate-900">
-            Total: 184/4 (18.2 Overs) • RR: 10.09
+            Total: 184/4 (18.2 Overs) � RR: 10.09
           </div>
         </div>
       </div>

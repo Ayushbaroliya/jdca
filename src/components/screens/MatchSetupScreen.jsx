@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { Check, Edit2, Search, ArrowRight, ArrowLeft, Plus, Trash2, X, Settings2, Users, Coins } from 'lucide-react';
 import { useCricket } from '../../context/CricketContext';
 

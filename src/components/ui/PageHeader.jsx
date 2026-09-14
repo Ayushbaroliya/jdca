@@ -1,7 +1,7 @@
-ï»¿import React from 'react';
+import React from 'react';
 
 /**
- * JDCA PageHeader â€” consistent section heading across all screens
+ * JDCA PageHeader — consistent section heading across all screens
  * Used at the top of every major section.
  */
 export function PageHeader({ title, subtitle, action, className = '' }) {
@@ -27,7 +27,7 @@ export function PageHeader({ title, subtitle, action, className = '' }) {
 }
 
 /**
- * SectionLabel â€” small section sub-header above content groups
+ * SectionLabel — small section sub-header above content groups
  */
 export function SectionLabel({ children, className = '' }) {
   return (
@@ -38,7 +38,7 @@ export function SectionLabel({ children, className = '' }) {
 }
 
 /**
- * TabBar â€” horizontal tab navigation within a screen
+ * TabBar — horizontal tab navigation within a screen
  */
 export function TabBar({ tabs, active, onChange, className = '' }) {
   return (

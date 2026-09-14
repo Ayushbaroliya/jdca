@@ -7,7 +7,6 @@ import {
 } from 'lucide-react';
 import { useCricket } from '../../context/CricketContext';
 import { motion } from 'motion/react';
-import jdcaLogo from '../../assets/jdca-logo.png';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -110,7 +109,7 @@ export default function HomeScreen() {
             {/* Title & Badge */}
             <div className="flex items-start gap-4">
               <img
-                src={jdcaLogo}
+                src="/jdca-logo.png"
                 alt="JDCA Official Crest"
                 className="w-16 h-16 sm:w-20 sm:h-20 object-contain drop-shadow-xl flex-shrink-0 hidden sm:block"
               />

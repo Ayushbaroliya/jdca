@@ -1,7 +1,6 @@
 import React from 'react';
 import { ArrowLeft, Search, Bell } from 'lucide-react';
 import { useCricket } from '../context/CricketContext';
-import jdcaLogo from '../assets/jdca-logo.png';
 
 // Screen-level titles
 const SCREEN_TITLES = {
@@ -44,7 +43,7 @@ export default function Header() {
             <ArrowLeft size={17} />
           </button>
         ) : (
-          <img src={jdcaLogo} alt="JDCA Logo" className="w-7 h-7 object-contain flex-shrink-0" />
+          <img src="/jdca-logo.png" alt="JDCA Logo" className="w-7 h-7 object-contain flex-shrink-0" />
         )}
         <h1 className="font-semibold text-slate-900 text-base tracking-tight truncate max-w-[200px] sm:max-w-xs">
           {info.title}

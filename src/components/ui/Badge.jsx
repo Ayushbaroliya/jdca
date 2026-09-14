@@ -1,7 +1,7 @@
-ï»¿import React from 'react';
+import React from 'react';
 
 /**
- * JDCA Badge â€” semantic status / category indicator
+ * JDCA Badge — semantic status / category indicator
  * variant: 'live' | 'upcoming' | 'completed' | 'cancelled' | 'mango' | 'cobalt' | 'jade' | 'coral'
  */
 export function Badge({ variant = 'completed', children, dot = false, className = '' }) {
@@ -25,7 +25,7 @@ export function Badge({ variant = 'completed', children, dot = false, className 
 }
 
 /**
- * JDCA RoleBadge â€” user role display
+ * JDCA RoleBadge — user role display
  */
 export function RoleBadge({ role }) {
   const config = {
@@ -49,7 +49,7 @@ export function RoleBadge({ role }) {
 }
 
 /**
- * JDCA MatchStatusBadge â€” for match cards
+ * JDCA MatchStatusBadge — for match cards
  */
 export function MatchStatusBadge({ status }) {
   if (status === 'LIVE' || status === 'IN_PROGRESS') {
