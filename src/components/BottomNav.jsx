@@ -24,58 +24,23 @@ export default function BottomNav() {
 
   const activeId = ACTIVE_MAP[currentScreen] || 'home';
 
-  // Role-Aware Navigation Configuration
+  // Return all tabs for mobile display
   const getNavItems = () => {
-    const baseItems = [
+    return [
       { id: 'home', label: 'Home', icon: Home, route: 'home' },
+      { id: 'matches', label: 'Matches', icon: Calendar, route: 'matches' },
+      { id: 'scoring', label: 'Score', icon: Radio, route: 'scoring', liveIndicator: true },
+      { id: 'players', label: 'Players', icon: Users, route: 'players' },
+      { id: 'selection', label: 'Selection', icon: LayoutGrid, route: 'selection' },
+      { id: 'administration', label: 'Admin', icon: Settings, route: 'administration' }
     ];
-    
-    switch (userRole) {
-      case 'SuperAdmin':
-      case 'Admin':
-        return [
-          ...baseItems,
-          { id: 'matches', label: 'Matches', icon: Calendar, route: 'matches' },
-          { id: 'players', label: 'Players', icon: Users, route: 'players' },
-          { id: 'administration', label: 'Admin', icon: Settings, route: 'administration' },
-          { id: 'more', label: 'More', icon: MoreHorizontal, route: null },
-        ];
-      case 'Scorer':
-        return [
-          ...baseItems,
-          { id: 'matches', label: 'Matches', icon: Calendar, route: 'matches' },
-          { id: 'scoring', label: 'Score', icon: Radio, route: 'scoring', liveIndicator: true },
-          { id: 'more', label: 'More', icon: MoreHorizontal, route: null },
-        ];
-      case 'Selector':
-        return [
-          ...baseItems,
-          { id: 'players', label: 'Players', icon: Users, route: 'players' },
-          { id: 'selection', label: 'Selection', icon: LayoutGrid, route: 'selection' },
-          { id: 'matches', label: 'Matches', icon: Calendar, route: 'matches' },
-          { id: 'more', label: 'More', icon: MoreHorizontal, route: null },
-        ];
-      case 'Player':
-        return [
-          ...baseItems,
-          { id: 'matches', label: 'Matches', icon: Calendar, route: 'matches' },
-          { id: 'player-profile', label: 'Profile', icon: User, route: 'player-profile' },
-          { id: 'more', label: 'More', icon: MoreHorizontal, route: null },
-        ];
-      default:
-        return [
-          ...baseItems,
-          { id: 'matches', label: 'Matches', icon: Calendar, route: 'matches' },
-          { id: 'more', label: 'More', icon: MoreHorizontal, route: null },
-        ];
-    }
   };
 
   const tabs = getNavItems();
 
   return (
     <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-t border-gray-200 pb-safe shadow-[0_-4px_24px_rgba(0,0,0,0.06)] h-[68px]">
-      <div className="flex items-stretch justify-around h-full px-2 relative">
+      <div className="flex items-stretch justify-start overflow-x-auto no-scrollbar h-full px-2 relative">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeId === tab.id;
@@ -93,7 +58,7 @@ export default function BottomNav() {
             <button
               key={tab.id}
               onClick={handleClick}
-              className="flex flex-col items-center justify-center flex-1 space-y-1 transition-all duration-200 cursor-pointer outline-none tap-highlight-transparent relative"
+              className="flex flex-col items-center justify-center flex-1 min-w-[70px] shrink-0 space-y-1 transition-all duration-200 cursor-pointer outline-none tap-highlight-transparent relative"
             >
               <div className={`relative flex items-center justify-center w-12 h-8 rounded-full z-10 transition-colors ${isActive && !isMore ? 'text-[#2457D6]' : 'text-[#8a99b0]'}`}>
                 {isActive && !isMore && (
