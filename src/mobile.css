@@ -1,0 +1,439 @@
+﻿/* ================================================================
+   JDCA MOBILE DESIGN SYSTEM
+   Purpose: intentionally different mobile experience from desktop.
+   Mobile uses nested information boxes instead of desktop tables/cards.
+   Breakpoint: <= 767px. Desktop styles remain untouched above it.
+   ================================================================ */
+
+@media (max-width: 767px) {
+  :root {
+    --jdca-mobile-bg: #f7f8f4;
+    --jdca-mobile-card: #ffffff;
+    --jdca-mobile-ink: #101827;
+    --jdca-mobile-muted: #596579;
+    --jdca-mobile-line: #e5e8ec;
+    --jdca-mobile-blue: #2457d6;
+    --jdca-mobile-jade: #0fa968;
+    --jdca-mobile-mango: #ff6100;
+    --jdca-mobile-coral: #f05a47;
+  }
+
+  html, body, #root { min-height: 100%; }
+  body { overflow-x: hidden; background: var(--jdca-mobile-bg); }
+
+  /* Give the mobile app a native-app rhythm. */
+  main {
+    padding-bottom: 74px;
+    overscroll-behavior-y: contain;
+  }
+
+  main > * { min-width: 0; }
+
+  /* Existing page wrappers: replace desktop breathing room with compact mobile rhythm. */
+  main .fade-in-up {
+    width: 100%;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 16px 14px 88px !important;
+  }
+
+  /* Mobile header: stronger JDCA identity, less SaaS chrome. */
+  header.lg\:hidden {
+    height: 58px !important;
+    min-height: 58px;
+    padding: 0 14px !important;
+    background: var(--jdca-mobile-ink) !important;
+    box-shadow: 0 1px 0 rgba(255,255,255,.06);
+  }
+
+  header.lg\:hidden button {
+    border-radius: 8px !important;
+  }
+
+  /* Bottom navigation becomes a compact phone control rail. */
+  nav.lg\:hidden {
+    position: fixed !important;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 68px;
+    background: rgba(255,255,255,.98) !important;
+    border-top: 1px solid var(--jdca-mobile-line) !important;
+    box-shadow: 0 -8px 24px rgba(16,24,39,.08) !important;
+    padding-bottom: env(safe-area-inset-bottom);
+    backdrop-filter: blur(10px);
+  }
+
+  nav.lg\:hidden > div { height: 68px; }
+  nav.lg\:hidden button { min-height: 60px; }
+
+  /* Page headers */
+  .page-header,
+  [class*="PageHeader"] {
+    margin-bottom: 14px !important;
+  }
+
+  h1 { font-size: 24px !important; line-height: 1.08 !important; }
+  h2 { font-size: 20px !important; }
+  h3 { font-size: 16px !important; }
+
+  /* Desktop cards become flatter mobile sections. */
+  .jdca-card,
+  .jdca-card-hover {
+    border-radius: 12px !important;
+    box-shadow: none !important;
+    border-color: var(--jdca-mobile-line) !important;
+  }
+
+  .jdca-card-hover:active {
+    transform: scale(.992);
+    border-color: #abc1f5 !important;
+  }
+
+  /* Keep forms easy to operate with one thumb. */
+  .jdca-input,
+  .jdca-select,
+  input,
+  select,
+  textarea {
+    min-height: 46px;
+    font-size: 16px !important; /* prevents iOS zoom */
+    border-radius: 9px !important;
+  }
+
+  button { -webkit-user-select: none; user-select: none; }
+  button, a, select, input { touch-action: manipulation; }
+
+  .btn-primary,
+  .btn-secondary {
+    min-height: 44px;
+    border-radius: 9px !important;
+  }
+
+  /* Hide wide desktop tables in favour of mobile cards where applicable. */
+  .jdca-table { font-size: 12px; }
+  .overflow-x-auto { -webkit-overflow-scrolling: touch; }
+
+  /* Generic mobile stat grids. */
+  .grid.grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .grid.grid-cols-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+  /* ============================================================
+     NESTED MOBILE BOX SYSTEM
+     Used by Players and can be reused by Selection/Tournaments.
+     ============================================================ */
+  .jdca-mobile-directory {
+    display: block;
+    margin-top: 14px;
+  }
+
+  .jdca-mobile-directory__group {
+    margin-bottom: 14px;
+    border: 1px solid var(--jdca-mobile-line);
+    border-radius: 15px;
+    overflow: hidden;
+    background: var(--jdca-mobile-card);
+  }
+
+  .jdca-mobile-directory__group-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 58px;
+    padding: 12px 14px;
+    background: #101827;
+    color: #fff;
+  }
+
+  .jdca-mobile-directory__group-header--women {
+    background: #7a3e67;
+  }
+
+  .jdca-mobile-directory__group-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .jdca-mobile-directory__group-title-icon {
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    display: grid;
+    place-items: center;
+    border-radius: 9px;
+    background: rgba(255,255,255,.1);
+  }
+
+  .jdca-mobile-directory__group-title strong {
+    display: block;
+    font-size: 15px;
+    line-height: 1.1;
+    letter-spacing: -.01em;
+  }
+
+  .jdca-mobile-directory__group-title span {
+    display: block;
+    margin-top: 3px;
+    font-size: 11px;
+    color: rgba(255,255,255,.68);
+  }
+
+  .jdca-mobile-directory__count {
+    flex: 0 0 auto;
+    min-width: 32px;
+    height: 28px;
+    display: grid;
+    place-items: center;
+    padding: 0 8px;
+    border-radius: 7px;
+    background: rgba(255,255,255,.1);
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .jdca-mobile-directory__districts {
+    padding: 8px;
+    background: #f7f8f4;
+  }
+
+  .jdca-mobile-directory__district {
+    margin: 6px 0;
+    border: 1px solid #e5e8ec;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
+  }
+
+  .jdca-mobile-directory__district-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 50px;
+    padding: 10px 11px;
+    border: 0;
+    background: #fff;
+    color: var(--jdca-mobile-ink);
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .jdca-mobile-directory__district-header:active { background: #f4f7fd; }
+
+  .jdca-mobile-directory__district-name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    font-size: 14px;
+    font-weight: 750;
+  }
+
+  .jdca-mobile-directory__district-pin {
+    width: 28px;
+    height: 28px;
+    display: grid;
+    place-items: center;
+    border-radius: 7px;
+    background: #eef2fd;
+    color: var(--jdca-mobile-blue);
+  }
+
+  .jdca-mobile-directory__district-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--jdca-mobile-muted);
+    font-size: 11px;
+    font-weight: 650;
+  }
+
+  .jdca-mobile-directory__age-list {
+    display: grid;
+    gap: 6px;
+    padding: 0 8px 8px;
+    background: #fafbf9;
+    border-top: 1px solid #edf0f2;
+  }
+
+  .jdca-mobile-directory__age {
+    border: 1px solid #edf0f2;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+  }
+
+  .jdca-mobile-directory__age-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 42px;
+    padding: 8px 10px;
+    border: 0;
+    width: 100%;
+    background: #fff;
+    color: var(--jdca-mobile-ink);
+    cursor: pointer;
+    text-align: left;
+  }
+
+  .jdca-mobile-directory__age-header strong {
+    font-size: 12px;
+    font-weight: 750;
+  }
+
+  .jdca-mobile-directory__age-count {
+    min-width: 24px;
+    height: 23px;
+    display: grid;
+    place-items: center;
+    padding: 0 6px;
+    border-radius: 6px;
+    background: #eef2fd;
+    color: var(--jdca-mobile-blue);
+    font-size: 10px;
+    font-weight: 800;
+  }
+
+  .jdca-mobile-directory__players {
+    display: grid;
+    gap: 6px;
+    padding: 0 6px 6px;
+  }
+
+  .jdca-mobile-player {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 60px;
+    padding: 8px;
+    border: 1px solid #edf0f2;
+    border-radius: 9px;
+    background: #fff;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .jdca-mobile-player:active { background: #f6f8fc; }
+
+  .jdca-mobile-player__avatar {
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid #e5e8ec;
+  }
+
+  .jdca-mobile-player__main {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .jdca-mobile-player__name {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--jdca-mobile-ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .jdca-mobile-player__meta {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 3px;
+    color: var(--jdca-mobile-muted);
+    font-size: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .jdca-mobile-player__stats {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    flex: 0 0 auto;
+    color: var(--jdca-mobile-muted);
+    font-size: 10px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .jdca-mobile-player__runs {
+    color: var(--jdca-mobile-ink);
+    font-weight: 850;
+  }
+
+  .jdca-mobile-player__wickets {
+    color: var(--jdca-mobile-coral);
+    font-weight: 850;
+  }
+
+  /* Mobile filter panel: compact, vertical and thumb-friendly. */
+  .jdca-mobile-filter-panel {
+    border: 1px solid var(--jdca-mobile-line);
+    border-radius: 12px;
+    background: #fff;
+    padding: 10px;
+    margin-bottom: 12px;
+  }
+
+  .jdca-mobile-filter-panel .grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+
+  /* Mobile-only score controls: preserve a large, physical-control feel. */
+  .scoring-keypad,
+  [data-scoring-keypad="true"] {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px !important;
+  }
+
+  .scoring-keypad button,
+  [data-scoring-keypad="true"] button {
+    min-height: 58px !important;
+    font-size: 20px !important;
+    font-weight: 800 !important;
+    border-radius: 10px !important;
+  }
+
+  /* Tables become horizontally scrollable, never squeezed into unreadable text. */
+  .jdca-card:has(.jdca-table) { overflow: hidden; }
+  .jdca-card:has(.jdca-table) .overflow-x-auto { max-width: 100%; }
+
+  /* Don't allow desktop-only fixed widths to break phones. */
+  [style*="maxWidth: 1100px"],
+  [style*="max-width: 1100px"] {
+    max-width: none !important;
+  }
+
+  /* Reduce decorative motion on phones. */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: .01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: .01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* These classes are hidden on desktop by design. */
+.jdca-mobile-directory,
+.jdca-mobile-filter-panel { display: none; }
+
+@media (max-width: 767px) {
+  .jdca-mobile-directory,
+  .jdca-mobile-filter-panel { display: block; }
+}
+
+@media (max-width: 767px) {
+  .jdca-mobile-desktop-player-content { display: none; }
+}
