@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { ArrowLeft, CalendarDays, MapPin, Radio, ShieldCheck, Trophy, Users, FileText } from 'lucide-react';
 import { useCricket } from '../../context/CricketContext';
 import MatchScorecard from '../ui/MatchScorecard';
@@ -38,8 +38,8 @@ export default function MatchDetailScreen() {
 
   return (
     <div className="pb-[100px] bg-[#F7F8F4] min-h-screen">
-      {/* â”€â”€ Match Hero â”€â”€ */}
-      <div className={`bg-gradient-to-br ${live ? 'from-[#2457D6] to-[#1b41a8]' : 'from-[#101827] to-[#1e2b41]'} text-white pb-6 pt-[60px] px-4 relative`}>
+      {/* ── Match Hero ── */}
+      <div className={`text-white pb-6 pt-[60px] px-4 relative ${live ? 'bg-emerald-600' : 'bg-slate-900'}`}>
         <button
           onClick={goBack}
           className="absolute top-4 left-4 w-9 h-9 flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
@@ -85,13 +85,13 @@ export default function MatchDetailScreen() {
         </div>
       </div>
 
-      {/* â”€â”€ Tabs â”€â”€ */}
-      <div className="pt-4 sticky top-[60px] bg-[#F7F8F4] z-20 shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
+      {/* ── Tabs ── */}
+      <div className="pt-4 sticky top-[60px] bg-slate-50 z-20 shadow-sm border-b border-slate-200">
         <MatchTabs tabs={tabs} active={activeTab} onChange={setActiveTab} />
       </div>
 
-      <div className="px-4 pb-8 space-y-4">
-        {/* â”€â”€ TAB 1: INFO â”€â”€ */}
+      <div className="px-4 pb-8 space-y-4 pt-4">
+        {/* ── TAB 1: INFO ── */}
         {activeTab === 'info' && (
           <div className="space-y-4">
             <div className="bg-white rounded-[16px] shadow-sm border border-gray-100 overflow-hidden">

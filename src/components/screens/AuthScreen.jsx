@@ -1,7 +1,8 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { useCricket } from '../../context/CricketContext';
 import { Shield, CheckCircle2, Lock, UserCheck, ArrowRight, Award } from 'lucide-react';
 import { ROLE_HOME } from '../ProtectedRoute';
+import jdcaLogo from '../../assets/jdca-logo.png';
 
 const ROLES = [
   { id: 'SuperAdmin', label: 'Super Admin', desc: 'Apex Council & Full Access' },
@@ -44,10 +45,12 @@ export default function AuthScreen() {
         
         {/* Official Association Header */}
         <div className="text-center mb-6">
-          <div className="w-16 h-16 rounded-2xl bg-[#101827] border-2 border-amber-400 flex items-center justify-center mx-auto mb-3 shadow-md">
-            <span className="font-extrabold text-xl tracking-wider text-[#ff6100] font-mono">
-              JDCA
-            </span>
+          <div className="flex items-center justify-center mx-auto mb-3">
+            <img
+              src={jdcaLogo}
+              alt="JDCA Official Emblem"
+              className="w-24 h-24 sm:w-28 sm:h-28 object-contain drop-shadow-xl"
+            />
           </div>
 
           <h1 className="text-xl font-extrabold text-slate-900 tracking-tight">

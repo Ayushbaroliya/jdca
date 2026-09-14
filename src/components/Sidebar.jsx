@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 import { useCricket } from '../context/CricketContext';
 import { RoleBadge } from './ui/Badge';
-import batIcon from '../assets/bat-icon.png';
+import jdcaLogo from '../assets/jdca-logo.png';
 import { motion } from 'motion/react';
 
 const NAV_ITEMS = [
@@ -54,12 +54,12 @@ export default function Sidebar() {
     >
       {/* Brand */}
       <div className="px-5 pt-6 pb-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
-        <div className="flex items-center gap-2.5 mb-1">
+        <div className="flex items-center gap-3 mb-1">
           <div
-            className="jdca-brand-mark flex items-center justify-center flex-shrink-0"
+            className="flex items-center justify-center flex-shrink-0"
             aria-label="JDCA"
           >
-            <img src={batIcon} alt="" style={{ width: 30, height: 30, objectFit: 'contain' }} />
+            <img src={jdcaLogo} alt="JDCA Logo" style={{ width: 44, height: 44, objectFit: 'contain' }} className="drop-shadow-md" />
           </div>
           <div>
             <div className="font-bold text-white" style={{ fontSize: 16, lineHeight: 1.05, letterSpacing: '0.02em' }}>JDCA</div>

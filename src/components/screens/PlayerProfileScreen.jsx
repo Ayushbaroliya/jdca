@@ -1,17 +1,18 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { 
-  ArrowLeft, Star, MapPin, Award, Activity, TrendingUp, Sliders
+  ArrowLeft, Star, MapPin, Award, Activity, TrendingUp, Sliders, Calendar, ShieldCheck, CheckCircle2
 } from 'lucide-react';
 import { useCricket } from '../../context/CricketContext';
 
-// Simple tab bar for the profile
 const ProfileTabs = ({ tabs, active, onChange }) => (
-  <div className="flex bg-gray-100 p-1 rounded-xl mb-4 mx-4">
+  <div className="flex bg-slate-100 p-1 rounded-xl mb-4 max-w-xl mx-auto">
     {tabs.map(tab => (
       <button
         key={tab.id}
         onClick={() => onChange(tab.id)}
-        className={`flex-1 py-2 rounded-lg text-[13px] font-bold transition-all ${active === tab.id ? 'bg-white text-[#101827] shadow-sm' : 'text-[#8a99b0]'}`}
+        className={`flex-1 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+          active === tab.id ? 'bg-white text-slate-900 shadow-2xs font-semibold' : 'text-slate-500 hover:text-slate-900'
+        }`}
       >
         {tab.label}
       </button>
@@ -55,175 +56,202 @@ export default function PlayerProfileScreen() {
   ];
 
   return (
-    <div className="pb-[100px] bg-[#F7F8F4] min-h-screen">
-      
+    <div className="pb-20 bg-[#f8fafc] min-h-screen">
       {/* Header Area */}
-      <div className="bg-white border-b border-gray-100 pt-[60px] pb-6 px-4 relative">
-        <button
-          onClick={goBack}
-          className="absolute top-4 left-4 w-9 h-9 flex items-center justify-center rounded-full bg-gray-50 text-[#101827] active:bg-gray-100 transition-colors"
-        >
-          <ArrowLeft size={20} strokeWidth={2.5} />
-        </button>
+      <div className="bg-white border-b border-slate-200 pt-14 sm:pt-6 pb-6 px-4 relative shadow-2xs">
+        <div className="max-w-4xl mx-auto relative">
+          <button
+            onClick={goBack}
+            className="absolute top-0 left-0 w-9 h-9 flex items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition cursor-pointer"
+            aria-label="Go Back"
+          >
+            <ArrowLeft size={18} />
+          </button>
 
-        <button
-          onClick={() => toggleShortlist(player.id)}
-          className={`absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-full transition-colors ${
-            isShortlisted ? 'bg-amber-50 text-[#ff6100]' : 'bg-gray-50 text-[#8a99b0]'
-          }`}
-        >
-          <Star size={20} strokeWidth={2.5} fill={isShortlisted ? '#ff6100' : 'none'} />
-        </button>
+          <button
+            onClick={() => toggleShortlist(player.id)}
+            className={`absolute top-0 right-0 w-9 h-9 flex items-center justify-center rounded-lg border transition cursor-pointer ${
+              isShortlisted
+                ? 'bg-amber-50 border-amber-200 text-amber-600'
+                : 'bg-white border-slate-200 text-slate-400 hover:text-slate-600'
+            }`}
+            aria-label="Toggle Shortlist"
+          >
+            <Star size={18} fill={isShortlisted ? '#d97706' : 'none'} />
+          </button>
 
-        <div className="flex flex-col items-center mt-6 text-center">
-          <img
-            src={player.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop&q=80'}
-            alt={player.name}
-            className="w-24 h-24 rounded-full object-cover border-[3px] border-white shadow-md mb-4"
-          />
-          <h1 className="text-[24px] font-black text-[#101827] leading-tight mb-1">{player.name}</h1>
-          <div className="text-[13px] font-medium text-[#596579] flex items-center justify-center gap-1.5 mb-3">
-            <span>{player.role}</span>
-            <span>•</span>
-            <MapPin size={12} className="text-[#2457D6]" />
-            <span>{player.district}</span>
-          </div>
+          <div className="flex flex-col items-center mt-2 text-center">
+            <img
+              src={player.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop&q=80'}
+              alt={player.name}
+              className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-2 border-white shadow-sm mb-3"
+            />
+            <h1 className="text-xl sm:text-2xl font-semibold text-slate-900 leading-tight mb-1">
+              {player.name}
+            </h1>
+            <div className="text-xs text-slate-500 flex items-center justify-center gap-1.5 mb-3">
+              <span className="font-medium text-slate-700">{player.role}</span>
+              <span>•</span>
+              <MapPin size={12} className="text-blue-600" />
+              <span>{player.district}</span>
+              <span>•</span>
+              <span>{player.team || 'District XI'}</span>
+            </div>
 
-          <div className="flex gap-2">
-            <span className="px-3 py-1 rounded-full bg-[#eef2fd] text-[#2457D6] text-[11px] font-bold uppercase tracking-wider">{player.category || 'Senior'}</span>
-            <span className="px-3 py-1 rounded-full bg-[#e8f8ef] text-[#0FA968] text-[11px] font-bold uppercase tracking-wider">Registered</span>
+            <div className="flex items-center gap-2">
+              <span className="px-2.5 py-0.5 rounded-md bg-blue-50 text-blue-700 text-xs font-medium border border-blue-100">
+                {player.category || 'Senior'}
+              </span>
+              <span className="px-2.5 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-xs font-medium border border-emerald-100 flex items-center gap-1">
+                <ShieldCheck size={12} /> Registered
+              </span>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="pt-4">
+      <div className="max-w-4xl mx-auto px-4 pt-5">
         <ProfileTabs tabs={tabs} active={activeTab} onChange={setActiveTab} />
-      </div>
 
-      {/* Content Area */}
-      <div className="px-4 pb-8 space-y-4">
-
-        {/* â”€â”€ TAB 1: OVERVIEW â”€â”€ */}
-        {activeTab === 'Overview' && (
-          <>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="bg-white rounded-[16px] p-4 border border-gray-100 shadow-sm">
-                <div className="text-[28px] font-black text-[#2457D6]">{player.careerRuns || 0}</div>
-                <div className="text-[12px] font-bold text-[#8a99b0] uppercase tracking-wider mt-1">Runs</div>
-              </div>
-              <div className="bg-white rounded-[16px] p-4 border border-gray-100 shadow-sm">
-                <div className="text-[28px] font-black text-[#101827]">{player.battingAvg ? player.battingAvg.toFixed(1) : '-'}</div>
-                <div className="text-[12px] font-bold text-[#8a99b0] uppercase tracking-wider mt-1">Average</div>
-              </div>
-              <div className="bg-white rounded-[16px] p-4 border border-gray-100 shadow-sm">
-                <div className="text-[28px] font-black text-[#101827]">{player.strikeRate || '-'}</div>
-                <div className="text-[12px] font-bold text-[#8a99b0] uppercase tracking-wider mt-1">Strike Rate</div>
-              </div>
-              <div className="bg-white rounded-[16px] p-4 border border-gray-100 shadow-sm">
-                <div className="text-[28px] font-black text-[#F05A47]">{player.wickets ?? (player.role === 'Bowler' ? 14 : 0)}</div>
-                <div className="text-[12px] font-bold text-[#8a99b0] uppercase tracking-wider mt-1">Wickets</div>
-              </div>
-            </div>
-
-            <div className="bg-gradient-to-br from-[#ff6100] to-[#b88920] rounded-[16px] p-5 text-white shadow-md">
-              <div className="flex items-center gap-2 mb-4">
-                <Award size={20} className="text-white/80" />
-                <h3 className="font-bold text-[14px] uppercase tracking-wider text-white/80">Distinctions</h3>
-              </div>
-              <ul className="space-y-3">
-                {(player.awards || ['Best District Batter 2024']).map((award, i) => (
-                  <li key={i} className="flex items-start gap-2">
-                    <span className="mt-1 w-1.5 h-1.5 rounded-full bg-white/50 flex-shrink-0" />
-                    <span className="font-bold text-[15px]">{award}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </>
-        )}
-
-        {/* â”€â”€ TAB 2: BATTING â”€â”€ */}
-        {activeTab === 'Batting' && (
-          <div className="bg-white rounded-[16px] border border-gray-100 shadow-sm overflow-hidden">
-            <div className="p-4 border-b border-gray-50 bg-[#F7F8F4]">
-              <h3 className="font-bold text-[14px] text-[#101827]">Batting Profile</h3>
-              <p className="text-[12px] text-[#596579]">{player.battingStyle || 'Right-Hand Bat'}</p>
-            </div>
-            <div className="p-4 grid grid-cols-2 gap-4">
-               <div>
-                  <div className="text-[12px] font-bold text-[#8a99b0] uppercase">Matches</div>
-                  <div className="text-[18px] font-black text-[#101827]">{player.matches || 24}</div>
-               </div>
-               <div>
-                  <div className="text-[12px] font-bold text-[#8a99b0] uppercase">Highest Score</div>
-                  <div className="text-[18px] font-black text-[#101827]">{player.highScore || '118*'}</div>
-               </div>
-               <div>
-                  <div className="text-[12px] font-bold text-[#8a99b0] uppercase">50s / 100s</div>
-                  <div className="text-[18px] font-black text-[#101827]">{player.fifties || 0} / {player.hundreds || 0}</div>
-               </div>
-               <div>
-                  <div className="text-[12px] font-bold text-[#8a99b0] uppercase">4s / 6s</div>
-                  <div className="text-[18px] font-black text-[#101827]">{player.fours || 0} / {player.sixes || 0}</div>
-               </div>
-            </div>
-          </div>
-        )}
-
-        {/* â”€â”€ TAB 3: BOWLING â”€â”€ */}
-        {activeTab === 'Bowling' && (
-          <div className="bg-white rounded-[16px] border border-gray-100 shadow-sm overflow-hidden">
-            <div className="p-4 border-b border-gray-50 bg-[#F7F8F4]">
-              <h3 className="font-bold text-[14px] text-[#101827]">Bowling Profile</h3>
-              <p className="text-[12px] text-[#596579]">{player.bowlingStyle || 'Right-Arm Medium'}</p>
-            </div>
-             <div className="p-4 grid grid-cols-2 gap-4">
-               <div>
-                  <div className="text-[12px] font-bold text-[#8a99b0] uppercase">Wickets</div>
-                  <div className="text-[18px] font-black text-[#F05A47]">{player.wickets || (player.role === 'Bowler' ? 14 : 0)}</div>
-               </div>
-               <div>
-                  <div className="text-[12px] font-bold text-[#8a99b0] uppercase">Economy</div>
-                  <div className="text-[18px] font-black text-[#101827]">{player.economy || (player.role === 'Bowler' ? '6.4' : '-')}</div>
-               </div>
-               <div>
-                  <div className="text-[12px] font-bold text-[#8a99b0] uppercase">Best Figures</div>
-                  <div className="text-[18px] font-black text-[#101827]">{player.bestBowling || (player.role === 'Bowler' ? '4/18' : '-')}</div>
-               </div>
-               <div>
-                  <div className="text-[12px] font-bold text-[#8a99b0] uppercase">Average</div>
-                  <div className="text-[18px] font-black text-[#101827]">{player.average ? player.average.toFixed(1) : '-'}</div>
-               </div>
-            </div>
-          </div>
-        )}
-
-        {/* â”€â”€ TAB 4: SELECTION â”€â”€ */}
-        {activeTab === 'Selection' && (
-          <div className="bg-white rounded-[16px] border border-gray-100 shadow-sm overflow-hidden">
-            <div className="p-4 border-b border-gray-50">
-              <h3 className="font-bold text-[14px] text-[#101827]">Selection History</h3>
-            </div>
-            
-            <div className="divide-y divide-gray-100">
-               <div className="p-4">
-                  <div className="flex items-center justify-between mb-1">
-                     <span className="text-[14px] font-bold text-[#101827]">Senior District Trophy</span>
-                     <span className="text-[12px] font-bold text-[#0FA968]">Selected</span>
+        {/* Content Area */}
+        <div className="space-y-4">
+          {/* TAB 1: OVERVIEW */}
+          {activeTab === 'Overview' && (
+            <>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div className="bg-white rounded-xl p-4 border border-slate-200 shadow-2xs">
+                  <div className="text-xs font-medium text-slate-400">Career Runs</div>
+                  <div className="text-xl sm:text-2xl font-semibold text-blue-700 mt-1">
+                    {player.careerRuns || player.runs || 0}
                   </div>
-                  <div className="text-[12px] text-[#596579]">2026 • {player.district} District XI</div>
-               </div>
-               <div className="p-4">
-                  <div className="flex items-center justify-between mb-1">
-                     <span className="text-[14px] font-bold text-[#101827]">MPCA Inter-District</span>
-                     <span className="text-[12px] font-bold text-[#8a99b0]">Played</span>
+                </div>
+                <div className="bg-white rounded-xl p-4 border border-slate-200 shadow-2xs">
+                  <div className="text-xs font-medium text-slate-400">Batting Average</div>
+                  <div className="text-xl sm:text-2xl font-semibold text-slate-900 mt-1">
+                    {player.battingAvg ? player.battingAvg.toFixed(1) : '-'}
                   </div>
-                  <div className="text-[12px] text-[#596579]">2025 • Jabalpur Division</div>
-               </div>
-            </div>
-          </div>
-        )}
+                </div>
+                <div className="bg-white rounded-xl p-4 border border-slate-200 shadow-2xs">
+                  <div className="text-xs font-medium text-slate-400">Strike Rate</div>
+                  <div className="text-xl sm:text-2xl font-semibold text-slate-900 mt-1">
+                    {player.strikeRate || '-'}
+                  </div>
+                </div>
+                <div className="bg-white rounded-xl p-4 border border-slate-200 shadow-2xs">
+                  <div className="text-xs font-medium text-slate-400">Wickets</div>
+                  <div className="text-xl sm:text-2xl font-semibold text-slate-900 mt-1">
+                    {player.wickets ?? (player.role === 'Bowler' ? 14 : 0)}
+                  </div>
+                </div>
+              </div>
 
+              <div className="bg-white rounded-xl p-5 border border-slate-200 shadow-2xs space-y-3">
+                <div className="flex items-center gap-2 pb-2 border-b border-slate-100">
+                  <Award size={16} className="text-amber-500" />
+                  <h3 className="font-semibold text-sm text-slate-900">Distinctions & Honors</h3>
+                </div>
+                <ul className="space-y-2 text-xs">
+                  {(player.awards || ['Best District Batter 2024', 'POTM - District Final']).map((award, i) => (
+                    <li key={i} className="flex items-center gap-2 text-slate-700">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0" />
+                      <span>{award}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </>
+          )}
+
+          {/* TAB 2: BATTING */}
+          {activeTab === 'Batting' && (
+            <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
+              <div className="p-4 border-b border-slate-100 bg-slate-50/60 flex items-center justify-between">
+                <div>
+                  <h3 className="font-semibold text-sm text-slate-900">Batting Profile</h3>
+                  <p className="text-xs text-slate-500">{player.battingStyle || 'Right-Hand Bat'}</p>
+                </div>
+              </div>
+              <div className="p-4 grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div>
+                  <div className="text-xs font-medium text-slate-400">Matches</div>
+                  <div className="text-lg font-semibold text-slate-900 mt-0.5">{player.matches || 24}</div>
+                </div>
+                <div>
+                  <div className="text-xs font-medium text-slate-400">Highest Score</div>
+                  <div className="text-lg font-semibold text-slate-900 mt-0.5">{player.highScore || '118*'}</div>
+                </div>
+                <div>
+                  <div className="text-xs font-medium text-slate-400">50s / 100s</div>
+                  <div className="text-lg font-semibold text-slate-900 mt-0.5">{player.fifties || 0} / {player.hundreds || 0}</div>
+                </div>
+                <div>
+                  <div className="text-xs font-medium text-slate-400">4s / 6s</div>
+                  <div className="text-lg font-semibold text-slate-900 mt-0.5">{player.fours || 0} / {player.sixes || 0}</div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 3: BOWLING */}
+          {activeTab === 'Bowling' && (
+            <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
+              <div className="p-4 border-b border-slate-100 bg-slate-50/60 flex items-center justify-between">
+                <div>
+                  <h3 className="font-semibold text-sm text-slate-900">Bowling Profile</h3>
+                  <p className="text-xs text-slate-500">{player.bowlingStyle || 'Right-Arm Medium'}</p>
+                </div>
+              </div>
+              <div className="p-4 grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div>
+                  <div className="text-xs font-medium text-slate-400">Wickets</div>
+                  <div className="text-lg font-semibold text-slate-900 mt-0.5">{player.wickets || (player.role === 'Bowler' ? 14 : 0)}</div>
+                </div>
+                <div>
+                  <div className="text-xs font-medium text-slate-400">Economy</div>
+                  <div className="text-lg font-semibold text-slate-900 mt-0.5">{player.economy || (player.role === 'Bowler' ? '6.4' : '-')}</div>
+                </div>
+                <div>
+                  <div className="text-xs font-medium text-slate-400">Best Figures</div>
+                  <div className="text-lg font-semibold text-slate-900 mt-0.5">{player.bestBowling || (player.role === 'Bowler' ? '4/18' : '-')}</div>
+                </div>
+                <div>
+                  <div className="text-xs font-medium text-slate-400">Average</div>
+                  <div className="text-lg font-semibold text-slate-900 mt-0.5">{player.average ? player.average.toFixed(1) : '-'}</div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 4: SELECTION */}
+          {activeTab === 'Selection' && (
+            <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
+              <div className="p-4 border-b border-slate-100 bg-slate-50/60">
+                <h3 className="font-semibold text-sm text-slate-900">Official Selection History</h3>
+              </div>
+              
+              <div className="divide-y divide-slate-100">
+                <div className="p-4 flex items-center justify-between">
+                  <div>
+                    <div className="text-sm font-semibold text-slate-900">Senior District Trophy</div>
+                    <div className="text-xs text-slate-500 mt-0.5">2026 • {player.district} District XI</div>
+                  </div>
+                  <span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 text-xs font-medium rounded border border-emerald-100 flex items-center gap-1">
+                    <CheckCircle2 size={12} /> Selected
+                  </span>
+                </div>
+                <div className="p-4 flex items-center justify-between">
+                  <div>
+                    <div className="text-sm font-semibold text-slate-900">MPCA Inter-District Championship</div>
+                    <div className="text-xs text-slate-500 mt-0.5">2025 • Jabalpur Division</div>
+                  </div>
+                  <span className="px-2 py-0.5 bg-slate-100 text-slate-600 text-xs font-medium rounded">
+                    Participated
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

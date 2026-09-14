@@ -1,6 +1,7 @@
-﻿import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Copy, Share2, Check, MessageCircle, FileText } from 'lucide-react';
 import { calculateMatchHighlights, generateMatchSummary, generateSocialCaption } from '../../engine/matchSummaryEngine';
+import jdcaLogo from '../../assets/jdca-logo.png';
 
 export default function MatchMediaReport({ match }) {
   const [copied, setCopied] = useState(false);
@@ -16,8 +17,9 @@ export default function MatchMediaReport({ match }) {
   return (
     <div>
       <div className="bg-white border border-gray-200 shadow-sm rounded-[16px] overflow-hidden mb-6 relative">
-        <div className="bg-[#101827] text-white p-5 text-center">
-          <div className="text-[10px] font-bold tracking-widest uppercase text-white/60 mb-2">Jabalpur District Cricket Association</div>
+        <div className="bg-[#101827] text-white p-5 text-center flex flex-col items-center justify-center">
+          <img src={jdcaLogo} alt="JDCA Emblem" className="w-12 h-12 object-contain mb-2 drop-shadow-md" />
+          <div className="text-[10px] font-bold tracking-widest uppercase text-white/60 mb-1">Jabalpur District Cricket Association</div>
           <div className="text-[14px] font-black uppercase tracking-wider text-white">Official Media Report</div>
         </div>
         

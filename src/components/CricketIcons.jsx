@@ -1,5 +1,6 @@
 import React from 'react';
 import batIconUrl from '../assets/bat-icon.png';
+import jdcaLogoUrl from '../assets/jdca-logo.png';
 
 /**
  * High-fidelity Vector Icons & Logos matching Stitch UI Cricket specifications
@@ -10,8 +11,8 @@ export function CricketAppLogo({ className = "w-12 h-12", isMini = false }) {
   return (
     <div className="relative flex items-center justify-center">
       <img
-        src={batIconUrl}
-        alt="Cricket Bat"
+        src={jdcaLogoUrl}
+        alt="JDCA Logo"
         className={className}
         style={{ objectFit: 'contain' }}
       />

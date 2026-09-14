@@ -165,7 +165,7 @@ export default function SelectionScreen() {
 
       {/* Selected Squad Strip if any selected */}
       {shortlistedIds.length > 0 && (
-        <div className="jdca-card p-4.5 bg-gradient-to-r from-emerald-50/70 via-white to-blue-50/40 border-emerald-200/80">
+        <div className="jdca-card p-4.5 bg-emerald-50 border-emerald-200">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
             <div>
               <div className="flex items-center gap-2">

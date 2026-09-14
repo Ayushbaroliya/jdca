@@ -14,33 +14,28 @@ const MatchListItem = ({ match, onClick }) => {
   const isLive = match.status === 'LIVE' || match.status === 'IN_PROGRESS';
   const isCompleted = match.status === 'COMPLETED' || match.status === 'FINISHED';
 
+  // Determine border color based on status
+  let borderStyle = 'border-slate-200';
+  let leftAccent = 'border-l-blue-500';
+  if (isLive) leftAccent = 'border-l-emerald-500';
+  if (isCompleted) leftAccent = 'border-l-slate-400';
+
   return (
     <div 
       onClick={onClick}
-      className={`rounded-[16px] p-4 cursor-pointer relative overflow-hidden transition-transform active:scale-[0.98] border mb-3 ${
-        isLive ? 'bg-gradient-to-br from-[#2457D6] to-[#1b41a8] text-white border-transparent shadow-md' : 'bg-white border-gray-100 shadow-sm'
-      }`}
+      className={`bg-white rounded-2xl p-4.5 cursor-pointer relative transition-all duration-300 active:scale-[0.99] border ${borderStyle} border-l-4 ${leftAccent} mb-3 shadow-sm hover:shadow-md`}
     >
-      {/* Decorative Elements for LIVE cards */}
-      {isLive && (
-        <>
-          <div className="absolute -top-10 -right-10 w-32 h-32 rounded-full border-[12px] border-white/5 pointer-events-none" />
-          <div className="absolute -bottom-12 -left-12 w-40 h-40 rounded-full border-[16px] border-white/5 pointer-events-none" />
-          <div className="absolute top-0 right-0 w-1.5 h-full bg-[#ff6100] pointer-events-none" />
-        </>
-      )}
-
       <div className="flex items-center justify-between mb-3 relative z-10">
-        <span className={`text-[10px] font-bold tracking-wider uppercase ${isLive ? 'text-white/80' : 'text-[#8a99b0]'}`}>
+        <span className={`text-[10px] font-bold tracking-wider uppercase text-slate-500`}>
           {match.tournament || 'JDCA Official Fixtures'}
         </span>
         {isLive ? (
-          <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white/20 text-white text-[10px] font-bold">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#0FA968] animate-pulse" />
+          <span className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 text-[10px] font-bold border border-emerald-100">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
             LIVE
           </span>
         ) : (
-          <span className={`text-[10px] font-bold uppercase tracking-widest ${isCompleted ? 'text-[#0FA968]' : 'text-[#8a99b0]'}`}>
+          <span className={`text-[10px] font-bold uppercase tracking-widest ${isCompleted ? 'text-slate-500' : 'text-blue-600'}`}>
             {isCompleted ? 'COMPLETED' : 'UPCOMING'}
           </span>
         )}
@@ -48,22 +43,22 @@ const MatchListItem = ({ match, onClick }) => {
       
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
-          <div className={`text-[16px] font-bold ${isLive ? 'text-white' : 'text-[#101827]'}`}>
+          <div className="text-[16px] font-bold text-slate-900">
             {match.teamA?.name || match.teamA || 'JABALPUR'}
           </div>
           {(isLive || isCompleted) && (
-            <div className={`text-[18px] font-black ${isLive ? 'text-white' : 'text-[#101827]'}`}>
+            <div className="text-[18px] font-black text-slate-900">
               {match.teamA?.score || (isLive ? '142/4' : '186/4')}
             </div>
           )}
         </div>
         
         <div className="flex items-center justify-between">
-          <div className={`text-[16px] font-bold ${isLive ? 'text-white' : 'text-[#101827]'}`}>
+          <div className="text-[16px] font-bold text-slate-900">
             {match.teamB?.name || match.teamB || 'MANDLA'}
           </div>
           {(isLive || isCompleted) && (
-            <div className={`text-[18px] font-black ${isLive ? 'text-white' : 'text-[#101827]'}`}>
+            <div className="text-[18px] font-black text-slate-900">
               {match.teamB?.score || (isLive ? '—' : '184/8')}
             </div>
           )}
@@ -71,23 +66,23 @@ const MatchListItem = ({ match, onClick }) => {
       </div>
       
       {isCompleted && (
-        <div className="mt-3 text-[12px] font-bold text-[#2457D6]">
+        <div className="mt-3 text-[12px] font-bold text-slate-600 bg-slate-50 px-3 py-1.5 rounded-xl inline-block border border-slate-100">
           {match.result || 'Jabalpur won by 6 wickets'}
         </div>
       )}
 
       {isLive && (
-        <div className="mt-2 text-[12px] font-medium text-white/80">
-          {match.teamA?.overs || '24.2'} overs Â· {match.format || '40'} overs match
+        <div className="mt-2 text-[12px] font-semibold text-slate-500">
+          {match.teamA?.overs || '24.2'} overs · {match.format || '40'} overs match
         </div>
       )}
       
-      <div className={`mt-4 pt-3 flex items-center justify-between text-[11px] font-medium ${isLive ? 'border-t border-white/10 text-white/80' : 'border-t border-gray-100 text-[#8a99b0]'}`}>
+      <div className="mt-4 pt-3 flex items-center justify-between text-[11px] font-medium border-t border-slate-100 text-slate-500">
         <div className="flex items-center gap-1.5">
           <MapPin size={12} />
           {match.venue || 'Ranital Cricket Ground'}
         </div>
-        <div className={`flex items-center gap-1 uppercase tracking-wide font-bold ${!isLive ? 'text-[#2457D6]' : ''}`}>
+        <div className="flex items-center gap-1 uppercase tracking-wide font-bold text-blue-600">
           VIEW MATCH
           <ArrowRight size={14} />
         </div>

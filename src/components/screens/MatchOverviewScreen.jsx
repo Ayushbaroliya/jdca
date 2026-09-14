@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { 
   ShieldCheck, 
   Award, 
@@ -35,54 +35,54 @@ export default function MatchOverviewScreen() {
 
       {/* 2. Key Metrics 4-Column Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5">
-        {/* Metric 1: Run Rate */}
-        <div className="jdca-card p-4.5 bg-white">
-          <span className="text-[11px] uppercase font-bold tracking-wider text-gray-400 block mb-1">
+        {/* Metric 1: Run Rate - Blue */}
+        <div className="bg-white rounded-2xl p-4.5 border border-slate-200 border-l-4 border-l-blue-500 shadow-sm hover:shadow-md hover:scale-[1.02] transition-all">
+          <span className="text-[11px] uppercase font-black tracking-wider text-slate-500 block mb-1">
             Run Rate
           </span>
-          <div className="text-2xl sm:text-3xl font-extrabold text-ink font-tabular">
+          <div className="text-2xl sm:text-3xl font-black text-slate-900 font-tabular leading-none">
             8.45
           </div>
-          <div className="text-xs text-gray-500 font-medium mt-1">
-            Req: <strong className="text-cobalt">9.10</strong>
+          <div className="text-xs text-slate-500 font-semibold mt-1.5">
+            Req: <strong className="text-blue-600">9.10</strong>
           </div>
         </div>
 
-        {/* Metric 2: Overs Progress */}
-        <div className="jdca-card p-4.5 bg-white">
-          <span className="text-[11px] uppercase font-bold tracking-wider text-gray-400 block mb-1">
+        {/* Metric 2: Overs Progress - Emerald */}
+        <div className="bg-white rounded-2xl p-4.5 border border-slate-200 border-l-4 border-l-emerald-500 shadow-sm hover:shadow-md hover:scale-[1.02] transition-all">
+          <span className="text-[11px] uppercase font-black tracking-wider text-slate-500 block mb-1">
             Overs Progress
           </span>
-          <div className="text-2xl sm:text-3xl font-extrabold text-ink font-tabular">
-            14.2 <span className="text-sm font-normal text-gray-400">/ 20</span>
+          <div className="text-2xl sm:text-3xl font-black text-slate-900 font-tabular leading-none">
+            14.2 <span className="text-sm font-bold text-slate-400">/ 20</span>
           </div>
-          <div className="text-xs text-gray-500 font-medium mt-1">
+          <div className="text-xs text-slate-500 font-semibold mt-1.5">
             34 balls left
           </div>
         </div>
 
-        {/* Metric 3: Extras */}
-        <div className="jdca-card p-4.5 bg-white">
-          <span className="text-[11px] uppercase font-bold tracking-wider text-gray-400 block mb-1">
+        {/* Metric 3: Extras - Amber */}
+        <div className="bg-white rounded-2xl p-4.5 border border-slate-200 border-l-4 border-l-amber-500 shadow-sm hover:shadow-md hover:scale-[1.02] transition-all">
+          <span className="text-[11px] uppercase font-black tracking-wider text-slate-500 block mb-1">
             Extras Given
           </span>
-          <div className="text-2xl sm:text-3xl font-extrabold text-ink font-tabular">
+          <div className="text-2xl sm:text-3xl font-black text-slate-900 font-tabular leading-none">
             12
           </div>
-          <div className="text-xs text-gray-500 font-medium mt-1">
+          <div className="text-xs text-slate-500 font-semibold mt-1.5">
             Wd: 8 • Nb: 2 • Lb: 2
           </div>
         </div>
 
-        {/* Metric 4: Current Partnership */}
-        <div className="jdca-card p-4.5 bg-white">
-          <span className="text-[11px] uppercase font-bold tracking-wider text-gray-400 block mb-1">
+        {/* Metric 4: Current Partnership - Purple */}
+        <div className="bg-white rounded-2xl p-4.5 border border-slate-200 border-l-4 border-l-purple-500 shadow-sm hover:shadow-md hover:scale-[1.02] transition-all">
+          <span className="text-[11px] uppercase font-black tracking-wider text-slate-500 block mb-1">
             Current Stand
           </span>
-          <div className="text-2xl sm:text-3xl font-extrabold text-jade-700 font-tabular">
+          <div className="text-2xl sm:text-3xl font-black text-slate-900 font-tabular leading-none">
             45
           </div>
-          <div className="text-xs text-gray-500 font-medium mt-1">
+          <div className="text-xs text-slate-500 font-semibold mt-1.5">
             from 28 balls (RR 9.6)
           </div>
         </div>

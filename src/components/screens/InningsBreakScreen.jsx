@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { Trophy, ArrowRight, Play, Award, Zap } from 'lucide-react';
 import { useCricket } from '../../context/CricketContext';
 import { CricketBatIcon, CricketBallIcon } from '../CricketIcons';
@@ -44,50 +44,50 @@ export default function InningsBreakScreen() {
       </div>
 
       {/* 2. Target Challenge Card */}
-      <div className="jdca-card p-6 text-center space-y-2 border-cobalt-200 bg-cobalt-50/20">
-        <div className="inline-flex items-center justify-center space-x-1.5 px-3 py-1 rounded-full bg-cobalt-50 text-cobalt text-xs font-bold uppercase tracking-wider">
-          <CricketBatIcon className="w-3.5 h-3.5 text-cobalt" />
+      <div className="bg-white rounded-2xl p-6 text-center space-y-2.5 border border-slate-200 border-l-4 border-l-blue-500 shadow-sm">
+        <div className="inline-flex items-center justify-center space-x-1.5 px-3 py-1 rounded bg-blue-50 text-blue-700 text-xs font-bold uppercase tracking-wider border border-blue-100">
+          <CricketBatIcon className="w-3.5 h-3.5" />
           <span>TARGET FOR 2ND INNINGS CHASE</span>
         </div>
-        <div className="text-3xl sm:text-4xl font-extrabold text-cobalt font-tabular">
-          {targetScore} Runs
+        <div className="text-4xl sm:text-5xl font-black text-slate-900 font-tabular drop-shadow-sm">
+          {targetScore} <span className="text-2xl font-bold text-slate-400">Runs</span>
         </div>
-        <p className="text-xs font-semibold text-gray-600">
+        <p className="text-xs font-semibold text-slate-500">
           Required from 120 legal deliveries • Required Run Rate: {(targetScore / 20).toFixed(2)} RPO
         </p>
       </div>
 
       {/* 3. Top Performers */}
-      <div className="jdca-card p-5 space-y-3">
-        <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400">
+      <div className="bg-white rounded-2xl border border-slate-200/80 p-5 space-y-3.5 shadow-sm">
+        <h3 className="text-xs font-black uppercase tracking-wider text-slate-500">
           Key 1st Innings Performers
         </h3>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {/* Top Batter */}
-          <div className="p-3.5 rounded-xl bg-mango-50/50 border border-mango-200">
-            <div className="flex items-center space-x-1.5 text-xs font-bold text-mango-800 mb-1">
-              <CricketBatIcon className="w-3.5 h-3.5 text-mango-700" />
+          {/* Top Batter - Amber */}
+          <div className="p-4 rounded-2xl bg-white border border-slate-200 border-l-4 border-l-amber-500 shadow-sm">
+            <div className="flex items-center space-x-1.5 text-xs font-bold text-slate-500 mb-1">
+              <CricketBatIcon className="w-3.5 h-3.5 text-amber-500" />
               <span>Top Batter</span>
             </div>
-            <h4 className="font-bold text-sm text-gray-900">R. Sharma</h4>
-            <div className="text-base font-extrabold text-cobalt mt-0.5 font-tabular">
-              68* <span className="text-xs font-normal text-gray-500">(42 balls)</span>
+            <h4 className="font-black text-base text-slate-900">R. Sharma</h4>
+            <div className="text-xl font-black text-slate-900 mt-1 font-tabular">
+              68* <span className="text-xs font-medium text-slate-400">(42 balls)</span>
             </div>
-            <p className="text-[10px] text-gray-400 font-medium">6x4, 2x6 • SR: 161.9</p>
+            <p className="text-[11px] text-slate-500 font-semibold mt-1">6x4, 2x6 • SR: 161.9</p>
           </div>
 
-          {/* Top Bowler */}
-          <div className="p-3.5 rounded-xl bg-gray-50 border border-gray-150">
-            <div className="flex items-center space-x-1.5 text-xs font-bold text-gray-600 mb-1">
-              <CricketBallIcon className="w-3.5 h-3.5 text-coral" />
+          {/* Top Bowler - Blue */}
+          <div className="p-4 rounded-2xl bg-white border border-slate-200 border-l-4 border-l-blue-500 shadow-sm">
+            <div className="flex items-center space-x-1.5 text-xs font-bold text-slate-500 mb-1">
+              <CricketBallIcon className="w-3.5 h-3.5 text-blue-500" />
               <span>Top Bowler</span>
             </div>
-            <h4 className="font-bold text-sm text-gray-900">A. Patel</h4>
-            <div className="text-base font-extrabold text-coral mt-0.5 font-tabular">
-              3/24 <span className="text-xs font-normal text-gray-500">(4.0 ov)</span>
+            <h4 className="font-black text-base text-slate-900">A. Patel</h4>
+            <div className="text-xl font-black text-slate-900 mt-1 font-tabular">
+              3/24 <span className="text-xs font-medium text-slate-400">(4.0 ov)</span>
             </div>
-            <p className="text-[10px] text-gray-400 font-medium">Econ: 6.00 • 11 Dots</p>
+            <p className="text-[11px] text-slate-500 font-semibold mt-1">Econ: 6.00 • 11 Dots</p>
           </div>
         </div>
       </div>

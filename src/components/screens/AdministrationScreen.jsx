@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import {
   Users, Shield, Settings, MapPin, Trophy, Calendar, Plus,
   Check, X, Edit, Bell, Lock, UserCheck, AlertTriangle
@@ -51,7 +51,7 @@ const INITIAL_FORMATS = [
 ];
 
 export default function AdministrationScreen() {
-  const { registeredUsers, setRegisteredUsers, userRole } = useCricket();
+  const { registeredUsers, setRegisteredUsers, userRole, isDarkMode, setIsDarkMode } = useCricket();
   const [activeTab, setActiveTab] = useState('staff');
   
   // Add User Modal State
@@ -376,6 +376,19 @@ export default function AdministrationScreen() {
             <p className="text-xs text-slate-500 mb-4">Official JDCA scoring engine & notification parameters</p>
 
             <div className="space-y-4 divide-y divide-slate-100">
+              <div className="flex items-center justify-between pt-3">
+                <div>
+                  <div className="font-semibold text-slate-900 dark:text-white text-sm">Dark Mode UI</div>
+                  <div className="text-xs text-slate-500 dark:text-slate-400">Toggle dark mode for the entire association dashboard</div>
+                </div>
+                <input 
+                  type="checkbox" 
+                  checked={isDarkMode} 
+                  onChange={(e) => setIsDarkMode(e.target.checked)} 
+                  className="w-4 h-4 text-[#2457D6] rounded border-slate-300 cursor-pointer" 
+                />
+              </div>
+
               <div className="flex items-center justify-between pt-3">
                 <div>
                   <div className="font-semibold text-slate-900 text-sm">Live Scoring Realtime Sync</div>

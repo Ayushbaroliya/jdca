@@ -24,7 +24,7 @@ import TournamentsScreen      from './components/screens/TournamentsScreen';
 import PlayersScreen          from './components/screens/PlayersScreen';
 import PlayerProfileScreen    from './components/screens/PlayerProfileScreen';
 import PlayerRegistrationScreen from './components/screens/PlayerRegistrationScreen';
-import SelectionScreen        from './components/screens/SelectionScreen';
+import SelectionScreen        from './components/selection/SelectionWorkspace';
 import AdministrationScreen   from './components/screens/AdministrationScreen';
 import PlayerComparisonModal  from './components/screens/PlayerComparisonModal';
 

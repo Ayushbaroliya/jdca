@@ -2,6 +2,44 @@ import React, { useMemo, useState } from 'react';
 import { Plus, Trophy, ChevronRight, CheckCircle2 } from 'lucide-react';
 import { useCricket } from '../../context/CricketContext';
 
+const TOURNAMENT_THEMES = [
+  {
+    header: 'bg-amber-600',
+    tag: 'bg-amber-500',
+    cardBorder: 'border-slate-200 shadow-sm border-t-4 border-t-amber-500',
+    progress: 'bg-amber-500',
+    badge: 'bg-white/20',
+  },
+  {
+    header: 'bg-blue-600',
+    tag: 'bg-blue-500',
+    cardBorder: 'border-slate-200 shadow-sm border-t-4 border-t-blue-500',
+    progress: 'bg-blue-500',
+    badge: 'bg-white/20',
+  },
+  {
+    header: 'bg-emerald-600',
+    tag: 'bg-emerald-500',
+    cardBorder: 'border-slate-200 shadow-sm border-t-4 border-t-emerald-500',
+    progress: 'bg-emerald-500',
+    badge: 'bg-white/20',
+  },
+  {
+    header: 'bg-purple-600',
+    tag: 'bg-purple-500',
+    cardBorder: 'border-slate-200 shadow-sm border-t-4 border-t-purple-500',
+    progress: 'bg-purple-500',
+    badge: 'bg-white/20',
+  },
+  {
+    header: 'bg-rose-600',
+    tag: 'bg-rose-500',
+    cardBorder: 'border-slate-200 shadow-sm border-t-4 border-t-rose-500',
+    progress: 'bg-rose-500',
+    badge: 'bg-white/20',
+  },
+];
+
 // Clean match row for tournaments list
 const TournamentMatchRow = ({ match, index, onClick }) => {
   const isLive = match.status === 'LIVE' || match.status === 'IN_PROGRESS';
@@ -157,34 +195,37 @@ export default function TournamentsScreen() {
         {tournaments.map(([name, ms], i) => {
           const completed = ms.filter(m => ['COMPLETED', 'FINISHED'].includes(m.status)).length;
           const progress = Math.round((completed / ms.length) * 100) || 0;
+          const theme = TOURNAMENT_THEMES[i % TOURNAMENT_THEMES.length];
 
           return (
-            <div key={name} className="bg-white rounded-[20px] shadow-sm border border-gray-100 overflow-hidden">
+            <div key={name} className={`bg-white rounded-[22px] shadow-lg border ${theme.cardBorder} overflow-hidden hover:scale-[1.01] transition-all`}>
               {/* Tournament Header */}
-              <div className="bg-gradient-to-r from-[#2457D6] to-[#1b41a8] p-5 text-white relative overflow-hidden">
+              <div className={`${theme.header} p-5 sm:p-6 text-white relative overflow-hidden`}>
                 {/* Decorative Elements */}
-                <div className="absolute -top-16 -right-16 w-48 h-48 rounded-full border-[16px] border-white/5 pointer-events-none" />
-                <div className="absolute -bottom-10 -left-10 w-32 h-32 rounded-full border-[12px] border-white/5 pointer-events-none" />
-                <div className="absolute top-0 right-0 w-1.5 h-full bg-[#ff6100] pointer-events-none" />
+                <div className="absolute -top-16 -right-16 w-48 h-48 rounded-full border-[16px] border-white/10 pointer-events-none" />
+                <div className="absolute -bottom-10 -left-10 w-32 h-32 rounded-full border-[12px] border-white/10 pointer-events-none" />
+                <div className={`absolute top-0 right-0 w-2 h-full ${theme.tag} pointer-events-none`} />
 
                 <div className="relative z-10">
-                  <div className="text-[10px] font-bold tracking-widest uppercase text-white/70 mb-1">Season 2026</div>
-                  <h2 className="text-[20px] font-black leading-tight mb-4">{name}</h2>
+                  <div className="inline-block px-2.5 py-0.5 rounded-full bg-white/20 text-[10px] font-black tracking-widest uppercase text-white mb-2 border border-white/20 backdrop-blur-xs">
+                    Season 2026 • Official JDCA
+                  </div>
+                  <h2 className="text-[22px] sm:text-[24px] font-black leading-tight mb-4 tracking-tight drop-shadow-sm">{name}</h2>
                   
-                  <div className="flex items-center gap-6 text-[12px] font-medium text-white/90">
-                    <div>
-                      <div className="text-[18px] font-black text-white">{ms.length}</div>
-                      <div className="text-[10px] uppercase tracking-wider text-white/60">Matches</div>
+                  <div className="flex items-center gap-6 text-[12px] font-medium text-white/95">
+                    <div className="bg-white/15 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/20">
+                      <div className="text-[20px] font-black text-white leading-none">{ms.length}</div>
+                      <div className="text-[10px] uppercase font-bold tracking-wider text-white/80 mt-1">Total Matches</div>
                     </div>
-                    <div>
-                      <div className="text-[18px] font-black text-white">{completed}</div>
-                      <div className="text-[10px] uppercase tracking-wider text-white/60">Completed</div>
+                    <div className="bg-white/15 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/20">
+                      <div className="text-[20px] font-black text-white leading-none">{completed}</div>
+                      <div className="text-[10px] uppercase font-bold tracking-wider text-white/80 mt-1">Completed</div>
                     </div>
                   </div>
 
                   {/* Progress bar */}
-                  <div className="mt-5 w-full bg-black/20 rounded-full h-1.5 overflow-hidden">
-                    <div className="bg-[#0FA968] h-full rounded-full" style={{ width: `${progress}%` }} />
+                  <div className="mt-5 w-full bg-black/25 rounded-full h-2 overflow-hidden border border-white/10">
+                    <div className={`${theme.progress} h-full rounded-full transition-all duration-500`} style={{ width: `${progress}%` }} />
                   </div>
                 </div>
               </div>

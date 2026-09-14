@@ -4,7 +4,7 @@ import {
 } from 'lucide-react';
 import { useCricket } from '../context/CricketContext';
 import { RoleBadge } from './ui/Badge';
-import batIcon from '../assets/bat-icon.png';
+import jdcaLogo from '../assets/jdca-logo.png';
 import { motion, AnimatePresence } from 'motion/react';
 
 const ALL_NAV = [
@@ -84,9 +84,9 @@ export default function DrawerMenu() {
               className="flex items-center justify-between px-5 py-4"
               style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}
             >
-              <div className="flex items-center gap-2.5">
-                <div className="jdca-brand-mark flex items-center justify-center" style={{ width: 40, height: 40 }}>
-                  <img src={batIcon} alt="" style={{ width: 29, height: 29, objectFit: 'contain' }} />
+              <div className="flex items-center gap-3">
+                <div className="flex items-center justify-center flex-shrink-0">
+                  <img src={jdcaLogo} alt="JDCA Logo" style={{ width: 42, height: 42, objectFit: 'contain' }} className="drop-shadow-md" />
                 </div>
                 <div>
                   <div className="font-bold text-white" style={{ fontSize: 14 }}>JDCA</div>

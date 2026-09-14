@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import confetti from 'canvas-confetti';
+import { supabase } from '../lib/supabase';
 import {
   processDelivery,
   formatOvers,
@@ -59,6 +60,25 @@ export function CricketProvider({ children }) {
   const [userEmail, setUserEmail] = useState('');
   const [userRole, setUserRole] = useState('Admin'); // SuperAdmin, Admin, Scorer, Selector, Player
 
+  // Dark Mode Theme State
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    try {
+      return localStorage.getItem('jdca-dark-mode') === 'true';
+    } catch {
+      return false;
+    }
+  });
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('jdca-dark-mode', 'true');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('jdca-dark-mode', 'false');
+    }
+  }, [isDarkMode]);
+
   // Registered Users (Super Admin access)
   const [registeredUsers, setRegisteredUsers] = useState([
     { id: 'usr_001', name: 'Rohan (Super Admin)', email: 'superadmin@jdca.com', password: 'password123', role: 'SuperAdmin' },
@@ -76,6 +96,32 @@ export function CricketProvider({ children }) {
   // Matches State
   const [matches, setMatches] = useState(INITIAL_MATCHES);
   const [activeMatchId, setActiveMatchId] = useState('match-live-1');
+
+  // Fetch Supabase Data
+  useEffect(() => {
+    const fetchSupabaseData = async () => {
+      try {
+        // Fetch Players
+        const { data: supabasePlayers, error: playerError } = await supabase.from('players').select('*');
+        if (!playerError && supabasePlayers && supabasePlayers.length > 0) {
+          // Map backend schema to frontend model if necessary, or just set it
+          // setPlayers(supabasePlayers);
+          console.log('Fetched players from Supabase:', supabasePlayers);
+        }
+
+        // Fetch Matches
+        const { data: supabaseMatches, error: matchError } = await supabase.from('matches').select('*');
+        if (!matchError && supabaseMatches && supabaseMatches.length > 0) {
+          // setMatches(supabaseMatches);
+          console.log('Fetched matches from Supabase:', supabaseMatches);
+        }
+      } catch (err) {
+        console.error('Error fetching Supabase data:', err);
+      }
+    };
+
+    fetchSupabaseData();
+  }, []);
 
   // Match Setup State
   const [matchSetup, setMatchSetup] = useState({
@@ -572,6 +618,8 @@ export function CricketProvider({ children }) {
         setUserEmail,
         userRole,
         setUserRole,
+        isDarkMode,
+        setIsDarkMode,
         registeredUsers,
         setRegisteredUsers,
         players,

@@ -1,37 +1,66 @@
-﻿import React, { useState } from 'react';
-import { Search, ChevronRight, UserPlus, Filter } from 'lucide-react';
+import React, { useState } from 'react';
+import { Search, ChevronRight, UserPlus, Filter, User } from 'lucide-react';
 import { useCricket } from '../../context/CricketContext';
 
 const JDCA_DISTRICTS = ['All', 'Jabalpur', 'Katni', 'Narsinghpur', 'Seoni', 'Mandla', 'Balaghat', 'Chhindwara', 'Dindori', 'Pandhurna'];
-const CATEGORIES = ['All', 'Senior', 'U-22', 'U-18', 'U-15', 'U-13'];
+const CATEGORIES = ['All', 'Senior', 'U-22', 'U-19', 'U-16', 'U-15', 'U-13'];
 
-const PlayerListItem = ({ player, onClick }) => (
-  <div 
-    onClick={onClick}
-    className="flex items-center justify-between p-4 bg-white border-b border-gray-100 cursor-pointer active:bg-gray-50 transition-colors"
-  >
-    <div className="flex items-center gap-3">
-      <img
-        src={player.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80'}
-        alt={player.name}
-        className="w-12 h-12 rounded-full object-cover border border-gray-100"
-      />
-      <div>
-        <div className="text-[15px] font-bold text-[#101827]">{player.name}</div>
-        <div className="text-[12px] font-medium text-[#596579] mt-0.5">
-          {player.role || 'Batter'} • {player.district || 'Jabalpur'}
+const ROLE_BRIGHT_BADGES = {
+  Batter: 'bg-amber-500 text-white shadow-xs',
+  Batsman: 'bg-amber-500 text-white shadow-xs',
+  Bowler: 'bg-purple-600 text-white shadow-xs',
+  'All-Rounder': 'bg-emerald-600 text-white shadow-xs',
+  'All-rounder': 'bg-emerald-600 text-white shadow-xs',
+  'Wicket-Keeper': 'bg-cyan-600 text-white shadow-xs',
+  'Wicketkeeper': 'bg-cyan-600 text-white shadow-xs',
+};
+
+const PlayerListItem = ({ player, onClick }) => {
+  const roleBadge = ROLE_BRIGHT_BADGES[player.role] || 'bg-blue-600 text-white';
+
+  return (
+    <div 
+      onClick={onClick}
+      className="flex items-center justify-between p-3.5 sm:p-4 bg-white hover:bg-blue-50/40 border-b border-slate-100 cursor-pointer active:bg-blue-50 transition-all group relative overflow-hidden"
+    >
+      <div className="flex items-center gap-3.5 min-w-0">
+        <div className="relative shrink-0">
+          <img
+            src={player.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80'}
+            alt={player.name}
+            className="w-11 h-11 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-white shadow-md ring-2 ring-blue-500/20"
+          />
+        </div>
+        <div className="min-w-0">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-sm font-bold text-slate-900 group-hover:text-blue-600 transition truncate">
+              {player.name}
+            </span>
+            <span className={`px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider ${roleBadge}`}>
+              {player.role || 'Batter'}
+            </span>
+          </div>
+          <div className="text-xs text-slate-500 mt-1 truncate flex items-center gap-1.5">
+            <span className="font-semibold text-slate-700">{player.district || 'Jabalpur'}</span>
+            {player.category && (
+              <>
+                <span className="text-slate-300">•</span>
+                <span className="text-slate-600 font-bold">{player.category}</span>
+              </>
+            )}
+          </div>
         </div>
       </div>
-    </div>
-    <div className="flex items-center gap-4">
-      <div className="text-right hidden sm:block">
-        <div className="text-[14px] font-black text-[#2457D6]">{player.careerRuns || 0}</div>
-        <div className="text-[10px] font-bold uppercase tracking-wider text-[#8a99b0]">Runs</div>
+      <div className="flex items-center gap-4 shrink-0">
+        <div className="text-right hidden sm:block">
+          <div className="text-sm font-black text-blue-700 tabular-nums">{player.careerRuns || player.runs || 0}</div>
+          <div className="text-[11px] font-bold text-slate-400">Career Runs</div>
+        </div>
+        <ChevronRight size={16} className="text-slate-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-all" />
       </div>
-      <ChevronRight size={18} className="text-[#d2d8e2]" />
     </div>
-  </div>
-);
+  );
+};
 
 export default function PlayersScreen() {
   const { players, setSelectedPlayer, navigateTo } = useCricket();
@@ -68,81 +97,93 @@ export default function PlayersScreen() {
   };
 
   return (
-    <div className="pb-[100px] bg-[#F7F8F4] min-h-screen">
-      <div className="bg-white sticky top-[60px] z-30 border-b border-gray-100 shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
-        <div className="px-4 py-4">
-          <div className="flex items-center justify-between mb-4">
-            <h1 className="text-[28px] font-black text-[#101827] tracking-tight leading-none">Players</h1>
+    <div className="pb-20 bg-[#f8fafc] min-h-screen">
+      <div className="bg-white sticky top-[60px] lg:top-0 z-30 border-b border-slate-200 shadow-2xs">
+        <div className="max-w-5xl mx-auto px-4 py-4 space-y-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-xs text-slate-500 font-medium">Player Directory</div>
+              <h1 className="text-xl sm:text-2xl font-semibold text-slate-900 tracking-tight">Registered Players</h1>
+            </div>
             <button 
               onClick={() => navigateTo('player-registration')}
-              className="w-10 h-10 rounded-full bg-[#eef2fd] text-[#2457D6] flex items-center justify-center active:bg-blue-100"
+              className="px-3.5 py-1.5 rounded-lg bg-blue-600 text-white text-xs font-medium flex items-center gap-1.5 hover:bg-blue-700 transition cursor-pointer shadow-2xs"
             >
-              <UserPlus size={20} />
+              <UserPlus size={15} />
+              <span>Add Player</span>
             </button>
           </div>
 
-          <div className="flex bg-gray-100 p-1 rounded-xl mb-4">
+          <div className="flex bg-slate-100 p-1 rounded-xl w-full sm:w-64">
             <button
               onClick={() => setGenderTab('Men')}
-              className={`flex-1 py-2 rounded-lg text-[13px] font-bold transition-all ${genderTab === 'Men' ? 'bg-white text-[#101827] shadow-sm' : 'text-[#8a99b0]'}`}
+              className={`flex-1 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+                genderTab === 'Men' ? 'bg-white text-slate-900 shadow-2xs font-semibold' : 'text-slate-500 hover:text-slate-900'
+              }`}
             >
               Men
             </button>
             <button
               onClick={() => setGenderTab('Women')}
-              className={`flex-1 py-2 rounded-lg text-[13px] font-bold transition-all ${genderTab === 'Women' ? 'bg-white text-[#101827] shadow-sm' : 'text-[#8a99b0]'}`}
+              className={`flex-1 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+                genderTab === 'Women' ? 'bg-white text-slate-900 shadow-2xs font-semibold' : 'text-slate-500 hover:text-slate-900'
+              }`}
             >
               Women
             </button>
           </div>
 
-          <div className="relative mb-4">
-            <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#8a99b0]" />
-            <input 
-              type="text" 
-              placeholder="Search players..." 
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              className="w-full bg-[#F7F8F4] rounded-[12px] py-3 pl-10 pr-4 text-[14px] font-medium outline-none focus:ring-2 focus:ring-[#2457D6]/20 border border-transparent focus:border-[#2457D6]/50"
-            />
-          </div>
+          <div className="flex flex-col sm:flex-row gap-2">
+            <div className="relative flex-1">
+              <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input 
+                type="text" 
+                placeholder="Search players by name, club or role..." 
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                className="w-full bg-slate-50 rounded-lg py-2 pl-9 pr-4 text-xs font-medium text-slate-800 outline-none border border-slate-200 focus:border-blue-600 focus:bg-white transition"
+              />
+            </div>
 
-          <div className="flex gap-2 overflow-x-auto no-scrollbar">
-            <select 
-              value={districtFilter}
-              onChange={e => setDistrictFilter(e.target.value)}
-              className="bg-white border border-gray-200 rounded-full px-4 py-1.5 text-[12px] font-bold text-[#101827] outline-none"
-            >
-              {JDCA_DISTRICTS.map(d => <option key={d} value={d}>{d === 'All' ? 'District' : d}</option>)}
-            </select>
-            <select 
-              value={categoryFilter}
-              onChange={e => setCategoryFilter(e.target.value)}
-              className="bg-white border border-gray-200 rounded-full px-4 py-1.5 text-[12px] font-bold text-[#101827] outline-none"
-            >
-              {CATEGORIES.map(c => <option key={c} value={c}>{c === 'All' ? 'Age Group' : c}</option>)}
-            </select>
+            <div className="flex gap-2">
+              <select 
+                value={districtFilter}
+                onChange={e => setDistrictFilter(e.target.value)}
+                className="bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs font-medium text-slate-700 outline-none hover:border-slate-300 transition"
+              >
+                {JDCA_DISTRICTS.map(d => <option key={d} value={d}>{d === 'All' ? 'All Districts' : d}</option>)}
+              </select>
+              <select 
+                value={categoryFilter}
+                onChange={e => setCategoryFilter(e.target.value)}
+                className="bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs font-medium text-slate-700 outline-none hover:border-slate-300 transition"
+              >
+                {CATEGORIES.map(c => <option key={c} value={c}>{c === 'All' ? 'All Categories' : c}</option>)}
+              </select>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="px-4 pt-6">
-        <h2 className="text-[12px] font-black uppercase tracking-widest text-[#596579] mb-3 ml-1">
-          {filteredPlayers.length} Players Found
-        </h2>
+      <div className="max-w-5xl mx-auto px-4 pt-5">
+        <div className="flex items-center justify-between mb-3 px-1">
+          <span className="text-xs font-medium text-slate-500">
+            {filteredPlayers.length} {filteredPlayers.length === 1 ? 'Player' : 'Players'} Found
+          </span>
+        </div>
         
-        <div className="bg-white rounded-[20px] shadow-sm border border-gray-100 overflow-hidden flex flex-col">
+        <div className="bg-white rounded-xl shadow-2xs border border-slate-200 overflow-hidden flex flex-col divide-y divide-slate-100">
           {filteredPlayers.map(p => (
             <PlayerListItem key={p.id} player={p} onClick={() => handlePlayerClick(p)} />
           ))}
 
           {filteredPlayers.length === 0 && (
-            <div className="text-center py-12 px-4">
-              <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-3">
-                <Filter size={24} className="text-[#8a99b0]" />
+            <div className="text-center py-16 px-4">
+              <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                <Filter size={20} className="text-slate-400" />
               </div>
-              <h3 className="text-[16px] font-bold text-[#101827] mb-1">No players match</h3>
-              <p className="text-[13px] text-[#8a99b0]">Try adjusting your filters or search.</p>
+              <h3 className="text-sm font-semibold text-slate-900 mb-1">No players match the criteria</h3>
+              <p className="text-xs text-slate-500">Try adjusting your filters or search keywords.</p>
             </div>
           )}
         </div>
