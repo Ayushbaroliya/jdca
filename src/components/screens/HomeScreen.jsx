@@ -101,68 +101,68 @@ export default function HomeScreen() {
       <div className="relative text-white border-b border-slate-800 shadow-md overflow-hidden bg-slate-900">
         <div 
           className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-50 mix-blend-lighten"
-          style={{ backgroundImage: `url('/cricket-hero-bg.jpg')` }}
+          style={{ backgroundImage: `url('/imageforreplacemet.png')` }}
         ></div>
         <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-900/70 via-transparent to-slate-900/90 pointer-events-none"></div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 relative z-10">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8 relative z-10">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 sm:gap-5">
             {/* Title & Badge */}
-            <div className="flex items-start gap-4">
+            <div className="flex items-start gap-3 sm:gap-4">
               <img
                 src="/jdca-logo.png"
                 alt="JDCA Official Crest"
                 className="w-16 h-16 sm:w-20 sm:h-20 object-contain drop-shadow-xl flex-shrink-0 hidden sm:block"
               />
               <div>
-                <div className="flex flex-wrap items-center gap-2 mb-2">
+                <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2">
                   <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-500/20 text-blue-300 border border-blue-400/30">
                     <Shield size={12} className="text-blue-400" />
                     Jabalpur Division Cricket Association
                   </span>
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                    {liveMatches.length} Matches Live Now
+                    {liveMatches.length} Live
                   </span>
-                  <span className="text-xs text-slate-400">Season 2026</span>
+                  <span className="text-xs text-slate-400 hidden sm:inline">Season 2026</span>
                 </div>
 
-                <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-center gap-2.5">
-                  <span>Cricket Operations & Intelligence Hub</span>
+                <h1 className="text-xl sm:text-3xl font-extrabold text-white tracking-tight flex items-center gap-2">
+                  <span>Cricket Operations Hub</span>
                 </h1>
-                <p className="text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
-                  Centralized command center for live scoring, player scouting, district trials, and tournament governance across 9 districts.
+                <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
+                  Centralized command center for live scoring, player evaluations, district matches, and tournaments across 9 districts.
                 </p>
               </div>
             </div>
 
             {/* Top Right Quick Status */}
-            <div className="flex items-center gap-2 bg-white/5 backdrop-blur-md px-3.5 py-2 rounded-xl border border-white/10 self-start md:self-center">
+            <div className="flex items-center gap-2 bg-white/5 backdrop-blur-md px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl border border-white/10 self-start md:self-center">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-xs font-semibold text-slate-200">9 District Centers Connected</span>
+              <span className="text-xs font-semibold text-slate-200">9 Districts Connected</span>
             </div>
           </div>
 
           {/* ── KPI Stat Summary Cards ──────────────────────────────────── */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 sm:gap-4 mt-6 sm:mt-8">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4 mt-4 sm:mt-8">
             {/* Live Matches Card - Emerald */}
             <motion.div
               variants={itemVariants}
               onClick={() => navigateTo('matches')}
-              className="bg-white border border-slate-200 border-l-4 border-l-emerald-500 hover:scale-[1.03] transition-all rounded-2xl p-4 shadow-sm cursor-pointer group relative overflow-hidden"
+              className="bg-white border border-slate-200 border-l-4 border-l-emerald-500 hover:scale-[1.03] transition-all rounded-2xl p-3 sm:p-4 shadow-sm cursor-pointer group relative overflow-hidden"
             >
               <div className="flex items-center justify-between text-slate-500 text-xs font-bold">
-                <span className="flex items-center gap-1.5 uppercase tracking-wider">
-                  <Radio size={14} className="text-emerald-500 animate-pulse" />
+                <span className="flex items-center gap-1.5 uppercase tracking-wider text-xs">
+                  <Radio size={13} className="text-emerald-500 animate-pulse" />
                   Live Matches
                 </span>
-                <ChevronRight size={14} className="opacity-70 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all text-emerald-600" />
+                <ChevronRight size={13} className="opacity-70 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all text-emerald-600" />
               </div>
-              <div className="text-2xl sm:text-3xl font-black text-slate-900 mt-2 tabular-nums">
+              <div className="text-xl sm:text-3xl font-black text-slate-900 mt-1.5 sm:mt-2 tabular-nums">
                 {liveMatches.length}
               </div>
-              <div className="text-[11px] text-emerald-600 font-medium mt-1 flex items-center gap-1">
-                <Activity size={12} />
-                <span>In-progress scoring active</span>
+              <div className="text-xs sm:text-xs text-emerald-600 font-medium mt-0.5 flex items-center gap-1 truncate">
+                <Activity size={11} />
+                <span>In-progress active</span>
               </div>
             </motion.div>
 
@@ -170,20 +170,20 @@ export default function HomeScreen() {
             <motion.div
               variants={itemVariants}
               onClick={() => navigateTo('players')}
-              className="bg-white border border-slate-200 border-l-4 border-l-blue-500 hover:scale-[1.03] transition-all rounded-2xl p-4 shadow-sm cursor-pointer group relative overflow-hidden"
+              className="bg-white border border-slate-200 border-l-4 border-l-blue-500 hover:scale-[1.03] transition-all rounded-2xl p-3 sm:p-4 shadow-sm cursor-pointer group relative overflow-hidden"
             >
               <div className="flex items-center justify-between text-slate-500 text-xs font-bold">
-                <span className="flex items-center gap-1.5 uppercase tracking-wider">
-                  <Users size={14} className="text-blue-500" />
+                <span className="flex items-center gap-1.5 uppercase tracking-wider text-xs">
+                  <Users size={13} className="text-blue-500" />
                   Registered Players
                 </span>
-                <ChevronRight size={14} className="opacity-70 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all text-blue-600" />
+                <ChevronRight size={13} className="opacity-70 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all text-blue-600" />
               </div>
-              <div className="text-2xl sm:text-3xl font-black text-slate-900 mt-2 tabular-nums">
+              <div className="text-xl sm:text-3xl font-black text-slate-900 mt-1.5 sm:mt-2 tabular-nums">
                 {players.length > 0 ? players.length : 840}
               </div>
-              <div className="text-[11px] text-blue-600 font-medium mt-1 flex items-center gap-1">
-                <TrendingUp size={12} />
+              <div className="text-xs sm:text-xs text-blue-600 font-medium mt-0.5 flex items-center gap-1 truncate">
+                <TrendingUp size={11} />
                 <span>9 Districts active</span>
               </div>
             </motion.div>
@@ -192,43 +192,43 @@ export default function HomeScreen() {
             <motion.div
               variants={itemVariants}
               onClick={() => navigateTo('tournaments')}
-              className="bg-white border border-slate-200 border-l-4 border-l-amber-500 hover:scale-[1.03] transition-all rounded-2xl p-4 shadow-sm cursor-pointer group relative overflow-hidden"
+              className="bg-white border border-slate-200 border-l-4 border-l-amber-500 hover:scale-[1.03] transition-all rounded-2xl p-3 sm:p-4 shadow-sm cursor-pointer group relative overflow-hidden"
             >
               <div className="flex items-center justify-between text-slate-500 text-xs font-bold">
-                <span className="flex items-center gap-1.5 uppercase tracking-wider">
-                  <Trophy size={14} className="text-amber-500" />
+                <span className="flex items-center gap-1.5 uppercase tracking-wider text-xs">
+                  <Trophy size={13} className="text-amber-500" />
                   Tournaments
                 </span>
-                <ChevronRight size={14} className="opacity-70 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all text-amber-600" />
+                <ChevronRight size={13} className="opacity-70 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all text-amber-600" />
               </div>
-              <div className="text-2xl sm:text-3xl font-black text-slate-900 mt-2 tabular-nums">
+              <div className="text-xl sm:text-3xl font-black text-slate-900 mt-1.5 sm:mt-2 tabular-nums">
                 {tournaments.length || 3}
               </div>
-              <div className="text-[11px] text-amber-600 font-medium mt-1 flex items-center gap-1">
-                <Flame size={12} />
-                <span>T20, One Day & Test</span>
+              <div className="text-xs sm:text-xs text-amber-600 font-medium mt-0.5 flex items-center gap-1 truncate">
+                <Flame size={11} />
+                <span>T20 & One Day</span>
               </div>
             </motion.div>
 
-            {/* Scouting Shortlist Card - Purple */}
+            {/* Selected Talent Card - Purple */}
             <motion.div
               variants={itemVariants}
               onClick={() => navigateTo('selection')}
-              className="bg-white border border-slate-200 border-l-4 border-l-purple-500 hover:scale-[1.03] transition-all rounded-2xl p-4 shadow-sm cursor-pointer group relative overflow-hidden"
+              className="bg-white border border-slate-200 border-l-4 border-l-purple-500 hover:scale-[1.03] transition-all rounded-2xl p-3 sm:p-4 shadow-sm cursor-pointer group relative overflow-hidden"
             >
               <div className="flex items-center justify-between text-slate-500 text-xs font-bold">
-                <span className="flex items-center gap-1.5 uppercase tracking-wider">
-                  <Star size={14} className="text-purple-500" />
-                  Shortlisted Talent
+                <span className="flex items-center gap-1.5 uppercase tracking-wider text-xs">
+                  <Star size={13} className="text-purple-500" />
+                  Selected Talent
                 </span>
-                <ChevronRight size={14} className="opacity-70 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all text-purple-600" />
+                <ChevronRight size={13} className="opacity-70 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all text-purple-600" />
               </div>
-              <div className="text-2xl sm:text-3xl font-black text-slate-900 mt-2 tabular-nums">
+              <div className="text-xl sm:text-3xl font-black text-slate-900 mt-1.5 sm:mt-2 tabular-nums">
                 {shortlistedIds.length}
               </div>
-              <div className="text-[11px] text-purple-600 font-medium mt-1 flex items-center gap-1">
-                <Sparkles size={12} />
-                <span>Ready for review panel</span>
+              <div className="text-xs sm:text-xs text-purple-600 font-medium mt-0.5 flex items-center gap-1 truncate">
+                <Sparkles size={11} />
+                <span>Ready for team</span>
               </div>
             </motion.div>
           </div>
@@ -315,9 +315,9 @@ export default function HomeScreen() {
                   </div>
                   <div>
                     <div className="text-sm font-black text-slate-900">
-                      Scouting & Selection
+                      Team Selection
                     </div>
-                    <div className="text-xs text-slate-500 mt-0.5 font-medium">Build 15-member district squads</div>
+                    <div className="text-xs text-slate-500 mt-0.5 font-medium">Choose 15 players for each team</div>
                   </div>
                 </motion.div>
 
@@ -488,13 +488,7 @@ export default function HomeScreen() {
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 relative z-10">
                       {topBatters.map((batter, idx) => {
-                        const batterGradients = [
-                          'bg-gradient-to-br from-amber-500 via-orange-500 to-amber-700 text-white border-amber-300/40 shadow-lg shadow-amber-500/20',
-                          'bg-gradient-to-br from-orange-500 via-red-500 to-rose-700 text-white border-orange-300/40 shadow-lg shadow-orange-500/20',
-                          'bg-gradient-to-br from-yellow-500 via-amber-500 to-orange-700 text-white border-yellow-300/40 shadow-lg shadow-yellow-500/20',
-                          'bg-gradient-to-br from-rose-500 via-pink-500 to-red-700 text-white border-rose-300/40 shadow-lg shadow-rose-500/20',
-                        ];
-                        const bgClass = batterGradients[idx % batterGradients.length];
+                        const bgClass = 'bg-white border-l-4 border-l-amber-500 border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-1';
                         return (
                           <div
                             key={batter.id || idx}
@@ -505,26 +499,26 @@ export default function HomeScreen() {
                             className={`p-3.5 rounded-2xl ${bgClass} border hover:scale-[1.03] transition-all duration-300 cursor-pointer flex items-center justify-between group relative overflow-hidden`}
                           >
                             <div className="flex items-center gap-2.5 relative z-10">
-                              <span className="w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-black bg-white/25 text-white shadow-sm">
+                              <span className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-black bg-amber-50 text-amber-700 border border-amber-200 text-slate-900 shadow-sm">
                                 {idx + 1}
                               </span>
                               <img
                                 src={batter.avatar}
                                 alt={batter.name}
-                                className="w-10 h-10 rounded-full object-cover border-2 border-white/80 shadow-sm"
+                                className="w-10 h-10 rounded-full object-cover border-2 border-slate-200 shadow-sm"
                               />
                               <div>
-                                <div className="text-xs font-black text-white">
+                                <div className="text-xs font-black text-slate-900">
                                   {batter.name}
                                 </div>
-                                <div className="text-[11px] text-white/80">{batter.district || 'Jabalpur'} • {batter.category || 'Senior'}</div>
+                                <div className="text-xs text-slate-500">{batter.district || 'Jabalpur'} • {batter.category || 'Senior'}</div>
                               </div>
                             </div>
                             <div className="text-right relative z-10">
-                              <div className="text-base font-black text-white tabular-nums drop-shadow-sm">
+                              <div className="text-base font-black text-slate-900 tabular-nums drop-shadow-sm">
                                 {batter.careerRuns || 0}
                               </div>
-                              <div className="text-[10px] font-bold text-white/80">Avg {batter.battingAvg || 42.5}</div>
+                              <div className="text-xs font-bold text-slate-500">Avg {batter.battingAvg || 42.5}</div>
                             </div>
                           </div>
                         );
@@ -540,13 +534,7 @@ export default function HomeScreen() {
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 relative z-10">
                       {topBowlers.map((bowler, idx) => {
-                        const bowlerGradients = [
-                          'bg-gradient-to-br from-purple-600 via-indigo-600 to-purple-800 text-white border-purple-300/40 shadow-lg shadow-purple-500/20',
-                          'bg-gradient-to-br from-indigo-600 via-blue-600 to-indigo-800 text-white border-indigo-300/40 shadow-lg shadow-indigo-500/20',
-                          'bg-gradient-to-br from-fuchsia-600 via-pink-600 to-purple-800 text-white border-fuchsia-300/40 shadow-lg shadow-fuchsia-500/20',
-                          'bg-gradient-to-br from-violet-600 via-purple-600 to-pink-800 text-white border-violet-300/40 shadow-lg shadow-violet-500/20',
-                        ];
-                        const bgClass = bowlerGradients[idx % bowlerGradients.length];
+                        const bgClass = 'bg-white border-l-4 border-l-purple-500 border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-1';
                         return (
                           <div
                             key={bowler.id || idx}
@@ -557,26 +545,26 @@ export default function HomeScreen() {
                             className={`p-3.5 rounded-2xl ${bgClass} border hover:scale-[1.03] transition-all duration-300 cursor-pointer flex items-center justify-between group relative overflow-hidden`}
                           >
                             <div className="flex items-center gap-2.5 relative z-10">
-                              <span className="w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-black bg-white/25 text-white shadow-sm">
+                              <span className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-black bg-purple-50 text-purple-700 border border-purple-200 text-slate-900 shadow-sm">
                                 {idx + 1}
                               </span>
                               <img
                                 src={bowler.avatar}
                                 alt={bowler.name}
-                                className="w-10 h-10 rounded-full object-cover border-2 border-white/80 shadow-sm"
+                                className="w-10 h-10 rounded-full object-cover border-2 border-slate-200 shadow-sm"
                               />
                               <div>
-                                <div className="text-xs font-black text-white">
+                                <div className="text-xs font-black text-slate-900">
                                   {bowler.name}
                                 </div>
-                                <div className="text-[11px] text-white/80">{bowler.district || 'Katni'} • {bowler.role || 'Bowler'}</div>
+                                <div className="text-xs text-slate-500">{bowler.district || 'Katni'} • {bowler.role || 'Bowler'}</div>
                               </div>
                             </div>
                             <div className="text-right relative z-10">
-                              <div className="text-base font-black text-white tabular-nums drop-shadow-sm">
+                              <div className="text-base font-black text-slate-900 tabular-nums drop-shadow-sm">
                                 {bowler.wickets || 0} Wkts
                               </div>
-                              <div className="text-[10px] font-bold text-white/80">Econ {bowler.economy || '5.5'}</div>
+                              <div className="text-xs font-bold text-slate-500">Econ {bowler.economy || '5.5'}</div>
                             </div>
                           </div>
                         );
@@ -620,9 +608,9 @@ export default function HomeScreen() {
                         >
                           <div className="text-xs font-black">{d.district}</div>
                           <div className="text-base font-black mt-1 tabular-nums">
-                            {d.totalPlayers} <span className="text-[10px] font-bold opacity-80">players</span>
+                            {d.totalPlayers} <span className="text-xs font-bold opacity-80">players</span>
                           </div>
-                          <div className="text-[10px] font-medium mt-1 opacity-90 truncate">Top: {d.topPlayer}</div>
+                          <div className="text-xs font-medium mt-1 opacity-90 truncate">Top: {d.topPlayer}</div>
                         </div>
                       );
                     })}
@@ -685,44 +673,7 @@ export default function HomeScreen() {
                   </div>
                 </div>
 
-                {/* Official JDCA Announcements & Notice Board */}
-                <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-2xs space-y-3.5">
-                  <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center">
-                        <Megaphone size={18} />
-                      </div>
-                      <div>
-                        <h3 className="text-sm font-bold text-slate-900">Official Notice Board</h3>
-                        <p className="text-xs text-slate-500">Trials, alerts, and circulars</p>
-                      </div>
-                    </div>
-                    <span className="text-[11px] font-semibold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full">
-                      Verified
-                    </span>
-                  </div>
 
-                  <div className="space-y-2.5">
-                    {announcements.map((ann, idx) => {
-                      const bg = ANNOUNCEMENT_BRIGHT_CARDS[idx % ANNOUNCEMENT_BRIGHT_CARDS.length];
-                      return (
-                        <div
-                          key={ann.id}
-                          className={`p-3.5 rounded-2xl ${bg} border hover:scale-[1.02] transition-all relative overflow-hidden`}
-                        >
-                          <div className="flex items-center justify-between">
-                            <span className="text-[10px] font-black uppercase tracking-wider bg-black/5 text-slate-800 px-2 py-0.5 rounded-md backdrop-blur-xs">
-                              {ann.type}
-                            </span>
-                            <span className="text-[10px] opacity-70 font-bold">{ann.date}</span>
-                          </div>
-                          <div className="text-sm font-black mt-1.5 leading-tight">{ann.title}</div>
-                          <p className="text-[11px] opacity-80 mt-1 leading-relaxed font-semibold">{ann.body}</p>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
 
                 {/* Upcoming Fixtures Mini List */}
                 <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-2xs space-y-3">
@@ -741,22 +692,18 @@ export default function HomeScreen() {
 
                   <div className="space-y-2">
                     {upcomingMatches.slice(0, 2).map((m, i) => {
-                      const fixColors = [
-                        'bg-gradient-to-br from-blue-600 via-indigo-600 to-blue-800 text-white border-blue-400/40 shadow-md shadow-blue-600/20',
-                        'bg-gradient-to-br from-rose-500 via-pink-600 to-red-700 text-white border-rose-400/40 shadow-md shadow-rose-600/20',
-                      ];
-                      const bg = fixColors[i % fixColors.length];
+                      const bg = 'bg-white border border-slate-200 shadow-sm';
                       return (
                         <div key={i} className={`p-3.5 rounded-2xl ${bg} border flex items-center justify-between hover:scale-[1.02] transition-all`}>
                           <div>
-                            <div className="text-xs font-black text-white">
+                            <div className="text-xs font-black text-slate-900">
                               {m.teamA?.name || m.teamA} vs {m.teamB?.name || m.teamB}
                             </div>
-                            <div className="text-[11px] text-white/80 mt-0.5 font-medium">
+                            <div className="text-xs text-slate-500 mt-0.5 font-medium">
                               {m.date || 'Tomorrow'} • {m.venue || 'Ranital Ground'}
                             </div>
                           </div>
-                          <span className="text-[10px] font-black px-2.5 py-1 bg-white/20 text-white rounded-lg border border-white/30 backdrop-blur-sm">
+                          <span className="text-xs font-black px-2.5 py-1 bg-slate-100 text-slate-700 rounded-lg border border-slate-200">
                             {m.format || 'T20'}
                           </span>
                         </div>
@@ -802,7 +749,7 @@ export default function HomeScreen() {
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500 text-slate-950 flex items-center gap-1">
+                        <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500 text-slate-950 flex items-center gap-1">
                           <span className="w-1.5 h-1.5 rounded-full bg-slate-950 animate-pulse" />
                           LIVE
                         </span>
@@ -878,7 +825,7 @@ export default function HomeScreen() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
                 <h2 className="text-base font-bold text-slate-900">JDCA 9-District Cricket Infrastructure & Talent Pool</h2>
-                <p className="text-xs text-slate-500">Distribution of registered cricketers, official grounds, and scouting heads</p>
+                <p className="text-xs text-slate-500">Distribution of registered cricketers, official grounds, and selectors</p>
               </div>
 
               {/* District Filter Pills */}
@@ -912,7 +859,7 @@ export default function HomeScreen() {
                         <h3 className="text-base font-black text-white group-hover:underline transition-colors">
                           {item.district} District
                         </h3>
-                        <p className="text-xs text-white/80">Official Association Zone</p>
+                        <p className="text-xs text-slate-500">Official Association Zone</p>
                       </div>
                       <span className="px-2.5 py-1 rounded-lg bg-white/20 text-white text-xs font-bold border border-white/30 backdrop-blur-xs">
                         {item.grounds} Grounds
@@ -921,15 +868,15 @@ export default function HomeScreen() {
 
                     <div className="grid grid-cols-3 gap-2 p-3 bg-white/15 backdrop-blur-md rounded-xl text-center border border-white/20">
                       <div>
-                        <div className="text-[10px] text-white/80 font-medium">Total</div>
+                        <div className="text-xs text-slate-500 font-medium">Total</div>
                         <div className="text-base font-black text-white tabular-nums">{item.totalPlayers}</div>
                       </div>
                       <div>
-                        <div className="text-[10px] text-white/80 font-medium">Senior</div>
+                        <div className="text-xs text-slate-500 font-medium">Senior</div>
                         <div className="text-base font-black text-white tabular-nums">{item.seniorPlayers}</div>
                       </div>
                       <div>
-                        <div className="text-[10px] text-white/80 font-medium">Under-19</div>
+                        <div className="text-xs text-slate-500 font-medium">Under-19</div>
                         <div className="text-base font-black text-white tabular-nums">{item.u19Players}</div>
                       </div>
                     </div>
@@ -949,7 +896,7 @@ export default function HomeScreen() {
                       onClick={() => navigateTo('players')}
                       className={`w-full py-2 ${cfg.btn} rounded-xl text-xs font-bold shadow-md transition cursor-pointer flex items-center justify-center gap-1`}
                     >
-                      <span>View District Roster</span>
+                      <span>View District Players</span>
                       <ChevronRight size={13} />
                     </button>
                   </div>

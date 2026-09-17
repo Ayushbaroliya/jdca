@@ -21,11 +21,13 @@ import MatchDetailScreen      from './components/screens/MatchDetailScreen';
 import InningsBreakScreen     from './components/screens/InningsBreakScreen';
 import MatchResultScreen      from './components/screens/MatchResultScreen';
 import TournamentsScreen      from './components/screens/TournamentsScreen';
+import TeamsScreen            from './components/screens/TeamsScreen';
 import PlayersScreen          from './components/screens/PlayersScreen';
 import PlayerProfileScreen    from './components/screens/PlayerProfileScreen';
 import PlayerRegistrationScreen from './components/screens/PlayerRegistrationScreen';
 import SelectionScreen        from './components/selection/SelectionWorkspace';
 import AdministrationScreen   from './components/screens/AdministrationScreen';
+import NewsScreen             from './components/screens/NewsScreen';
 import PlayerComparisonModal  from './components/screens/PlayerComparisonModal';
 
 // Legacy / still in use
@@ -61,7 +63,7 @@ function MainApp() {
         {!isAuth && <Sidebar />}
 
         {/* Main content area */}
-        <main className="flex-1 min-w-0 overflow-y-auto overflow-x-hidden relative">
+        <main className="flex-1 min-w-0 overflow-y-auto overflow-x-hidden relative pb-28 lg:pb-8">
           <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
               {/* Public */}
@@ -78,11 +80,13 @@ function MainApp() {
               <Route path="/innings-break"       element={<ProtectedRoute path="/innings-break"       element={<AnimatedPage><InningsBreakScreen /></AnimatedPage>} />} />
               <Route path="/match-result"        element={<ProtectedRoute path="/match-result"        element={<AnimatedPage><MatchResultScreen /></AnimatedPage>} />} />
               <Route path="/tournaments"         element={<ProtectedRoute path="/tournaments"         element={<AnimatedPage><TournamentsScreen /></AnimatedPage>} />} />
+              <Route path="/teams"               element={<ProtectedRoute path="/teams"               element={<AnimatedPage><TeamsScreen /></AnimatedPage>} />} />
               <Route path="/players"             element={<ProtectedRoute path="/players"             element={<AnimatedPage><PlayersScreen /></AnimatedPage>} />} />
               <Route path="/player-profile"      element={<ProtectedRoute path="/player-profile"      element={<AnimatedPage><PlayerProfileScreen /></AnimatedPage>} />} />
               <Route path="/player-registration" element={<ProtectedRoute path="/player-registration" element={<AnimatedPage><PlayerRegistrationScreen /></AnimatedPage>} />} />
               <Route path="/selection"           element={<ProtectedRoute path="/selection"           element={<AnimatedPage><SelectionScreen /></AnimatedPage>} />} />
               <Route path="/administration"      element={<ProtectedRoute path="/administration"      element={<AnimatedPage><AdministrationScreen /></AnimatedPage>} />} />
+              <Route path="/news"                element={<ProtectedRoute path="/news"                element={<AnimatedPage><NewsScreen /></AnimatedPage>} />} />
 
               {/* Legacy aliases */}
               <Route path="/scouting"            element={<Navigate to="/players" replace />} />

@@ -87,7 +87,7 @@ export default function FilterTiles({
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
         {/* District Select */}
         <div>
-          <label className="block text-[10px] font-medium text-slate-400 mb-0.5">District</label>
+          <label className="block text-xs font-medium text-slate-400 mb-0.5">District</label>
           <select
             value={filters.district}
             onChange={e => onFilterChange('district', e.target.value)}
@@ -103,7 +103,7 @@ export default function FilterTiles({
 
         {/* Age Group Select */}
         <div>
-          <label className="block text-[10px] font-medium text-slate-400 mb-0.5">Age Group</label>
+          <label className="block text-xs font-medium text-slate-400 mb-0.5">Age Group</label>
           <select
             value={filters.ageGroup}
             onChange={e => onFilterChange('ageGroup', e.target.value)}
@@ -119,7 +119,7 @@ export default function FilterTiles({
 
         {/* Eligibility Select */}
         <div>
-          <label className="block text-[10px] font-medium text-slate-400 mb-0.5">Eligibility</label>
+          <label className="block text-xs font-medium text-slate-400 mb-0.5">Eligibility</label>
           <select
             value={filters.eligibility}
             onChange={e => onFilterChange('eligibility', e.target.value)}
@@ -135,7 +135,7 @@ export default function FilterTiles({
 
         {/* Batting Style Select */}
         <div>
-          <label className="block text-[10px] font-medium text-slate-400 mb-0.5">Batting Style</label>
+          <label className="block text-xs font-medium text-slate-400 mb-0.5">Batting Style</label>
           <select
             value={filters.battingStyle}
             onChange={e => onFilterChange('battingStyle', e.target.value)}

@@ -90,7 +90,7 @@ export default function ScorecardScreen() {
               Impact Player: <strong className="text-slate-900">Virat Sharma (74* off 42)</strong>
             </span>
           </div>
-          <span className="text-[11px] font-bold text-[#0FA968]">JDCA Verified</span>
+          <span className="text-xs font-bold text-[#0FA968]">JDCA Verified</span>
         </div>
       </div>
 
@@ -125,7 +125,7 @@ export default function ScorecardScreen() {
                   <td>
                     <div className="font-bold text-slate-900 text-sm flex items-center gap-1.5">
                       <span>{batter.name}</span>
-                      {batter.isCaptain && <span className="text-[10px] text-slate-400 font-normal">(c)</span>}
+                      {batter.isCaptain && <span className="text-xs text-slate-400 font-normal">(c)</span>}
                       {batter.isStriker && <span className="w-2 h-2 rounded-full bg-[#0FA968]" title="Current Striker" />}
                     </div>
                   </td>
@@ -162,7 +162,7 @@ export default function ScorecardScreen() {
             <span className="text-slate-600 font-medium">12 (wd 6, nb 2, b 2, lb 2)</span>
           </div>
           <div className="font-tabular font-extrabold text-sm text-slate-900">
-            Total: 184/4 (18.2 Overs) • RR: 10.09
+            Total: 184/4 (18.2 Overs) ï¿½ RR: 10.09
           </div>
         </div>
       </div>

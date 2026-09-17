@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { 
   Search, 
   MapPin, 
@@ -84,7 +84,7 @@ export default function SelectorsScreen() {
                   alt={player.name} 
                   className="w-12 h-12 rounded-full object-cover border-2 border-emerald-500 shadow-sm"
                 />
-                <span className="text-[10px] font-bold text-slate-800 truncate w-14 text-center">
+                <span className="text-xs font-bold text-slate-800 truncate w-14 text-center">
                   {player.name.split(' ')[0]}
                 </span>
               </div>
@@ -186,9 +186,9 @@ export default function SelectorsScreen() {
                           )}
                         </div>
                         <p className="text-xs text-slate-500 font-medium">
-                          {player.primaryRole || player.role} � {player.battingStyle}
+                          {player.primaryRole || player.role} • {player.battingStyle}
                         </p>
-                        <div className="flex items-center space-x-1 text-[11px] text-slate-400 mt-0.5">
+                        <div className="flex items-center space-x-1 text-xs text-slate-400 mt-0.5">
                           <MapPin className="w-3 h-3 text-slate-400" />
                           <span>{player.district}</span>
                         </div>
@@ -204,7 +204,7 @@ export default function SelectorsScreen() {
                     className="grid grid-cols-4 gap-2 p-2.5 rounded-xl bg-slate-50 border border-slate-100 cursor-pointer"
                   >
                     <div>
-                      <span className="text-[10px] uppercase font-bold text-slate-400 block">
+                      <span className="text-xs uppercase font-bold text-slate-400 block">
                         RUNS
                       </span>
                       <span className="text-sm font-extrabold text-slate-900">
@@ -213,7 +213,7 @@ export default function SelectorsScreen() {
                     </div>
 
                     <div>
-                      <span className="text-[10px] uppercase font-bold text-slate-400 block">
+                      <span className="text-xs uppercase font-bold text-slate-400 block">
                         AVG
                       </span>
                       <span className="text-sm font-extrabold text-blue-700">
@@ -222,7 +222,7 @@ export default function SelectorsScreen() {
                     </div>
 
                     <div>
-                      <span className="text-[10px] uppercase font-bold text-slate-400 block">
+                      <span className="text-xs uppercase font-bold text-slate-400 block">
                         SR
                       </span>
                       <span className="text-sm font-extrabold text-slate-900">
@@ -231,7 +231,7 @@ export default function SelectorsScreen() {
                     </div>
 
                     <div>
-                      <span className="text-[10px] uppercase font-bold text-slate-400 block">
+                      <span className="text-xs uppercase font-bold text-slate-400 block">
                         HS
                       </span>
                       <span className="text-sm font-extrabold text-slate-900">
@@ -243,7 +243,7 @@ export default function SelectorsScreen() {
                   {/* Bottom Row: Shortlist for Trial Switch */}
                   <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
                     <span className="text-xs font-bold text-slate-700">
-                      Select for Squad
+                      Select for Team
                     </span>
 
                     {/* Interactive Toggle Switch */}
@@ -272,3 +272,4 @@ export default function SelectorsScreen() {
     </div>
   );
 }
+

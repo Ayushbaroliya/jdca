@@ -74,7 +74,7 @@ export default function ScoutingHubScreen() {
               <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight font-display">
                 Selection Hub
               </h2>
-              <span className="px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 text-[10px] font-extrabold uppercase">
+              <span className="px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 text-xs font-extrabold uppercase">
                 Season 2024
               </span>
             </div>
@@ -240,9 +240,9 @@ export default function ScoutingHubScreen() {
                           )}
                         </div>
                         <p className="text-xs text-slate-500 font-medium">
-                          {player.primaryRole || player.role} • {player.battingStyle}
+                          {player.primaryRole || player.role} ï¿½ {player.battingStyle}
                         </p>
-                        <div className="flex items-center space-x-1 text-[11px] text-slate-400 mt-0.5">
+                        <div className="flex items-center space-x-1 text-xs text-slate-400 mt-0.5">
                           <MapPin className="w-3 h-3 text-slate-400" />
                           <span>{player.district}</span>
                         </div>
@@ -258,7 +258,7 @@ export default function ScoutingHubScreen() {
                     className="grid grid-cols-4 gap-2 p-2.5 rounded-xl bg-slate-50 border border-slate-100 cursor-pointer"
                   >
                     <div>
-                      <span className="text-[10px] uppercase font-bold text-slate-400 block">
+                      <span className="text-xs uppercase font-bold text-slate-400 block">
                         RUNS
                       </span>
                       <span className="text-sm font-extrabold text-slate-900">
@@ -267,7 +267,7 @@ export default function ScoutingHubScreen() {
                     </div>
 
                     <div>
-                      <span className="text-[10px] uppercase font-bold text-slate-400 block">
+                      <span className="text-xs uppercase font-bold text-slate-400 block">
                         AVG
                       </span>
                       <span className="text-sm font-extrabold text-blue-700">
@@ -276,7 +276,7 @@ export default function ScoutingHubScreen() {
                     </div>
 
                     <div>
-                      <span className="text-[10px] uppercase font-bold text-slate-400 block">
+                      <span className="text-xs uppercase font-bold text-slate-400 block">
                         SR
                       </span>
                       <span className="text-sm font-extrabold text-slate-900">
@@ -285,7 +285,7 @@ export default function ScoutingHubScreen() {
                     </div>
 
                     <div>
-                      <span className="text-[10px] uppercase font-bold text-slate-400 block">
+                      <span className="text-xs uppercase font-bold text-slate-400 block">
                         HS
                       </span>
                       <span className="text-sm font-extrabold text-slate-900">

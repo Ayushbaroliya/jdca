@@ -37,7 +37,7 @@ export default function MatchDetailScreen() {
   ];
 
   return (
-    <div className="pb-[100px] bg-[#F7F8F4] min-h-screen">
+    <div className="pb-[100px] bg-slate-50 min-h-screen">
       {/* ── Match Hero ── */}
       <div className={`text-white pb-6 pt-[60px] px-4 relative ${live ? 'bg-emerald-600' : 'bg-slate-900'}`}>
         <button
@@ -48,12 +48,12 @@ export default function MatchDetailScreen() {
         </button>
 
         <div className="text-center mt-6">
-          <div className="text-[10px] font-bold tracking-widest uppercase text-white/60 mb-3">
+          <div className="text-xs font-bold tracking-widest uppercase text-white/60 mb-3">
             {match.tournament || 'JDCA Official Fixture'}
           </div>
 
           {live && (
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-white text-[11px] font-bold mb-4">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-white text-xs font-bold mb-4">
               <span className="w-2 h-2 rounded-full bg-[#0FA968] animate-pulse" />
               LIVE MATCH
             </div>
@@ -68,7 +68,7 @@ export default function MatchDetailScreen() {
             
             <div className="w-8 flex-shrink-0 flex flex-col items-center justify-center text-white/40">
               <div className="h-4 w-px bg-white/20 mb-2"></div>
-              <div className="text-[10px] font-black uppercase">VS</div>
+              <div className="text-xs font-black uppercase">VS</div>
               <div className="h-4 w-px bg-white/20 mt-2"></div>
             </div>
 
@@ -153,7 +153,7 @@ export default function MatchDetailScreen() {
             {[['TOP BATTER', h.topBatter, '#2457D6'], ['TOP BOWLER', h.topBowler, '#F05A47'], ['POTM', h.playerOfMatch, '#ff6100']].map(([label, p, color], i) => (
               <div key={label} className="bg-white rounded-[16px] p-5 border border-gray-100 shadow-sm relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-2 h-full" style={{ backgroundColor: color }} />
-                <div className="text-[10px] font-bold tracking-widest uppercase text-[#8a99b0] mb-2">{label}</div>
+                <div className="text-xs font-bold tracking-widest uppercase text-[#8a99b0] mb-2">{label}</div>
                 <div className="text-[18px] font-black text-[#101827] mb-1">{p?.name || 'Waiting for completion'}</div>
                 <div className="text-[14px] font-bold text-[#596579]">{p?.stat || p?.batting || p?.bowling || 'Data recorded soon'}</div>
               </div>

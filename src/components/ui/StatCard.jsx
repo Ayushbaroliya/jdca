@@ -80,7 +80,7 @@ export function StatCard({
   index = 0
 }) {
   const sizes = {
-    sm: { val: 'text-xl font-bold', lbl: 'text-[11px]', pad: 'p-3.5', icon: 16 },
+    sm: { val: 'text-xl font-bold', lbl: 'text-xs', pad: 'p-3.5', icon: 16 },
     md: { val: 'text-2xl font-black', lbl: 'text-xs', pad: 'p-4', icon: 18 },
     lg: { val: 'text-3xl font-black', lbl: 'text-sm', pad: 'p-5', icon: 20 },
   };
@@ -110,7 +110,7 @@ export function StatCard({
       </div>
 
       {subtext && (
-        <div className={`text-[11px] font-medium mt-1.5 ${theme.sub}`}>
+        <div className={`text-xs font-medium mt-1.5 ${theme.sub}`}>
           {subtext}
         </div>
       )}

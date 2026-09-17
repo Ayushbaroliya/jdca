@@ -18,12 +18,12 @@ export default function MatchMediaReport({ match }) {
       <div className="bg-white border border-gray-200 shadow-sm rounded-[16px] overflow-hidden mb-6 relative">
         <div className="bg-[#101827] text-white p-5 text-center flex flex-col items-center justify-center">
           <img src="/jdca-logo.png" alt="JDCA Emblem" className="w-12 h-12 object-contain mb-2 drop-shadow-md" />
-          <div className="text-[10px] font-bold tracking-widest uppercase text-white/60 mb-1">Jabalpur District Cricket Association</div>
+          <div className="text-xs font-bold tracking-widest uppercase text-white/60 mb-1">Jabalpur District Cricket Association</div>
           <div className="text-[14px] font-black uppercase tracking-wider text-white">Official Media Report</div>
         </div>
         
         <div className="p-5">
-          <div className="text-[10px] font-bold tracking-widest uppercase text-[#ff6100] mb-2">{match.stage || match.tournament || 'JDCA FIXTURE'}</div>
+          <div className="text-xs font-bold tracking-widest uppercase text-[#ff6100] mb-2">{match.stage || match.tournament || 'JDCA FIXTURE'}</div>
           <h2 className="text-[20px] font-black text-[#101827] leading-tight mb-4">{headline}</h2>
           <p className="text-[14px] text-[#596579] leading-relaxed mb-6 font-medium bg-gray-50 p-4 rounded-xl italic">
             "{summary}"
@@ -34,7 +34,7 @@ export default function MatchMediaReport({ match }) {
               <div className="text-[16px] font-bold text-[#101827]">{match.teamA?.name}</div>
               <div className="text-[24px] font-black text-[#2457D6] leading-none">{match.teamA?.score || '—'}</div>
             </div>
-            <div className="text-[10px] font-black uppercase tracking-widest text-[#8a99b0]">VS</div>
+            <div className="text-xs font-black uppercase tracking-widest text-[#8a99b0]">VS</div>
             <div className="text-left flex-1">
               <div className="text-[16px] font-bold text-[#101827]">{match.teamB?.name}</div>
               <div className="text-[24px] font-black text-[#101827] leading-none">{match.teamB?.score || '—'}</div>
@@ -60,8 +60,8 @@ export default function MatchMediaReport({ match }) {
             </div>
           </div>
 
-          <div className="bg-[#F7F8F4] p-4 rounded-[12px]">
-            <div className="text-[10px] font-bold tracking-widest uppercase text-[#8a99b0] mb-2 flex items-center gap-1"><MessageCircle size={12}/> Social / WhatsApp Format</div>
+          <div className="bg-slate-50 p-4 rounded-[12px]">
+            <div className="text-xs font-bold tracking-widest uppercase text-[#8a99b0] mb-2 flex items-center gap-1"><MessageCircle size={12}/> Social / WhatsApp Format</div>
             <pre className="text-[12px] text-[#596579] whitespace-pre-wrap font-sans leading-relaxed m-0">
               {caption}
             </pre>

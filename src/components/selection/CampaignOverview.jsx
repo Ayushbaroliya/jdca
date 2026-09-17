@@ -49,7 +49,7 @@ export default function CampaignOverview({ campaign, onNavigate }) {
             onClick={() => onNavigate('squad')}
             className="px-6 py-3 bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 rounded-xl font-semibold transition"
           >
-            Final Squad
+            Final Team
           </button>
         </div>
       </div>

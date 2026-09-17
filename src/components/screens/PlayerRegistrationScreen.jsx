@@ -55,7 +55,7 @@ export default function PlayerRegistrationScreen() {
   };
 
   return (
-    <div className="pb-[100px] bg-[#F7F8F4] min-h-screen">
+    <div className="pb-[100px] bg-slate-50 min-h-screen">
       <div className="bg-white px-4 pt-[60px] pb-6 border-b border-gray-100 relative shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
         <button
           onClick={goBack}
@@ -105,17 +105,17 @@ export default function PlayerRegistrationScreen() {
 
             <div className="space-y-4">
               <div>
-                <label className="block text-[11px] font-bold text-[#8a99b0] uppercase tracking-wider mb-1.5">Full Name *</label>
+                <label className="block text-xs font-bold text-[#8a99b0] uppercase tracking-wider mb-1.5">Full Name *</label>
                 <input 
                   type="text" required value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Rahul Sharma"
-                  className={`w-full bg-[#F7F8F4] rounded-[12px] p-3 text-[14px] font-bold outline-none border focus:border-[#2457D6] ${formErrors.name ? 'border-[#F05A47]' : 'border-transparent'}`}
+                  className={`w-full bg-slate-50 rounded-[12px] p-3 text-[14px] font-bold outline-none border focus:border-[#2457D6] ${formErrors.name ? 'border-[#F05A47]' : 'border-transparent'}`}
                 />
               </div>
               <div>
-                <label className="block text-[11px] font-bold text-[#8a99b0] uppercase tracking-wider mb-1.5">Age (Years) *</label>
+                <label className="block text-xs font-bold text-[#8a99b0] uppercase tracking-wider mb-1.5">Age (Years) *</label>
                 <input 
                   type="number" min="10" max="60" required value={age} onChange={e => setAge(e.target.value)}
-                  className={`w-full bg-[#F7F8F4] rounded-[12px] p-3 text-[14px] font-bold outline-none border focus:border-[#2457D6] ${formErrors.age ? 'border-[#F05A47]' : 'border-transparent'}`}
+                  className={`w-full bg-slate-50 rounded-[12px] p-3 text-[14px] font-bold outline-none border focus:border-[#2457D6] ${formErrors.age ? 'border-[#F05A47]' : 'border-transparent'}`}
                 />
               </div>
             </div>
@@ -126,14 +126,14 @@ export default function PlayerRegistrationScreen() {
             <h2 className="text-[12px] font-black uppercase tracking-widest text-[#596579] mb-4 flex items-center gap-1.5"><MapPin size={14}/> Affiliation</h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-[11px] font-bold text-[#8a99b0] uppercase tracking-wider mb-1.5">District Unit</label>
-                <select value={district} onChange={e => setDistrict(e.target.value)} className="w-full bg-[#F7F8F4] rounded-[12px] p-3 text-[14px] font-bold outline-none border border-transparent focus:border-[#2457D6] appearance-none">
+                <label className="block text-xs font-bold text-[#8a99b0] uppercase tracking-wider mb-1.5">District Unit</label>
+                <select value={district} onChange={e => setDistrict(e.target.value)} className="w-full bg-slate-50 rounded-[12px] p-3 text-[14px] font-bold outline-none border border-transparent focus:border-[#2457D6] appearance-none">
                   {JDCA_DISTRICTS.map(d => <option key={d} value={d}>{d} District</option>)}
                 </select>
               </div>
               <div>
-                <label className="block text-[11px] font-bold text-[#8a99b0] uppercase tracking-wider mb-1.5">Age Category</label>
-                <select value={category} onChange={e => setCategory(e.target.value)} className="w-full bg-[#F7F8F4] rounded-[12px] p-3 text-[14px] font-bold outline-none border border-transparent focus:border-[#2457D6] appearance-none">
+                <label className="block text-xs font-bold text-[#8a99b0] uppercase tracking-wider mb-1.5">Age Category</label>
+                <select value={category} onChange={e => setCategory(e.target.value)} className="w-full bg-slate-50 rounded-[12px] p-3 text-[14px] font-bold outline-none border border-transparent focus:border-[#2457D6] appearance-none">
                   {AGE_CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
@@ -145,21 +145,21 @@ export default function PlayerRegistrationScreen() {
             <h2 className="text-[12px] font-black uppercase tracking-widest text-[#596579] mb-4 flex items-center gap-1.5"><Activity size={14}/> Specialisation</h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-[11px] font-bold text-[#8a99b0] uppercase tracking-wider mb-1.5">Primary Role</label>
-                <select value={role} onChange={e => setRole(e.target.value)} className="w-full bg-[#F7F8F4] rounded-[12px] p-3 text-[14px] font-bold outline-none border border-transparent focus:border-[#2457D6] appearance-none">
+                <label className="block text-xs font-bold text-[#8a99b0] uppercase tracking-wider mb-1.5">Primary Role</label>
+                <select value={role} onChange={e => setRole(e.target.value)} className="w-full bg-slate-50 rounded-[12px] p-3 text-[14px] font-bold outline-none border border-transparent focus:border-[#2457D6] appearance-none">
                   {ROLES.map(r => <option key={r} value={r}>{r}</option>)}
                 </select>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[11px] font-bold text-[#8a99b0] uppercase tracking-wider mb-1.5">Batting Style</label>
-                  <select value={battingStyle} onChange={e => setBattingStyle(e.target.value)} className="w-full bg-[#F7F8F4] rounded-[12px] p-3 text-[12px] font-bold outline-none border border-transparent focus:border-[#2457D6] appearance-none">
+                  <label className="block text-xs font-bold text-[#8a99b0] uppercase tracking-wider mb-1.5">Batting Style</label>
+                  <select value={battingStyle} onChange={e => setBattingStyle(e.target.value)} className="w-full bg-slate-50 rounded-[12px] p-3 text-[12px] font-bold outline-none border border-transparent focus:border-[#2457D6] appearance-none">
                     {BATTING_STYLES.map(b => <option key={b} value={b}>{b}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-[11px] font-bold text-[#8a99b0] uppercase tracking-wider mb-1.5">Bowling Style</label>
-                  <select value={bowlingStyle} onChange={e => setBowlingStyle(e.target.value)} className="w-full bg-[#F7F8F4] rounded-[12px] p-3 text-[12px] font-bold outline-none border border-transparent focus:border-[#2457D6] appearance-none">
+                  <label className="block text-xs font-bold text-[#8a99b0] uppercase tracking-wider mb-1.5">Bowling Style</label>
+                  <select value={bowlingStyle} onChange={e => setBowlingStyle(e.target.value)} className="w-full bg-slate-50 rounded-[12px] p-3 text-[12px] font-bold outline-none border border-transparent focus:border-[#2457D6] appearance-none">
                     {BOWLING_STYLES.map(b => <option key={b} value={b}>{b}</option>)}
                   </select>
                 </div>

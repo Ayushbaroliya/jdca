@@ -36,7 +36,7 @@ const PlayerListItem = ({ player, onClick }) => {
             <span className="text-sm font-bold text-slate-900 group-hover:text-blue-600 transition truncate">
               {player.name}
             </span>
-            <span className={`px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider ${roleBadge}`}>
+            <span className={`px-2 py-0.5 rounded-full text-xs font-black uppercase tracking-wider ${roleBadge}`}>
               {player.role || 'Batter'}
             </span>
           </div>
@@ -54,7 +54,7 @@ const PlayerListItem = ({ player, onClick }) => {
       <div className="flex items-center gap-4 shrink-0">
         <div className="text-right hidden sm:block">
           <div className="text-sm font-black text-blue-700 tabular-nums">{player.careerRuns || player.runs || 0}</div>
-          <div className="text-[11px] font-bold text-slate-400">Career Runs</div>
+          <div className="text-xs font-bold text-slate-400">Career Runs</div>
         </div>
         <ChevronRight size={16} className="text-slate-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-all" />
       </div>
@@ -69,6 +69,7 @@ export default function PlayersScreen() {
   const [searchQuery, setSearchQuery] = useState('');
   const [districtFilter, setDistrictFilter] = useState('All');
   const [categoryFilter, setCategoryFilter] = useState('All');
+  const [showFilters, setShowFilters] = useState(false);
 
   const filteredPlayers = players.filter(p => {
     const isWomen = String(p.category || '').toLowerCase().includes('women');
@@ -98,18 +99,18 @@ export default function PlayersScreen() {
 
   return (
     <div className="pb-20 bg-[#f8fafc] min-h-screen">
-      <div className="bg-white sticky top-[60px] lg:top-0 z-30 border-b border-slate-200 shadow-2xs">
-        <div className="max-w-5xl mx-auto px-4 py-4 space-y-3">
+      <div className="bg-white sticky top-0 z-30 border-b border-slate-200 shadow-2xs">
+        <div className="max-w-5xl mx-auto px-4 py-3 sm:py-4 space-y-2.5 sm:space-y-3">
           <div className="flex items-center justify-between">
             <div>
               <div className="text-xs text-slate-500 font-medium">Player Directory</div>
-              <h1 className="text-xl sm:text-2xl font-semibold text-slate-900 tracking-tight">Registered Players</h1>
+              <h1 className="text-lg sm:text-2xl font-bold text-slate-900 tracking-tight">Registered Players</h1>
             </div>
             <button 
               onClick={() => navigateTo('player-registration')}
-              className="px-3.5 py-1.5 rounded-lg bg-blue-600 text-white text-xs font-medium flex items-center gap-1.5 hover:bg-blue-700 transition cursor-pointer shadow-2xs"
+              className="px-3 py-1.5 rounded-lg bg-blue-600 text-white text-xs font-semibold flex items-center gap-1.5 hover:bg-blue-700 transition cursor-pointer shadow-2xs"
             >
-              <UserPlus size={15} />
+              <UserPlus size={14} />
               <span>Add Player</span>
             </button>
           </div>
@@ -141,22 +142,46 @@ export default function PlayersScreen() {
                 placeholder="Search players by name, club or role..." 
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
-                className="w-full bg-slate-50 rounded-lg py-2 pl-9 pr-4 text-xs font-medium text-slate-800 outline-none border border-slate-200 focus:border-blue-600 focus:bg-white transition"
+                className="w-full bg-slate-50 rounded-xl py-2 pl-9 pr-4 text-xs font-medium text-slate-800 outline-none border border-slate-200 focus:border-blue-600 focus:bg-white transition"
               />
             </div>
 
-            <div className="flex gap-2">
+            {/* Mobile Filter Toggle Button */}
+            <div className="sm:hidden flex items-center justify-between">
+              <button
+                type="button"
+                onClick={() => setShowFilters(!showFilters)}
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold border transition cursor-pointer ${
+                  showFilters || districtFilter !== 'All' || categoryFilter !== 'All'
+                    ? 'bg-blue-50 text-blue-700 border-blue-200'
+                    : 'bg-white text-slate-700 border-slate-200 shadow-2xs'
+                }`}
+              >
+                <Filter size={13} />
+                <span>{showFilters ? 'Hide Filters' : 'District & Category Filters'}</span>
+                {(districtFilter !== 'All' || categoryFilter !== 'All') && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-600" />
+                )}
+              </button>
+
+              <span className="text-xs font-semibold text-slate-500">
+                {filteredPlayers.length} players
+              </span>
+            </div>
+
+            {/* Filter Dropdowns: Collapsible on Mobile, Flex on Desktop */}
+            <div className={`${showFilters ? 'grid grid-cols-2' : 'hidden'} sm:flex flex-col sm:flex-row gap-2 animate-in fade-in duration-150`}>
               <select 
                 value={districtFilter}
                 onChange={e => setDistrictFilter(e.target.value)}
-                className="bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs font-medium text-slate-700 outline-none hover:border-slate-300 transition"
+                className="bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium text-slate-700 outline-none hover:border-slate-300 transition w-full sm:w-auto cursor-pointer"
               >
                 {JDCA_DISTRICTS.map(d => <option key={d} value={d}>{d === 'All' ? 'All Districts' : d}</option>)}
               </select>
               <select 
                 value={categoryFilter}
                 onChange={e => setCategoryFilter(e.target.value)}
-                className="bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs font-medium text-slate-700 outline-none hover:border-slate-300 transition"
+                className="bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium text-slate-700 outline-none hover:border-slate-300 transition w-full sm:w-auto cursor-pointer"
               >
                 {CATEGORIES.map(c => <option key={c} value={c}>{c === 'All' ? 'All Categories' : c}</option>)}
               </select>

@@ -122,7 +122,7 @@ export default function ScoringScreen() {
         <div className="px-4 pt-[60px] pb-4 bg-slate-50 border-b border-slate-100">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <span className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-jade-50 text-jade-700 border border-jade-100 text-[10px] font-bold uppercase tracking-wider">
+              <span className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-jade-50 text-jade-700 border border-jade-100 text-xs font-bold uppercase tracking-wider">
                 <span className="w-1.5 h-1.5 rounded-full bg-jade animate-pulse" />
                 LIVE SCORING
               </span>
@@ -133,7 +133,7 @@ export default function ScoringScreen() {
             </div>
           </div>
 
-          <div className="text-[11px] font-bold tracking-widest uppercase text-slate-500 mb-1">{tournamentName}</div>
+          <div className="text-xs font-bold tracking-widest uppercase text-slate-500 mb-1">{tournamentName}</div>
           <div className="text-[16px] font-black text-slate-900">{teamAName} <span className="text-slate-400">vs</span> {teamBName}</div>
         </div>
 
@@ -184,7 +184,7 @@ export default function ScoringScreen() {
         {/* RECENT BALLS */}
         <div className="px-4 mb-6">
           <div className="bg-slate-50 rounded-[12px] p-3 border border-slate-200 flex items-center justify-between">
-            <div className="text-[10px] font-bold uppercase tracking-wider text-slate-500 w-12 text-center">THIS OVER</div>
+            <div className="text-xs font-bold uppercase tracking-wider text-slate-500 w-12 text-center">THIS OVER</div>
             <div className="flex-1 flex items-center gap-2 overflow-x-auto px-2 no-scrollbar min-h-[32px]">
               {lastBalls.map((b, i) => (
                 <div key={i} className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-[12px] font-black border ${
@@ -207,13 +207,13 @@ export default function ScoringScreen() {
           <div className="grid grid-cols-2 gap-3 mb-3">
             <button onClick={() => toggleStriker?.()} className="bg-white rounded-[12px] p-4 text-left border border-slate-200 shadow-sm relative overflow-hidden active:bg-slate-50 transition-colors">
               <div className="absolute top-0 right-0 w-2 h-full bg-jade" />
-              <div className="text-[10px] font-bold text-jade uppercase tracking-wider mb-1 flex items-center gap-1">Striker <span>*</span></div>
+              <div className="text-xs font-bold text-jade uppercase tracking-wider mb-1 flex items-center gap-1">Striker <span>*</span></div>
               <div className="text-[15px] font-black text-slate-900 truncate mb-2">{striker.name}</div>
               <div className="text-[18px] font-black tabular-nums leading-none text-slate-900">{striker.runs} <span className="text-[12px] text-slate-500">({striker.balls})</span></div>
             </button>
             
             <button onClick={() => toggleStriker?.()} className="bg-slate-50 rounded-[12px] p-4 text-left border border-slate-200 active:bg-slate-100 transition-colors">
-              <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Non-Striker</div>
+              <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Non-Striker</div>
               <div className="text-[15px] font-bold text-slate-700 truncate mb-2">{nonStriker.name}</div>
               <div className="text-[18px] font-black tabular-nums leading-none text-slate-700">{nonStriker.runs} <span className="text-[12px] text-slate-500">({nonStriker.balls})</span></div>
             </button>
@@ -221,20 +221,20 @@ export default function ScoringScreen() {
 
           <div className="bg-white rounded-[12px] p-4 border border-slate-200 flex items-center justify-between mb-3 shadow-sm">
              <div>
-               <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1 flex items-center gap-1"><RefreshCw size={10}/> Bowler</div>
+               <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 flex items-center gap-1"><RefreshCw size={10}/> Bowler</div>
                <div className="text-[15px] font-black text-slate-900">{currentBowler.name}</div>
              </div>
              <div className="text-right">
-               <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">O-M-R-W</div>
+               <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">O-M-R-W</div>
                <div className="text-[16px] font-black tabular-nums text-slate-900">{currentBowler.overs}-{currentBowler.maidens}-{currentBowler.runs}-{currentBowler.wickets}</div>
              </div>
           </div>
 
           <div className="flex gap-2">
-             <button onClick={() => setOverOpen(true)} className="flex-1 bg-white rounded-[10px] py-2.5 text-[11px] font-bold uppercase tracking-wider border border-slate-200 text-slate-700 flex items-center justify-center gap-1.5 hover:bg-slate-50 active:bg-slate-100 transition-colors">
+             <button onClick={() => setOverOpen(true)} className="flex-1 bg-white rounded-[10px] py-2.5 text-xs font-bold uppercase tracking-wider border border-slate-200 text-slate-700 flex items-center justify-center gap-1.5 hover:bg-slate-50 active:bg-slate-100 transition-colors">
                <RefreshCw size={14} /> Change Bowler
              </button>
-             <button onClick={() => setChangeWkOpen(true)} className="flex-1 bg-white rounded-[10px] py-2.5 text-[11px] font-bold uppercase tracking-wider border border-slate-200 text-slate-700 flex items-center justify-center gap-1.5 hover:bg-slate-50 active:bg-slate-100 transition-colors">
+             <button onClick={() => setChangeWkOpen(true)} className="flex-1 bg-white rounded-[10px] py-2.5 text-xs font-bold uppercase tracking-wider border border-slate-200 text-slate-700 flex items-center justify-center gap-1.5 hover:bg-slate-50 active:bg-slate-100 transition-colors">
                <Users size={14} /> Edit WK {currentWk ? `(${currentWk.name.split(' ')[0]})` : ''}
              </button>
           </div>
@@ -247,7 +247,7 @@ export default function ScoringScreen() {
               <h3 className="text-[16px] font-black text-slate-900">Record Ball</h3>
               <div className="text-[12px] font-medium text-slate-500">Tap the result of the delivery</div>
             </div>
-            <button onClick={undoLastAction} disabled={!deliveryLog.length} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-slate-200 text-slate-600 text-[11px] font-bold uppercase tracking-wider shadow-sm disabled:opacity-50 hover:bg-slate-50 active:bg-slate-100 transition-colors">
+            <button onClick={undoLastAction} disabled={!deliveryLog.length} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-slate-200 text-slate-600 text-xs font-bold uppercase tracking-wider shadow-sm disabled:opacity-50 hover:bg-slate-50 active:bg-slate-100 transition-colors">
               <RotateCcw size={14} /> Undo
             </button>
           </div>
@@ -294,7 +294,7 @@ export default function ScoringScreen() {
             <div className="bg-white border border-slate-100 rounded-[12px] p-3 mb-4 text-center">
               <span className="text-[14px] font-bold text-slate-900">{striker.name}</span> <span className="text-[12px] text-slate-500">is on strike</span>
             </div>
-            <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">How out?</div>
+            <div className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">How out?</div>
             <div className="grid grid-cols-2 gap-2 mb-4">
               {DISMISSALS.map(type => {
                 const blocked = isFreeHit && !FREE_HIT_ALLOWED_DISMISSALS.includes(type);
@@ -318,7 +318,7 @@ export default function ScoringScreen() {
 
             {selectedDismissal === 'Caught' && (
               <div className="mb-4">
-                <label className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2 block">Caught by</label>
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2 block">Caught by</label>
                 <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto pr-1">
                   {playingXI.filter(p => p.name !== striker.name && p.name !== nonStriker.name).map(p => (
                     <button 
@@ -349,7 +349,7 @@ export default function ScoringScreen() {
         {retireModalOpen && (
           <Modal title="Retire Batter" onClose={() => setRetireModalOpen(false)}>
             <div className="mb-4">
-              <label className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2 block">Who is retiring?</label>
+              <label className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2 block">Who is retiring?</label>
               <div className="grid grid-cols-2 gap-2">
                 <button 
                   onClick={() => setRetiringBatter('striker')}
@@ -367,19 +367,19 @@ export default function ScoringScreen() {
             </div>
 
             <div className="mb-6">
-              <label className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2 block">Reason</label>
+              <label className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2 block">Reason</label>
               <div className="grid grid-cols-2 gap-2">
                 <button 
                   onClick={() => setRetireType('hurt')}
                   className={`py-3 px-2 rounded-[10px] text-[13px] font-bold border transition-colors flex flex-col items-center justify-center gap-1 ${retireType === 'hurt' ? 'bg-mango text-white border-mango' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'}`}
                 >
-                  <span>Retired Hurt</span><span className="text-[10px] font-normal opacity-90">(No Wicket)</span>
+                  <span>Retired Hurt</span><span className="text-xs font-normal opacity-90">(No Wicket)</span>
                 </button>
                 <button 
                   onClick={() => setRetireType('out')}
                   className={`py-3 px-2 rounded-[10px] text-[13px] font-bold border transition-colors flex flex-col items-center justify-center gap-1 ${retireType === 'out' ? 'bg-coral text-white border-coral' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'}`}
                 >
-                  <span>Retired Out</span><span className="text-[10px] font-normal opacity-90">(Counts as Wicket)</span>
+                  <span>Retired Out</span><span className="text-xs font-normal opacity-90">(Counts as Wicket)</span>
                 </button>
               </div>
             </div>
@@ -408,7 +408,7 @@ export default function ScoringScreen() {
                 >
                   <div>
                     <div className="text-[14px] font-bold text-slate-900 text-left">{player.name}</div>
-                    <div className="text-[11px] text-slate-500 text-left">{player.role || 'Batter'}</div>
+                    <div className="text-xs text-slate-500 text-left">{player.role || 'Batter'}</div>
                   </div>
                   <ChevronRight size={16} className="text-slate-300"/>
                 </button>
@@ -425,7 +425,7 @@ export default function ScoringScreen() {
                 <div className="text-[12px] font-bold text-slate-600">after {formatOvers(balls)} overs</div>
               </div>
             )}
-            <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">Select new bowler</div>
+            <div className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Select new bowler</div>
             <div className="flex flex-col gap-2 max-h-60 overflow-y-auto pr-1">
               {playingXI.filter(p => /bowler|all-rounder/i.test(p.role || '') && p.id !== lastOverBowlerId).map(player => (
                 <button 
@@ -435,7 +435,7 @@ export default function ScoringScreen() {
                 >
                   <div>
                     <div className="text-[14px] font-bold text-slate-900 text-left">{player.name}</div>
-                    <div className="text-[11px] text-slate-500 text-left">{player.role}</div>
+                    <div className="text-xs text-slate-500 text-left">{player.role}</div>
                   </div>
                   <ChevronRight size={16} className="text-slate-300"/>
                 </button>
@@ -446,7 +446,7 @@ export default function ScoringScreen() {
 
         {changeWkOpen && (
           <Modal title="Change Wicket Keeper" onClose={() => setChangeWkOpen(false)}>
-            <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">Select new Wicket Keeper</div>
+            <div className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Select new Wicket Keeper</div>
             <div className="flex flex-col gap-2 max-h-60 overflow-y-auto pr-1">
               {playingXI.map(player => {
                 const isWk = /wicket/i.test(player.role || '');
@@ -458,9 +458,9 @@ export default function ScoringScreen() {
                   >
                     <div className="text-left">
                       <div className="text-[14px] font-bold">{player.name}</div>
-                      <div className={`text-[11px] ${isWk ? 'text-mango-700 font-semibold' : 'text-slate-500'}`}>{player.role}</div>
+                      <div className={`text-xs ${isWk ? 'text-mango-700 font-semibold' : 'text-slate-500'}`}>{player.role}</div>
                     </div>
-                    {isWk && <span className="text-[10px] font-bold uppercase tracking-widest bg-mango text-white px-2 py-1 rounded">Current WK</span>}
+                    {isWk && <span className="text-xs font-bold uppercase tracking-widest bg-mango text-white px-2 py-1 rounded">Current WK</span>}
                   </button>
                 );
               })}

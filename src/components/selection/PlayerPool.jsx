@@ -125,7 +125,7 @@ export default function PlayerPool({
                       {player.name}
                     </span>
                     {/* Role badge */}
-                    <span className={`text-[10px] font-semibold px-1.5 py-0.5 border rounded uppercase tracking-wide ${t.badge}`}>
+                    <span className={`text-xs font-semibold px-1.5 py-0.5 border rounded uppercase tracking-wide ${t.badge}`}>
                       {t.label || player.role}
                     </span>
                   </div>
@@ -142,22 +142,22 @@ export default function PlayerPool({
               {/* Status chip */}
               <div className="shrink-0">
                 {isInSelectedTeam ? (
-                  <span className="text-[11px] font-semibold px-2 py-0.5 bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-md flex items-center gap-1">
+                  <span className="text-xs font-semibold px-2 py-0.5 bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-md flex items-center gap-1">
                     <CheckCircle2 className="w-3 h-3" /> Selected
                   </span>
                 ) : !isEligible ? (
                   <span
-                    className="text-[11px] font-semibold px-2 py-0.5 bg-rose-50 text-rose-600 border border-rose-200 rounded-md flex items-center gap-1"
+                    className="text-xs font-semibold px-2 py-0.5 bg-rose-50 text-rose-600 border border-rose-200 rounded-md flex items-center gap-1"
                     title={player.eligibility?.reason}
                   >
                     <AlertTriangle className="w-3 h-3" /> Ineligible
                   </span>
                 ) : isShortlisted ? (
-                  <span className="text-[11px] font-semibold px-2 py-0.5 bg-indigo-50 text-indigo-600 border border-indigo-200 rounded-md">
+                  <span className="text-xs font-semibold px-2 py-0.5 bg-indigo-50 text-indigo-600 border border-indigo-200 rounded-md">
                     Shortlisted
                   </span>
                 ) : (
-                  <span className="text-[11px] font-medium px-2 py-0.5 bg-slate-100 text-slate-500 border border-slate-200 rounded-md">
+                  <span className="text-xs font-medium px-2 py-0.5 bg-slate-100 text-slate-500 border border-slate-200 rounded-md">
                     Available
                   </span>
                 )}
@@ -167,13 +167,13 @@ export default function PlayerPool({
             {/* 2. STATS GRID */}
             <div className={`grid grid-cols-4 gap-2 mt-3 pt-3 border-t ${t.divider} text-center`}>
               <div className={`${t.statBox} border p-2 rounded-lg`}>
-                <div className={`text-[10px] font-medium ${t.statLbl}`}>Recent Form</div>
+                <div className={`text-xs font-medium ${t.statLbl}`}>Recent Form</div>
                 <div className={`text-xs font-semibold ${t.statVal} mt-0.5 truncate`}>
                   {player.recentFormString || '–'}
                 </div>
               </div>
               <div className={`${t.statBox} border p-2 rounded-lg`}>
-                <div className={`text-[10px] font-medium ${t.statLbl}`}>
+                <div className={`text-xs font-medium ${t.statLbl}`}>
                   {isBowler ? 'Wickets' : 'Runs'}
                 </div>
                 <div className={`text-xs font-bold ${t.statVal} mt-0.5 truncate`}>
@@ -181,7 +181,7 @@ export default function PlayerPool({
                 </div>
               </div>
               <div className={`${t.statBox} border p-2 rounded-lg`}>
-                <div className={`text-[10px] font-medium ${t.statLbl}`}>
+                <div className={`text-xs font-medium ${t.statLbl}`}>
                   {isBowler ? 'Economy' : 'Avg'}
                 </div>
                 <div className={`text-xs font-semibold ${t.statVal} mt-0.5 truncate`}>
@@ -189,7 +189,7 @@ export default function PlayerPool({
                 </div>
               </div>
               <div className={`${t.statBox} border p-2 rounded-lg`}>
-                <div className={`text-[10px] font-medium ${t.statLbl}`}>
+                <div className={`text-xs font-medium ${t.statLbl}`}>
                   {isBowler ? 'Best' : '50s/100s'}
                 </div>
                 <div className={`text-xs font-semibold ${t.statVal} mt-0.5 truncate`}>

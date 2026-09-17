@@ -57,7 +57,7 @@ export default function SelectedTeam({
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="text-[11px] font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-100/60">
+              <span className="text-xs font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-100/60">
                 {team.season} • {team.category}
               </span>
               <span className="text-xs text-slate-400 font-medium">
@@ -68,7 +68,7 @@ export default function SelectedTeam({
               {team.name}
             </h2>
             <p className="text-xs text-slate-500 font-normal">
-              Target Roster: {targetSize} Players • {count} Players Selected
+              Target Team: {targetSize} Players • {count} Players Selected
             </p>
           </div>
 
@@ -80,7 +80,7 @@ export default function SelectedTeam({
                 </span>
                 <span className="text-xs font-normal text-slate-400"> / {targetSize}</span>
               </div>
-              <div className="text-[11px] font-medium text-slate-500">Team Size</div>
+              <div className="text-xs font-medium text-slate-500">Team Size</div>
             </div>
           </div>
         </div>
@@ -174,7 +174,7 @@ export default function SelectedTeam({
         <div className="space-y-0.5">
           <div className="font-semibold text-slate-900">
             {isCompositionValid && count === targetSize
-              ? `Team Roster Complete (${count} Players Selected)`
+              ? `Team Complete (${count} Players Selected)`
               : `Team Selection In Progress (${count} / ${targetSize} Players)`}
           </div>
           <div className="text-xs text-slate-600 font-normal">
@@ -185,37 +185,37 @@ export default function SelectedTeam({
         </div>
       </div>
 
-      {/* SELECTED ROSTER LIST */}
+      {/* SELECTED TEAM PLAYERS */}
       <div className="space-y-4">
-        <RosterGroup
+        <PlayerGroup
           title="Specialist Batters"
           players={batters}
           teamRoles={team.roles}
           onSelect={onSelectPlayer}
           onRemove={onRemovePlayerFromTeam}
         />
-        <RosterGroup
+        <PlayerGroup
           title="All-Rounders"
           players={allRounders}
           teamRoles={team.roles}
           onSelect={onSelectPlayer}
           onRemove={onRemovePlayerFromTeam}
         />
-        <RosterGroup
+        <PlayerGroup
           title="Wicketkeepers"
           players={wicketkeepers}
           teamRoles={team.roles}
           onSelect={onSelectPlayer}
           onRemove={onRemovePlayerFromTeam}
         />
-        <RosterGroup
+        <PlayerGroup
           title="Fast Bowlers"
           players={fastBowlers}
           teamRoles={team.roles}
           onSelect={onSelectPlayer}
           onRemove={onRemovePlayerFromTeam}
         />
-        <RosterGroup
+        <PlayerGroup
           title="Spin Bowlers"
           players={spinners}
           teamRoles={team.roles}
@@ -236,16 +236,16 @@ export default function SelectedTeam({
 }
 
 const DISCIPLINE_THEMES = {
-  'Batters':       { tile: 'bg-white border-l-4 border-l-amber-500', count: 'text-amber-700 text-xl font-bold', label: 'text-slate-600 text-xs', status: 'text-slate-400 text-[11px]' },
-  'All-Rounders':  { tile: 'bg-white border-l-4 border-l-violet-600', count: 'text-violet-700 text-xl font-bold', label: 'text-slate-600 text-xs', status: 'text-slate-400 text-[11px]' },
-  'Wicketkeepers': { tile: 'bg-white border-l-4 border-l-teal-600', count: 'text-teal-700 text-xl font-bold', label: 'text-slate-600 text-xs', status: 'text-slate-400 text-[11px]' },
-  'Fast Bowlers':  { tile: 'bg-white border-l-4 border-l-rose-600', count: 'text-rose-700 text-xl font-bold', label: 'text-slate-600 text-xs', status: 'text-slate-400 text-[11px]' },
-  'Spinners':      { tile: 'bg-white border-l-4 border-l-blue-600', count: 'text-blue-700 text-xl font-bold', label: 'text-slate-600 text-xs', status: 'text-slate-400 text-[11px]' },
+  'Batters':       { tile: 'bg-white border-l-4 border-l-amber-500', count: 'text-amber-700 text-xl font-bold', label: 'text-slate-600 text-xs', status: 'text-slate-400 text-xs' },
+  'All-Rounders':  { tile: 'bg-white border-l-4 border-l-violet-600', count: 'text-violet-700 text-xl font-bold', label: 'text-slate-600 text-xs', status: 'text-slate-400 text-xs' },
+  'Wicketkeepers': { tile: 'bg-white border-l-4 border-l-teal-600', count: 'text-teal-700 text-xl font-bold', label: 'text-slate-600 text-xs', status: 'text-slate-400 text-xs' },
+  'Fast Bowlers':  { tile: 'bg-white border-l-4 border-l-rose-600', count: 'text-rose-700 text-xl font-bold', label: 'text-slate-600 text-xs', status: 'text-slate-400 text-xs' },
+  'Spinners':      { tile: 'bg-white border-l-4 border-l-blue-600', count: 'text-blue-700 text-xl font-bold', label: 'text-slate-600 text-xs', status: 'text-slate-400 text-xs' },
 };
 
 function DisciplineTile({ label, count, min }) {
   const isSatisfied = count >= min;
-  const t = DISCIPLINE_THEMES[label] || { tile: 'bg-white border-l-4 border-l-slate-400', count: 'text-slate-700 text-xl font-bold', label: 'text-slate-600 text-xs', status: 'text-slate-400 text-[11px]' };
+  const t = DISCIPLINE_THEMES[label] || { tile: 'bg-white border-l-4 border-l-slate-400', count: 'text-slate-700 text-xl font-bold', label: 'text-slate-600 text-xs', status: 'text-slate-400 text-xs' };
   return (
     <div
       className={`p-3 rounded-xl border border-slate-200 text-center shadow-sm ${t.tile} ${!isSatisfied ? 'ring-2 ring-red-400/60' : ''}`}
@@ -259,7 +259,7 @@ function DisciplineTile({ label, count, min }) {
   );
 }
 
-const ROSTER_GROUP_THEMES = {
+const PLAYER_GROUP_THEMES = {
   'Batters':       { header: 'bg-amber-50/50', text: 'text-amber-800', icon: '🏏', border: 'border-amber-200', accent: 'bg-white hover:bg-amber-50/30 border-l-4 border-l-amber-400' },
   'All-Rounders':  { header: 'bg-violet-50/50', text: 'text-violet-800', icon: '⚡', border: 'border-violet-200', accent: 'bg-white hover:bg-violet-50/30 border-l-4 border-l-violet-400' },
   'Wicketkeepers': { header: 'bg-teal-50/50', text: 'text-teal-800', icon: '🧤', border: 'border-teal-200', accent: 'bg-white hover:bg-teal-50/30 border-l-4 border-l-teal-400' },
@@ -267,10 +267,10 @@ const ROSTER_GROUP_THEMES = {
   'Spinners':      { header: 'bg-blue-50/50', text: 'text-blue-800', icon: '🌀', border: 'border-blue-200', accent: 'bg-white hover:bg-blue-50/30 border-l-4 border-l-blue-400' },
 };
 
-function RosterGroup({ title, players, teamRoles, onSelect, onRemove }) {
+function PlayerGroup({ title, players, teamRoles, onSelect, onRemove }) {
   if (players.length === 0) return null;
 
-  const t = ROSTER_GROUP_THEMES[title] || { header: 'bg-slate-50', text: 'text-slate-800', icon: '👤', border: 'border-slate-200', accent: 'bg-white hover:bg-slate-50/50 border-l-4 border-l-slate-400' };
+  const t = PLAYER_GROUP_THEMES[title] || { header: 'bg-slate-50', text: 'text-slate-800', icon: '👤', border: 'border-slate-200', accent: 'bg-white hover:bg-slate-50/50 border-l-4 border-l-slate-400' };
 
   return (
     <div className={`rounded-xl border ${t.border} overflow-hidden shadow-sm`}>
@@ -302,17 +302,17 @@ function RosterGroup({ title, players, teamRoles, onSelect, onRemove }) {
                       {p.district}
                     </span>
                     {isCaptain && (
-                      <span className="text-[11px] font-semibold bg-amber-100 text-amber-800 border border-amber-300/60 px-2 py-0.5 rounded flex items-center gap-1">
+                      <span className="text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-300/60 px-2 py-0.5 rounded flex items-center gap-1">
                         <Crown className="w-3 h-3 text-amber-600" /> Captain
                       </span>
                     )}
                     {isViceCaptain && (
-                      <span className="text-[11px] font-semibold bg-blue-100 text-blue-800 border border-blue-300/60 px-2 py-0.5 rounded flex items-center gap-1">
+                      <span className="text-xs font-semibold bg-blue-100 text-blue-800 border border-blue-300/60 px-2 py-0.5 rounded flex items-center gap-1">
                         <Award className="w-3 h-3 text-blue-600" /> Vice Captain
                       </span>
                     )}
                     {isWK && (
-                      <span className="text-[11px] font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300/60 px-2 py-0.5 rounded flex items-center gap-1">
+                      <span className="text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300/60 px-2 py-0.5 rounded flex items-center gap-1">
                         <Shield className="w-3 h-3 text-emerald-600" /> WK
                       </span>
                     )}

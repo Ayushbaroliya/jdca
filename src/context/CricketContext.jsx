@@ -50,6 +50,7 @@ export function CricketProvider({ children }) {
     'match-result': 'matches',
     'innings-break': 'matches',
     'tournaments': 'tournaments',
+    'teams': 'teams',
     'administration': 'administration',
     'access-control': 'administration',
   };
@@ -97,30 +98,68 @@ export function CricketProvider({ children }) {
   const [matches, setMatches] = useState(INITIAL_MATCHES);
   const [activeMatchId, setActiveMatchId] = useState('match-live-1');
 
-  // Fetch Supabase Data
+  // Offline-First & Realtime Data Sync
   useEffect(() => {
-    const fetchSupabaseData = async () => {
-      try {
-        // Fetch Players
-        const { data: supabasePlayers, error: playerError } = await supabase.from('players').select('*');
-        if (!playerError && supabasePlayers && supabasePlayers.length > 0) {
-          // Map backend schema to frontend model if necessary, or just set it
-          // setPlayers(supabasePlayers);
-          console.log('Fetched players from Supabase:', supabasePlayers);
-        }
+    let subscription = null;
 
-        // Fetch Matches
-        const { data: supabaseMatches, error: matchError } = await supabase.from('matches').select('*');
-        if (!matchError && supabaseMatches && supabaseMatches.length > 0) {
-          // setMatches(supabaseMatches);
-          console.log('Fetched matches from Supabase:', supabaseMatches);
+    const setupDataAndSync = async () => {
+      try {
+        const { db } = await import('../lib/db.js');
+        
+        // 1. Load from Dexie (Offline First)
+        let localMatches = await db.matches.toArray();
+        if (localMatches.length === 0) {
+          // Seed the database if empty
+          console.log('[CricketContext] Seeding local Dexie database with INITIAL_MATCHES');
+          await db.matches.bulkAdd(INITIAL_MATCHES);
+          localMatches = INITIAL_MATCHES;
+        }
+        setMatches(localMatches);
+
+        // 2. Setup Supabase Realtime Subscription
+        if (supabase) {
+          subscription = supabase.channel('public:matches')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'matches' }, async (payload) => {
+              console.log('[Realtime] Match update received:', payload);
+              
+              if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
+                const matchData = payload.new;
+                
+                // Update Local Dexie
+                await db.matches.put(matchData);
+                
+                // Update React State
+                setMatches(prev => {
+                  const existingIndex = prev.findIndex(m => m.id === matchData.id);
+                  if (existingIndex >= 0) {
+                    const newArr = [...prev];
+                    newArr[existingIndex] = matchData;
+                    return newArr;
+                  }
+                  return [matchData, ...prev];
+                });
+              } else if (payload.eventType === 'DELETE') {
+                const matchId = payload.old.id;
+                await db.matches.delete(matchId);
+                setMatches(prev => prev.filter(m => m.id !== matchId));
+              }
+            })
+            .subscribe((status) => {
+              console.log('[Realtime] Subscription status:', status);
+            });
         }
       } catch (err) {
-        console.error('Error fetching Supabase data:', err);
+        console.error('[CricketContext] Sync error:', err);
       }
     };
 
-    fetchSupabaseData();
+    setupDataAndSync();
+
+    return () => {
+      if (subscription) {
+        supabase.removeChannel(subscription);
+      }
+    };
   }, []);
 
   // Match Setup State
@@ -253,6 +292,7 @@ export function CricketProvider({ children }) {
       'innings-break': '/innings-break',
       'match-result': '/match-result',
       'tournaments': '/tournaments',
+      'teams': '/teams',
       'players': '/players',
       'scouting': '/players',
       'player-profile': '/player-profile',

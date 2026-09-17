@@ -6,10 +6,10 @@ function BattingTable({ team, players = [] }) {
     <div className="mb-6">
       <div className="flex items-center justify-between p-3 bg-[#101827] text-white rounded-t-xl">
         <h4 className="font-bold text-[14px]">{team} Batting</h4>
-        <div className="font-black text-[16px]">{players.reduce((s,p)=>s+(Number(p.runs)||0),0) || '—'}</div>
+        <div className="font-black text-[16px]">{players.reduce((s,p)=>s+(Number(p.runs)||0),0) || 'ï¿½'}</div>
       </div>
       <div className="border border-gray-200 border-t-0 rounded-b-xl overflow-hidden">
-        <div className="flex bg-[#f0f2f4] text-[#596579] text-[10px] font-bold uppercase tracking-wider p-2 border-b border-gray-200">
+        <div className="flex bg-[#f0f2f4] text-[#596579] text-xs font-bold uppercase tracking-wider p-2 border-b border-gray-200">
           <div className="flex-[3]">Batter</div>
           <div className="flex-1 text-center">R</div>
           <div className="flex-1 text-center">B</div>
@@ -22,13 +22,13 @@ function BattingTable({ team, players = [] }) {
             <div key={p.id || i} className="flex items-center p-2 text-[12px]">
               <div className="flex-[3]">
                 <div className="font-bold text-[#101827]">{p.name}</div>
-                <div className="text-[10px] text-[#8a99b0] leading-tight">{p.dismissal || (p.notOut ? 'not out' : '')}</div>
+                <div className="text-xs text-[#8a99b0] leading-tight">{p.dismissal || (p.notOut ? 'not out' : '')}</div>
               </div>
-              <div className="flex-1 text-center font-black text-[#101827]">{p.runs ?? '—'}</div>
-              <div className="flex-1 text-center font-medium text-[#596579]">{p.balls ?? '—'}</div>
-              <div className="flex-1 text-center font-medium text-[#596579]">{p.fours ?? '—'}</div>
-              <div className="flex-1 text-center font-medium text-[#596579]">{p.sixes ?? '—'}</div>
-              <div className="flex-1 text-right font-medium text-[#8a99b0]">{p.strikeRate ?? '—'}</div>
+              <div className="flex-1 text-center font-black text-[#101827]">{p.runs ?? 'ï¿½'}</div>
+              <div className="flex-1 text-center font-medium text-[#596579]">{p.balls ?? 'ï¿½'}</div>
+              <div className="flex-1 text-center font-medium text-[#596579]">{p.fours ?? 'ï¿½'}</div>
+              <div className="flex-1 text-center font-medium text-[#596579]">{p.sixes ?? 'ï¿½'}</div>
+              <div className="flex-1 text-right font-medium text-[#8a99b0]">{p.strikeRate ?? 'ï¿½'}</div>
             </div>
           ))}
         </div>
@@ -45,7 +45,7 @@ function BowlingTable({ team, bowlers = [] }) {
         <h4 className="font-bold text-[14px]">{team} Bowling</h4>
       </div>
       <div className="border border-gray-200 border-t-0 rounded-b-xl overflow-hidden">
-        <div className="flex bg-[#f0f2f4] text-[#596579] text-[10px] font-bold uppercase tracking-wider p-2 border-b border-gray-200">
+        <div className="flex bg-[#f0f2f4] text-[#596579] text-xs font-bold uppercase tracking-wider p-2 border-b border-gray-200">
           <div className="flex-[3]">Bowler</div>
           <div className="flex-1 text-center">O</div>
           <div className="flex-1 text-center">M</div>
@@ -57,11 +57,11 @@ function BowlingTable({ team, bowlers = [] }) {
           {(bowlers.length ? bowlers : [{name:'No data recorded yet'}]).map((p,i) => (
             <div key={p.id || i} className="flex items-center p-2 text-[12px]">
               <div className="flex-[3] font-bold text-[#101827]">{p.name}</div>
-              <div className="flex-1 text-center font-medium text-[#596579]">{p.overs ?? '—'}</div>
-              <div className="flex-1 text-center font-medium text-[#596579]">{p.maidens ?? '—'}</div>
-              <div className="flex-1 text-center font-medium text-[#596579]">{p.runs ?? '—'}</div>
-              <div className="flex-1 text-center font-black text-[#F05A47]">{p.wickets ?? '—'}</div>
-              <div className="flex-1 text-right font-medium text-[#8a99b0]">{p.economy ?? '—'}</div>
+              <div className="flex-1 text-center font-medium text-[#596579]">{p.overs ?? 'ï¿½'}</div>
+              <div className="flex-1 text-center font-medium text-[#596579]">{p.maidens ?? 'ï¿½'}</div>
+              <div className="flex-1 text-center font-medium text-[#596579]">{p.runs ?? 'ï¿½'}</div>
+              <div className="flex-1 text-center font-black text-[#F05A47]">{p.wickets ?? 'ï¿½'}</div>
+              <div className="flex-1 text-right font-medium text-[#8a99b0]">{p.economy ?? 'ï¿½'}</div>
             </div>
           ))}
         </div>
@@ -96,7 +96,7 @@ export default function MatchScorecard({ match }) {
           <BattingTable team={match.teamA?.name || 'Team A'} players={scorecard.teamA?.batting} />
           <div className="flex items-center justify-between p-3 bg-gray-50 border border-gray-200 rounded-xl mb-6 text-[13px]">
             <span className="font-bold text-[#596579]">Extras</span>
-            <span className="font-black text-[#101827]">{scorecard.teamA?.extras ?? match.teamA?.extras ?? '—'}</span>
+            <span className="font-black text-[#101827]">{scorecard.teamA?.extras ?? match.teamA?.extras ?? 'ï¿½'}</span>
           </div>
           <BowlingTable team={match.teamB?.name || 'Team B'} bowlers={scorecard.teamB?.bowling || scorecard.bowlingA} />
         </>
@@ -107,7 +107,7 @@ export default function MatchScorecard({ match }) {
           <BattingTable team={match.teamB?.name || 'Team B'} players={scorecard.teamB?.batting} />
           <div className="flex items-center justify-between p-3 bg-gray-50 border border-gray-200 rounded-xl mb-6 text-[13px]">
             <span className="font-bold text-[#596579]">Extras</span>
-            <span className="font-black text-[#101827]">{scorecard.teamB?.extras ?? match.teamB?.extras ?? '—'}</span>
+            <span className="font-black text-[#101827]">{scorecard.teamB?.extras ?? match.teamB?.extras ?? 'ï¿½'}</span>
           </div>
           <BowlingTable team={match.teamA?.name || 'Team A'} bowlers={scorecard.teamA?.bowling || scorecard.bowlingB} />
         </>

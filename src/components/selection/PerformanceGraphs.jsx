@@ -161,7 +161,7 @@ function RunsByMatchChart({ data }) {
             <div className="font-semibold">
               {points[hoveredIdx].runs} {points[hoveredIdx].notOut ? '(Not Out)' : ''} ({points[hoveredIdx].balls}b)
             </div>
-            <div className="text-slate-400 text-[11px]">vs {points[hoveredIdx].opp} • {points[hoveredIdx].date}</div>
+            <div className="text-slate-400 text-xs">vs {points[hoveredIdx].opp} • {points[hoveredIdx].date}</div>
           </div>
         )}
       </div>
@@ -251,7 +251,7 @@ function WicketsByMatchChart({ data }) {
             <div className="font-semibold">
               {data[hoveredIdx].bowling?.wickets || 0}/{data[hoveredIdx].bowling?.runs || 0} ({data[hoveredIdx].bowling?.overs || '4.0'} ov)
             </div>
-            <div className="text-slate-400 text-[11px]">Econ: {data[hoveredIdx].bowling?.economy || '-'} • vs {data[hoveredIdx].opponentShort}</div>
+            <div className="text-slate-400 text-xs">Econ: {data[hoveredIdx].bowling?.economy || '-'} • vs {data[hoveredIdx].opponentShort}</div>
           </div>
         )}
       </div>
@@ -271,23 +271,23 @@ function WKDismissalsChart({ data }) {
           <div className="text-sm font-semibold text-slate-900">
             {data.reduce((sum, m) => sum + (m.fielding?.catches || 0), 0)}
           </div>
-          <div className="text-[11px] font-medium text-slate-500 mt-0.5">Catches</div>
+          <div className="text-xs font-medium text-slate-500 mt-0.5">Catches</div>
         </div>
         <div className="p-2.5 bg-slate-50 rounded-lg border border-slate-100 text-center">
           <div className="text-sm font-semibold text-slate-900">
             {data.reduce((sum, m) => sum + (m.fielding?.stumpings || 0), 0)}
           </div>
-          <div className="text-[11px] font-medium text-slate-500 mt-0.5">Stumpings</div>
+          <div className="text-xs font-medium text-slate-500 mt-0.5">Stumpings</div>
         </div>
         <div className="p-2.5 bg-slate-50 rounded-lg border border-slate-100 text-center">
           <div className="text-sm font-semibold text-slate-900">
             {data.reduce((sum, m) => sum + (m.fielding?.runOuts || 0), 0)}
           </div>
-          <div className="text-[11px] font-medium text-slate-500 mt-0.5">Run Outs</div>
+          <div className="text-xs font-medium text-slate-500 mt-0.5">Run Outs</div>
         </div>
         <div className="p-2.5 bg-slate-50 rounded-lg border border-slate-100 text-center">
           <div className="text-sm font-semibold text-emerald-700">0</div>
-          <div className="text-[11px] font-medium text-slate-500 mt-0.5">Byes Conceded</div>
+          <div className="text-xs font-medium text-slate-500 mt-0.5">Byes Conceded</div>
         </div>
       </div>
     </div>

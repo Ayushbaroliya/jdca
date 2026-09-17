@@ -74,7 +74,7 @@ export default function InningsBreakScreen() {
             <div className="text-xl font-black text-slate-900 mt-1 font-tabular">
               68* <span className="text-xs font-medium text-slate-400">(42 balls)</span>
             </div>
-            <p className="text-[11px] text-slate-500 font-semibold mt-1">6x4, 2x6 • SR: 161.9</p>
+            <p className="text-xs text-slate-500 font-semibold mt-1">6x4, 2x6 • SR: 161.9</p>
           </div>
 
           {/* Top Bowler - Blue */}
@@ -87,7 +87,7 @@ export default function InningsBreakScreen() {
             <div className="text-xl font-black text-slate-900 mt-1 font-tabular">
               3/24 <span className="text-xs font-medium text-slate-400">(4.0 ov)</span>
             </div>
-            <p className="text-[11px] text-slate-500 font-semibold mt-1">Econ: 6.00 • 11 Dots</p>
+            <p className="text-xs text-slate-500 font-semibold mt-1">Econ: 6.00 • 11 Dots</p>
           </div>
         </div>
       </div>

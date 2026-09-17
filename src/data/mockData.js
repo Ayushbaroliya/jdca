@@ -1257,7 +1257,7 @@ export const SELECTION_HISTORY = [
     selectors: ['A. Pandey (Chief)', 'V. Tripathi', 'R. Sharma'],
     selectedPlayers: ['rohan-sharma', 'virat-sharma', 'alex-mercer', 'sharma-senior', 'priya-balaghat', 'rahul-chhindwara'],
     trialVenue: 'Narsinghpur Ground',
-    notes: 'Balanced squad selected. Virat Sharma retained as captain.',
+    notes: 'Balanced team selected. Virat Sharma retained as captain.',
   },
 ];
 

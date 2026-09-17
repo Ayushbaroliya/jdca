@@ -171,7 +171,7 @@ export default function AdministrationScreen() {
                       <tr key={usr.id} className="hover:bg-slate-50">
                         <td>
                           <div className="font-bold text-slate-900 text-sm">{usr.name}</div>
-                          <div className="text-[11px] text-slate-500">{usr.district || 'Jabalpur HQ'}</div>
+                          <div className="text-xs text-slate-500">{usr.district || 'Jabalpur HQ'}</div>
                         </td>
                         <td className="text-xs text-slate-600 font-medium">
                           {usr.email}
@@ -218,7 +218,7 @@ export default function AdministrationScreen() {
                           )}
                         </td>
                         <td style={{ textAlign: 'right' }}>
-                          <span className="badge badge-live text-[10px]">Active</span>
+                          <span className="badge badge-live text-xs">Active</span>
                         </td>
                       </tr>
                     );
@@ -287,7 +287,7 @@ export default function AdministrationScreen() {
                       <td className="text-xs text-slate-800 font-medium">{d.contact}</td>
                       <td className="text-xs text-slate-600">{d.phone}</td>
                       <td style={{ textAlign: 'right' }}>
-                        <span className="badge badge-live text-[10px]">Affiliated</span>
+                        <span className="badge badge-live text-xs">Affiliated</span>
                       </td>
                     </tr>
                   ))}
@@ -321,7 +321,7 @@ export default function AdministrationScreen() {
                       <td className="text-xs text-slate-700 font-medium">{v.type}</td>
                       <td className="text-xs text-slate-600">{v.floodlights}</td>
                       <td style={{ textAlign: 'right' }}>
-                        <span className="badge badge-live text-[10px]">Approved</span>
+                        <span className="badge badge-live text-xs">Approved</span>
                       </td>
                     </tr>
                   ))}
@@ -357,7 +357,7 @@ export default function AdministrationScreen() {
                       <td className="font-tabular text-slate-700">{f.powerplayOvers}</td>
                       <td className="font-tabular font-semibold text-[#2457D6]">{f.maxBowlerOvers}</td>
                       <td style={{ textAlign: 'right' }}>
-                        <span className="badge badge-upcoming text-[10px]">Official JDCA</span>
+                        <span className="badge badge-upcoming text-xs">Official JDCA</span>
                       </td>
                     </tr>
                   ))}

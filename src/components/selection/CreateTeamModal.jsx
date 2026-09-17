@@ -108,7 +108,7 @@ export default function CreateTeamModal({ isOpen, onClose, onCreateTeam }) {
                   }`}
                 >
                   <div className="text-xs">{cat.name}</div>
-                  <div className="text-[10px] opacity-75 font-normal">
+                  <div className="text-xs opacity-75 font-normal">
                     {cat.ageLimit < 90 ? `Max ${cat.ageLimit} yrs` : 'Open Age'}
                   </div>
                 </button>
@@ -139,11 +139,11 @@ export default function CreateTeamModal({ isOpen, onClose, onCreateTeam }) {
 
           {/* Preview Box */}
           <div className="p-3 bg-cobalt-50 border border-cobalt-100 rounded-xl">
-            <div className="text-[10px] font-bold uppercase text-cobalt-700">Selection Preview</div>
+            <div className="text-xs font-bold uppercase text-cobalt-700">Selection Preview</div>
             <div className="text-sm font-bold text-cobalt-900 mt-0.5">
               {season} JDCA {currentCategory.name}{gender === 'Women' ? " Women's" : ''} Team
             </div>
-            <div className="text-[11px] text-cobalt-800 mt-0.5">
+            <div className="text-xs text-cobalt-800 mt-0.5">
               Target Size: {teamSize} Players • Eligibility: {currentCategory.ageLimit < 90 ? `Under ${currentCategory.ageLimit} years` : 'Open'}
             </div>
           </div>

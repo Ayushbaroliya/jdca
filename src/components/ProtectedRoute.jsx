@@ -9,14 +9,17 @@ export const ROLE_PERMISSIONS = {
   Scorer: [
     '/home', '/matches', '/match-setup', '/match-overview',
     '/scoring', '/scorecard', '/innings-break', '/match-result',
+    '/teams', '/tournaments', '/news'
   ],
   Selector: [
     '/home', '/matches', '/match-overview', '/scorecard',
     '/players', '/scouting', '/player-profile', '/player-registration',
     '/selection', '/selectors',
+    '/teams', '/tournaments', '/news'
   ],
   Player: [
     '/home', '/matches', '/match-overview', '/scorecard', '/player-profile',
+    '/teams', '/tournaments', '/news'
   ],
 };
 

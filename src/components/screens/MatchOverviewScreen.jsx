@@ -22,7 +22,7 @@ export default function MatchOverviewScreen() {
       {/* 1. Page Header */}
       <PageHeader
         title="Active Match Overview"
-        subtitle="Live statistics, partnership progression, and certified official roster"
+        subtitle="Live statistics, partnership progression, and playing 11 list"
         actions={
           <div className="flex items-center gap-2">
             <span className="badge badge-live inline-flex items-center gap-1.5 px-3 py-1 text-xs">
@@ -37,7 +37,7 @@ export default function MatchOverviewScreen() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5">
         {/* Metric 1: Run Rate - Blue */}
         <div className="bg-white rounded-2xl p-4.5 border border-slate-200 border-l-4 border-l-blue-500 shadow-sm hover:shadow-md hover:scale-[1.02] transition-all">
-          <span className="text-[11px] uppercase font-black tracking-wider text-slate-500 block mb-1">
+          <span className="text-xs uppercase font-black tracking-wider text-slate-500 block mb-1">
             Run Rate
           </span>
           <div className="text-2xl sm:text-3xl font-black text-slate-900 font-tabular leading-none">
@@ -50,7 +50,7 @@ export default function MatchOverviewScreen() {
 
         {/* Metric 2: Overs Progress - Emerald */}
         <div className="bg-white rounded-2xl p-4.5 border border-slate-200 border-l-4 border-l-emerald-500 shadow-sm hover:shadow-md hover:scale-[1.02] transition-all">
-          <span className="text-[11px] uppercase font-black tracking-wider text-slate-500 block mb-1">
+          <span className="text-xs uppercase font-black tracking-wider text-slate-500 block mb-1">
             Overs Progress
           </span>
           <div className="text-2xl sm:text-3xl font-black text-slate-900 font-tabular leading-none">
@@ -63,7 +63,7 @@ export default function MatchOverviewScreen() {
 
         {/* Metric 3: Extras - Amber */}
         <div className="bg-white rounded-2xl p-4.5 border border-slate-200 border-l-4 border-l-amber-500 shadow-sm hover:shadow-md hover:scale-[1.02] transition-all">
-          <span className="text-[11px] uppercase font-black tracking-wider text-slate-500 block mb-1">
+          <span className="text-xs uppercase font-black tracking-wider text-slate-500 block mb-1">
             Extras Given
           </span>
           <div className="text-2xl sm:text-3xl font-black text-slate-900 font-tabular leading-none">
@@ -76,7 +76,7 @@ export default function MatchOverviewScreen() {
 
         {/* Metric 4: Current Partnership - Purple */}
         <div className="bg-white rounded-2xl p-4.5 border border-slate-200 border-l-4 border-l-purple-500 shadow-sm hover:shadow-md hover:scale-[1.02] transition-all">
-          <span className="text-[11px] uppercase font-black tracking-wider text-slate-500 block mb-1">
+          <span className="text-xs uppercase font-black tracking-wider text-slate-500 block mb-1">
             Current Stand
           </span>
           <div className="text-2xl sm:text-3xl font-black text-slate-900 font-tabular leading-none">
@@ -119,7 +119,7 @@ export default function MatchOverviewScreen() {
                 </div>
               </div>
 
-              <span className="px-2 py-0.5 rounded-md bg-cobalt-50 text-cobalt text-[10px] font-bold">
+              <span className="px-2 py-0.5 rounded-md bg-cobalt-50 text-cobalt text-xs font-bold">
                 {official.experience}
               </span>
             </div>

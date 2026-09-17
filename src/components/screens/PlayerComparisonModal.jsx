@@ -70,7 +70,7 @@ export default function PlayerComparisonModal() {
                   className="w-14 h-14 rounded-2xl object-cover border-2 border-blue-500 shadow-sm mb-2"
                 />
                 <h4 className="font-extrabold text-sm text-slate-900">{p1.name}</h4>
-                <span className="text-[10px] font-bold text-blue-700">{p1.district}</span>
+                <span className="text-xs font-bold text-blue-700">{p1.district}</span>
               </div>
 
               {/* Player 2 with Selector */}
@@ -93,7 +93,7 @@ export default function PlayerComparisonModal() {
                     <option key={p.id} value={p.id}>{p.name}</option>
                   ))}
                 </select>
-                <span className="text-[10px] font-medium text-slate-400 mt-0.5">{p2.district}</span>
+                <span className="text-xs font-medium text-slate-400 mt-0.5">{p2.district}</span>
               </div>
             </div>
 
@@ -117,7 +117,7 @@ export default function PlayerComparisonModal() {
                       {m.v1} {p1Wins && '★'}
                     </div>
 
-                    <div className="font-bold text-slate-400 uppercase tracking-wider text-[11px] text-center px-2">
+                    <div className="font-bold text-slate-400 uppercase tracking-wider text-xs text-center px-2">
                       {m.label}
                     </div>
 

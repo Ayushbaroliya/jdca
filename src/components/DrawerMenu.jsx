@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  X, Home, Calendar, Trophy, Users, Clipboard, Radio, Settings, LogOut
+  X, Home, Calendar, Trophy, Users, Clipboard, Radio, Settings, LogOut, Shield, Megaphone
 } from 'lucide-react';
 import { useCricket } from '../context/CricketContext';
 import { RoleBadge } from './ui/Badge';
@@ -8,11 +8,13 @@ import { motion, AnimatePresence } from 'motion/react';
 
 const ALL_NAV = [
   { id: 'home',           label: 'Home',          icon: Home,      route: 'home' },
+  { id: 'teams',          label: 'Teams',          icon: Shield,    route: 'teams' },
+  { id: 'selection',      label: 'Player Selection',      icon: Clipboard, route: 'selection' },
   { id: 'matches',        label: 'Matches',        icon: Calendar,  route: 'matches' },
   { id: 'tournaments',    label: 'Tournaments',    icon: Trophy,    route: 'tournaments' },
-  { id: 'players',        label: 'Players',        icon: Users,     route: 'players' },
-  { id: 'selection',      label: 'Player Selection',      icon: Clipboard, route: 'selection' },
   { id: 'scoring',        label: 'Live Score',   icon: Radio,     route: 'scoring', liveIndicator: true },
+  { id: 'players',        label: 'Players',        icon: Users,     route: 'players' },
+  { id: 'news',           label: 'News',           icon: Megaphone, route: 'news' },
   { id: 'administration', label: 'Administration', icon: Settings,  route: 'administration', adminOnly: true },
 ];
 
@@ -21,9 +23,11 @@ const ACTIVE_MAP = {
   'match-overview': 'matches', 'match-result': 'matches', 'innings-break': 'matches',
   'scoring': 'scoring', 'scorecard': 'scoring',
   'tournaments': 'tournaments',
+  'teams': 'teams',
   'players': 'players', 'scouting': 'players', 'player-profile': 'players', 'player-registration': 'players',
   'selection': 'selection', 'selectors': 'selection',
   'administration': 'administration', 'access-control': 'administration',
+  'news': 'news',
 };
 
 export default function DrawerMenu() {
@@ -33,9 +37,10 @@ export default function DrawerMenu() {
 
   const visible = ALL_NAV.filter(item => {
     if (item.adminOnly && !['SuperAdmin', 'Admin'].includes(userRole)) return false;
-    if (userRole === 'Scorer')   return ['home','matches','scoring'].includes(item.id);
-    if (userRole === 'Selector') return ['home','players','selection'].includes(item.id);
-    if (userRole === 'Player')   return ['home','matches','players'].includes(item.id);
+    if (userRole === 'SuperAdmin' && item.id === 'scoring') return false;
+    if (userRole === 'Scorer')   return ['home','matches','scoring','teams','tournaments','news'].includes(item.id);
+    if (userRole === 'Selector') return ['home','players','selection','teams','tournaments','news'].includes(item.id);
+    if (userRole === 'Player')   return ['home','matches','players','teams','tournaments','news'].includes(item.id);
     return true;
   });
 

@@ -110,14 +110,14 @@ export default function SelectionScreen() {
       {showSavedToast && (
         <div className="fixed top-20 right-6 z-50 flex items-center gap-2 rounded-xl bg-jade-600 px-4 py-3 text-white shadow-xl animate-in fade-in slide-in-from-top-2">
           <CheckCircle2 className="w-5 h-5" />
-          <span className="text-sm font-semibold">Squad selection saved successfully to JDCA central registry!</span>
+          <span className="text-sm font-semibold">Team selection saved successfully!</span>
         </div>
       )}
 
       {/* Page Header */}
       <PageHeader
         title="Player Selection"
-        subtitle="Official Jabalpur District Cricket Association Talent Identification & Squad Trials"
+        subtitle="Official Jabalpur District Cricket Association Team Selection"
         actions={
           <div className="flex items-center gap-2">
             <button
@@ -126,7 +126,7 @@ export default function SelectionScreen() {
               className="inline-flex items-center gap-1.5 rounded-lg bg-cobalt px-3.5 py-2 text-xs font-semibold text-white shadow-xs transition hover:bg-cobalt-700"
             >
               <Save className="w-3.5 h-3.5" />
-              <span>Save Squad ({shortlistedIds.length})</span>
+              <span>Save Team ({shortlistedIds.length})</span>
             </button>
           </div>
         }
@@ -135,15 +135,15 @@ export default function SelectionScreen() {
       {/* Selection Metrics Overview */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
         <StatCard
-          label="Total Trial Pool"
+          label="Total Players"
           value={filteredPlayers.length}
           subtext={`In ${selectedCategory}`}
           icon={Users}
         />
         <StatCard
-          label="Selected for Squad"
+          label="Selected Players"
           value={shortlistedIds.length}
-          subtext="Target squad: 15-18"
+          subtext="Target team: 15-18"
           tone={shortlistedIds.length >= 15 && shortlistedIds.length <= 18 ? 'success' : 'primary'}
           icon={CheckCircle2}
         />
@@ -163,7 +163,7 @@ export default function SelectionScreen() {
         />
       </div>
 
-      {/* Selected Squad Strip if any selected */}
+      {/* Selected Team Strip if any selected */}
       {shortlistedIds.length > 0 && (
         <div className="jdca-card p-4.5 bg-emerald-50 border-emerald-200">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
@@ -171,7 +171,7 @@ export default function SelectionScreen() {
               <div className="flex items-center gap-2">
                 <span className="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
                 <h3 className="text-sm font-bold text-ink">
-                  Shortlisted Squad ({shortlistedIds.length} Players)
+                  Selected Team ({shortlistedIds.length} Players)
                 </h3>
               </div>
               <div className="flex flex-wrap items-center gap-3 mt-1 text-xs text-gray-500">
@@ -191,7 +191,7 @@ export default function SelectionScreen() {
               className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-emerald-600 px-3.5 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-emerald-700"
             >
               <Save className="w-3.5 h-3.5" />
-              <span>Confirm & Lock Squad</span>
+              <span>Confirm & Save Team</span>
             </button>
           </div>
 
@@ -213,7 +213,7 @@ export default function SelectionScreen() {
                     alt={player.name}
                     className="w-11 h-11 rounded-full object-cover border-2 border-emerald-500 shadow-2xs"
                   />
-                  <span className="text-[11px] font-bold text-gray-900 truncate w-16 text-center mt-1">
+                  <span className="text-xs font-bold text-gray-900 truncate w-16 text-center mt-1">
                     {player.name ? player.name.split(' ')[0] : 'Player'}
                   </span>
                   <span className="text-[9px] text-gray-400 truncate max-w-[64px]">
@@ -288,14 +288,14 @@ export default function SelectionScreen() {
         </div>
       </div>
 
-      {/* Player Trials List Grid */}
+      {/* Player List Grid */}
       <div>
         {filteredPlayers.length === 0 ? (
           <div className="jdca-card p-12 text-center space-y-2">
             <ShieldAlert className="w-8 h-8 text-gray-300 mx-auto" />
             <h4 className="text-sm font-bold text-gray-700">No players found matching your criteria</h4>
             <p className="text-xs text-gray-400">
-              Try adjusting your category, district, or role filter to view trial candidates.
+              Try adjusting your category, district, or role filter to view players.
             </p>
           </div>
         ) : (
@@ -351,7 +351,7 @@ export default function SelectionScreen() {
                           <p className="text-xs text-gray-500 truncate mt-0.5">
                             {player.primaryRole || player.role || 'Player'} • {player.battingStyle || 'Right hand'}
                           </p>
-                          <div className="flex items-center gap-1 text-[11px] text-gray-400 mt-1">
+                          <div className="flex items-center gap-1 text-xs text-gray-400 mt-1">
                             <MapPin className="w-3 h-3 text-gray-400 shrink-0" />
                             <span className="truncate">{player.district || 'Jabalpur'}</span>
                           </div>
@@ -372,7 +372,7 @@ export default function SelectionScreen() {
                       className="grid grid-cols-4 gap-2 my-3.5 p-2.5 rounded-lg bg-gray-50/80 border border-gray-100 cursor-pointer text-center"
                     >
                       <div>
-                        <span className="text-[10px] uppercase font-bold text-gray-400 block">
+                        <span className="text-xs uppercase font-bold text-gray-400 block">
                           RUNS
                         </span>
                         <span className="text-xs font-bold text-gray-900">
@@ -381,7 +381,7 @@ export default function SelectionScreen() {
                       </div>
 
                       <div>
-                        <span className="text-[10px] uppercase font-bold text-gray-400 block">
+                        <span className="text-xs uppercase font-bold text-gray-400 block">
                           AVG
                         </span>
                         <span className="text-xs font-bold text-cobalt">
@@ -390,7 +390,7 @@ export default function SelectionScreen() {
                       </div>
 
                       <div>
-                        <span className="text-[10px] uppercase font-bold text-gray-400 block">
+                        <span className="text-xs uppercase font-bold text-gray-400 block">
                           SR
                         </span>
                         <span className="text-xs font-bold text-gray-900">
@@ -399,7 +399,7 @@ export default function SelectionScreen() {
                       </div>
 
                       <div>
-                        <span className="text-[10px] uppercase font-bold text-gray-400 block">
+                        <span className="text-xs uppercase font-bold text-gray-400 block">
                           HS
                         </span>
                         <span className="text-xs font-bold text-gray-900">
@@ -412,7 +412,7 @@ export default function SelectionScreen() {
                   {/* Bottom: Selection Action */}
                   <div className="pt-2 border-t border-gray-100 flex items-center justify-between">
                     <span className="text-xs font-semibold text-gray-700">
-                      {isShortlisted ? 'In Trial Squad' : 'Add to Squad'}
+                      {isShortlisted ? 'In Team' : 'Add to Team'}
                     </span>
 
                     <button

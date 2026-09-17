@@ -126,13 +126,13 @@ export default function Shortlist({
                       <span className="font-semibold text-sm text-slate-900 truncate">
                         {player.name}
                       </span>
-                      <span className={`text-[10px] font-semibold px-1.5 py-0.5 border rounded uppercase tracking-wide ${t.pill}`}>
+                      <span className={`text-xs font-semibold px-1.5 py-0.5 border rounded uppercase tracking-wide ${t.pill}`}>
                         {player.role === 'Wicket Keeper' ? 'WK' : player.role}
                       </span>
-                      <span className="text-[11px] font-medium px-2 py-0.5 bg-slate-100 text-slate-500 border border-slate-200 rounded">
+                      <span className="text-xs font-medium px-2 py-0.5 bg-slate-100 text-slate-500 border border-slate-200 rounded">
                         {player.district}
                       </span>
-                      <span className="text-[11px] font-medium px-2 py-0.5 bg-slate-100 text-slate-500 border border-slate-200 rounded">
+                      <span className="text-xs font-medium px-2 py-0.5 bg-slate-100 text-slate-500 border border-slate-200 rounded">
                         {player.ageGroup}
                       </span>
                     </div>
@@ -147,14 +147,14 @@ export default function Shortlist({
                 {/* STATS */}
                 <div className="flex items-center gap-3">
                   <div className={`${t.statBox} border px-2.5 py-1.5 rounded-lg text-center min-w-[56px]`}>
-                    <div className={`text-[10px] font-medium ${t.statLbl}`}>Recent Form</div>
+                    <div className={`text-xs font-medium ${t.statLbl}`}>Recent Form</div>
                     <div className={`text-xs font-semibold ${t.statVal} mt-0.5`}>
                       {player.recentFormString || '–'}
                     </div>
                   </div>
 
                   <div className={`${t.statBox} border px-2.5 py-1.5 rounded-lg text-center min-w-[52px]`}>
-                    <div className={`text-[10px] font-medium ${t.statLbl}`}>
+                    <div className={`text-xs font-medium ${t.statLbl}`}>
                       {isBowler ? 'Wickets' : 'Runs'}
                     </div>
                     <div className={`text-xs font-bold ${t.statVal} mt-0.5`}>
@@ -163,7 +163,7 @@ export default function Shortlist({
                   </div>
 
                   <div className={`hidden sm:block ${t.statBox} border px-2.5 py-1.5 rounded-lg text-center min-w-[52px]`}>
-                    <div className={`text-[10px] font-medium ${t.statLbl}`}>
+                    <div className={`text-xs font-medium ${t.statLbl}`}>
                       {isBowler ? 'Economy' : 'Avg'}
                     </div>
                     <div className={`text-xs font-semibold ${t.statVal} mt-0.5`}>
@@ -185,7 +185,7 @@ export default function Shortlist({
                     title={isInCompare ? 'Remove from Compare' : 'Add to Compare'}
                   >
                     <Scale className="w-3.5 h-3.5" />
-                    <span className="hidden lg:inline text-[11px]">
+                    <span className="hidden lg:inline text-xs">
                       {isInCompare ? 'Compared' : 'Compare'}
                     </span>
                   </button>

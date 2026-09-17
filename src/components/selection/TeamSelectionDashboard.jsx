@@ -1,224 +1,166 @@
-import React, { useState } from 'react';
-import {
-  Users,
-  Plus,
-  ArrowRight,
-  Shield,
-  Search,
+import React from 'react';
+import { 
+  ArrowLeft, Users, Bookmark, CheckCircle2, AlertTriangle, ShieldCheck, User
 } from 'lucide-react';
-import { TEAM_CATEGORIES } from './selectionData';
-import CreateTeamModal from './CreateTeamModal';
 
-export default function TeamSelectionDashboard({
-  teams,
-  allPlayers,
-  onSelectTeam,
-  onCreateTeam,
-}) {
-  const [categoryFilter, setCategoryFilter] = useState('All');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+export default function TeamSelectionDashboard({ team, allPlayers, onBack, onUpdateTeam, onSelectPlayer }) {
+  if (!team) return null;
 
-  const filteredTeams = teams.filter(team => {
-    if (categoryFilter !== 'All' && team.category !== categoryFilter && !team.name.includes(categoryFilter)) {
-      return false;
-    }
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
-      return team.name.toLowerCase().includes(q) || team.category.toLowerCase().includes(q) || team.season.includes(q);
-    }
-    return true;
+  const selectedPlayers = allPlayers.filter(p => team.selectedPlayerIds?.includes(p.id));
+  const consideredPlayers = allPlayers.filter(p => team.shortlistedPlayerIds?.includes(p.id) && !team.selectedPlayerIds?.includes(p.id));
+
+  // Role Breakdown
+  const counts = {
+    'Batter': 0,
+    'Bowler': 0,
+    'All-Rounder': 0,
+    'Wicket Keeper': 0
+  };
+
+  selectedPlayers.forEach(p => {
+    if (counts[p.role] !== undefined) counts[p.role]++;
   });
 
-  const TEAM_CARD_THEMES = [
-    { card: 'border-l-blue-500', header: 'bg-white', text: 'text-slate-900', stat: 'bg-blue-50/50 border-blue-100', btn: 'bg-white text-slate-700 border-slate-200 hover:border-blue-300 hover:text-blue-700', badge: 'bg-blue-50 text-blue-700 border-blue-200' },
-    { card: 'border-l-amber-500', header: 'bg-white', text: 'text-slate-900', stat: 'bg-amber-50/50 border-amber-100', btn: 'bg-white text-slate-700 border-slate-200 hover:border-amber-300 hover:text-amber-700', badge: 'bg-amber-50 text-amber-700 border-amber-200' },
-    { card: 'border-l-emerald-500', header: 'bg-white', text: 'text-slate-900', stat: 'bg-emerald-50/50 border-emerald-100', btn: 'bg-white text-slate-700 border-slate-200 hover:border-emerald-300 hover:text-emerald-700', badge: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
-    { card: 'border-l-purple-500', header: 'bg-white', text: 'text-slate-900', stat: 'bg-purple-50/50 border-purple-100', btn: 'bg-white text-slate-700 border-slate-200 hover:border-purple-300 hover:text-purple-700', badge: 'bg-purple-50 text-purple-700 border-purple-200' },
-    { card: 'border-l-rose-500', header: 'bg-white', text: 'text-slate-900', stat: 'bg-rose-50/50 border-rose-100', btn: 'bg-white text-slate-700 border-slate-200 hover:border-rose-300 hover:text-rose-700', badge: 'bg-rose-50 text-rose-700 border-rose-200' },
-    { card: 'border-l-cyan-500', header: 'bg-white', text: 'text-slate-900', stat: 'bg-cyan-50/50 border-cyan-100', btn: 'bg-white text-slate-700 border-slate-200 hover:border-cyan-300 hover:text-cyan-700', badge: 'bg-cyan-50 text-cyan-700 border-cyan-200' },
-  ];
+  // Balance Warnings
+  const warnings = [];
+  if (counts['Wicket Keeper'] === 0 && selectedPlayers.length > 5) {
+    warnings.push("Add at least 1 Wicket Keeper to the team.");
+  }
+  if (counts['Bowler'] < 3 && selectedPlayers.length > 8) {
+    warnings.push("Team contains fewer than 3 specialist bowlers.");
+  }
+  if (counts['Batter'] > 8) {
+    warnings.push("Team is heavily weighted toward pure batters.");
+  }
 
-  return (
-    <div className="flex-1 flex flex-col h-full bg-[#f8fafc] overflow-y-auto">
-      {/* PAGE HEADER */}
-      <div className="bg-white border-b border-slate-200/80 px-4 sm:px-8 py-7">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-5">
-          <div className="space-y-1.5">
-            <div className="flex items-center gap-2">
-              <span className="px-2.5 py-0.5 bg-blue-50 text-blue-700 border border-blue-100/80 text-xs font-semibold rounded-md">
-                Official Administration
-              </span>
-              <span className="text-xs text-slate-400 font-medium">Season 2026</span>
-            </div>
-            <h1 className="text-xl sm:text-2xl font-semibold text-slate-900 tracking-tight">
-              Player Selection & Team Management
-            </h1>
-            <p className="text-xs sm:text-sm text-slate-500 font-normal max-w-2xl leading-relaxed">
-              Manage official JDCA district cricket team selections across age categories. Evaluate player eligibility, review previous match performances, and organize balanced team rosters.
-            </p>
-          </div>
+  const isLocked = team.status === 'Locked';
 
-          <button
-            type="button"
-            onClick={() => setIsCreateModalOpen(true)}
-            className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-medium transition shadow-xs shrink-0 cursor-pointer"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Create Team Selection</span>
-          </button>
-        </div>
-      </div>
-
-      {/* FILTER BAR & SEARCH */}
-      <div className="px-4 sm:px-8 py-3.5 bg-white/60 border-b border-slate-200/70 backdrop-blur-xs">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-          {/* Category Filter Pills */}
-          <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0 no-scrollbar">
-            <button
-              onClick={() => setCategoryFilter('All')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition whitespace-nowrap cursor-pointer ${
-                categoryFilter === 'All'
-                  ? 'bg-blue-600 text-white shadow-xs'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200/80 hover:text-slate-900'
-              }`}
-            >
-              All Teams ({teams.length})
-            </button>
-            {TEAM_CATEGORIES.map(cat => (
-              <button
-                key={cat.id}
-                onClick={() => setCategoryFilter(cat.name)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition whitespace-nowrap cursor-pointer ${
-                  categoryFilter === cat.name
-                    ? 'bg-blue-600 text-white shadow-xs'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200/80 hover:text-slate-900'
-                }`}
-              >
-                {cat.name}
-              </button>
-            ))}
-          </div>
-
-          {/* Search Input */}
-          <div className="relative w-full sm:w-64">
-            <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
-            <input
-              type="text"
-              placeholder="Search team selection..."
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-3 py-1.5 text-xs bg-white border border-slate-200 rounded-lg outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600/20 text-slate-800 placeholder-slate-400 transition"
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* TEAMS GRID */}
-      <div className="p-4 sm:p-8 max-w-6xl mx-auto w-full">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {filteredTeams.map((team, idx) => {
-            const selectedCount = (team.selectedPlayerIds || []).length;
-            const shortlistedCount = (team.shortlistedPlayerIds || []).length;
-            const targetSize = team.targetSize || 15;
-            const t = TEAM_CARD_THEMES[idx % TEAM_CARD_THEMES.length];
-
-            return (
-              <div
-                key={team.id}
-                className={`rounded-xl border border-slate-200 border-l-4 ${t.card} bg-white shadow-sm hover:shadow-md transition-all flex flex-col justify-between group`}
-              >
-                {/* Header */}
-                <div className={`${t.header} p-4 pb-2 border-b border-slate-100`}>
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-1.5">
-                        <span className={`text-[10px] font-bold px-1.5 py-0.5 border rounded uppercase tracking-wide ${t.badge}`}>
-                          {team.season} • {team.category}
-                        </span>
-                        <span className="text-[11px] font-medium text-slate-500 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">
-                          {team.gender}
-                        </span>
-                      </div>
-                      <h2 className={`text-base font-semibold ${t.text} pt-0.5`}>
-                        {team.name}
-                      </h2>
-                    </div>
-
-                    <div className="w-9 h-9 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 shrink-0">
-                      <Shield className="w-4.5 h-4.5" />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Card Body */}
-                <div className="p-4 space-y-3 flex-1">
-                  {/* Stats Row */}
-                  <div className="grid grid-cols-2 gap-2.5">
-                    <div className={`${t.stat} border p-2.5 rounded-lg`}>
-                      <div className="text-[11px] font-medium text-slate-500">Selected</div>
-                      <div className="text-base font-semibold text-slate-900 mt-0.5 flex items-baseline gap-1">
-                        <span className={selectedCount > 0 ? 'text-emerald-700' : 'text-slate-900'}>{selectedCount}</span>
-                        <span className="text-xs font-normal text-slate-400">/ {targetSize} Target</span>
-                      </div>
-                    </div>
-
-                    <div className={`${t.stat} border p-2.5 rounded-lg`}>
-                      <div className="text-[11px] font-medium text-slate-500">Shortlisted</div>
-                      <div className="text-base font-semibold text-blue-700 mt-0.5">
-                        {shortlistedCount} <span className="text-xs font-normal text-slate-400">Players</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Roles Summary */}
-                  <div className="text-xs text-slate-500 space-y-1">
-                    <div className="flex items-center justify-between">
-                      <span className="text-slate-400">Captain:</span>
-                      <span className="font-medium text-slate-700">
-                        {team.roles?.captainId ? allPlayers.find(p => p.id === team.roles.captainId)?.name || 'Assigned' : 'Not Assigned'}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-slate-400">Wicketkeeper:</span>
-                      <span className="font-medium text-slate-700">
-                        {team.roles?.wicketkeeperId ? allPlayers.find(p => p.id === team.roles.wicketkeeperId)?.name || 'Assigned' : 'Not Assigned'}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Open Action */}
-                <div className="px-4 pb-4">
-                  <button
-                    type="button"
-                    onClick={() => onSelectTeam(team.id)}
-                    className={`w-full py-2 px-3.5 border ${t.btn} rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1.5 cursor-pointer`}
-                  >
-                    <span>Open Selection Workspace</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {filteredTeams.length === 0 && (
-          <div className="bg-white rounded-xl border border-slate-200/80 p-12 text-center space-y-2">
-            <Shield className="w-10 h-10 text-slate-300 mx-auto" />
-            <h3 className="text-sm font-semibold text-slate-800">No Team Selections Found</h3>
-            <p className="text-xs text-slate-500">Create a new team selection process using the button above.</p>
-          </div>
+  const PlayerRow = ({ player, isSelected }) => (
+    <div 
+      onClick={() => onSelectPlayer(player.id)}
+      className="flex items-center p-3 bg-white border border-slate-200 rounded-md mb-2 cursor-pointer hover:border-blue-300 hover:shadow-sm transition-all"
+    >
+      <div className="w-10 h-10 rounded bg-slate-100 overflow-hidden shrink-0 flex items-center justify-center mr-3 border border-slate-200">
+        {player.avatar ? (
+          <img src={player.avatar} alt={player.name} className="w-full h-full object-cover" />
+        ) : (
+          <User className="w-5 h-5 text-slate-400" />
         )}
       </div>
+      <div className="flex-1 min-w-0">
+        <h4 className="text-sm font-bold text-slate-900">{player.name}</h4>
+        <div className="text-xs text-slate-500 font-medium">
+          {player.district} · {player.role}
+        </div>
+      </div>
+      <div className="text-right">
+        {isSelected ? (
+          <button 
+            disabled={isLocked}
+            onClick={(e) => {
+              e.stopPropagation();
+              onUpdateTeam({ ...team, selectedPlayerIds: team.selectedPlayerIds.filter(id => id !== player.id) });
+            }}
+            className="text-xs font-bold uppercase tracking-wider text-rose-600 bg-rose-50 px-2 py-1 rounded border border-rose-100 hover:bg-rose-100 disabled:opacity-50"
+          >
+            Remove
+          </button>
+        ) : (
+          <button 
+            disabled={isLocked}
+            onClick={(e) => {
+              e.stopPropagation();
+              onUpdateTeam({ ...team, selectedPlayerIds: [...(team.selectedPlayerIds || []), player.id] });
+            }}
+            className="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2 py-1 rounded border border-emerald-200 hover:bg-emerald-100 disabled:opacity-50"
+          >
+            Select
+          </button>
+        )}
+      </div>
+    </div>
+  );
 
-      {/* CREATE TEAM MODAL */}
-      <CreateTeamModal
-        isOpen={isCreateModalOpen}
-        onClose={() => setIsCreateModalOpen(false)}
-        onCreateTeam={onCreateTeam}
-      />
+  return (
+    <div className="flex flex-col h-full bg-[#f8fafc] font-sans">
+      <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6">
+           
+           {/* LEFT: TEAM OVERVIEW */}
+           <div className="lg:col-span-8 flex flex-col gap-6">
+             
+             {/* Team Balance */}
+             <div className="bg-white border border-slate-200 rounded-lg p-5 shadow-sm">
+                <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
+                  <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                    <ShieldCheck className="w-4 h-4 text-blue-600" /> Team Composition
+                  </h3>
+                  <div className="text-sm font-bold text-slate-700 bg-slate-100 px-3 py-1 rounded">
+                    {selectedPlayers.length} / {team.targetSize} Selected
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-4 gap-3 mb-4">
+                   {['Batter', 'All-Rounder', 'Bowler', 'Wicket Keeper'].map(role => (
+                     <div key={role} className="flex flex-col p-3 bg-slate-50 border border-slate-100 rounded text-center">
+                       <span className="text-2xl font-bold text-slate-800">{counts[role] || 0}</span>
+                       <span className="text-xs font-bold uppercase tracking-wider text-slate-500 mt-1">{role.replace('Wicket Keeper', 'WK')}</span>
+                     </div>
+                   ))}
+                </div>
+
+                {warnings.length > 0 && (
+                  <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-slate-100">
+                    {warnings.map((w, i) => (
+                      <div key={i} className="flex items-start gap-2 text-xs font-semibold text-amber-700 bg-amber-50 p-2 rounded border border-amber-100">
+                        <AlertTriangle className="w-4 h-4 shrink-0" />
+                        <span>{w}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+             </div>
+
+             {/* Selected List */}
+             <div className="bg-white border border-slate-200 rounded-lg p-5 shadow-sm">
+                <h3 className="text-sm font-bold text-emerald-800 uppercase tracking-wider mb-4 flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4" /> Selected Team
+                </h3>
+                {selectedPlayers.length === 0 ? (
+                  <div className="text-center p-8 text-slate-400 bg-slate-50 rounded border border-slate-100 border-dashed">
+                    <Users className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                    <p className="text-sm font-medium">No players selected yet.</p>
+                  </div>
+                ) : (
+                  <div className="flex flex-col">
+                    {selectedPlayers.map(p => <PlayerRow key={p.id} player={p} isSelected={true} />)}
+                  </div>
+                )}
+             </div>
+
+           </div>
+
+           {/* RIGHT: CONSIDERED POOL */}
+           <div className="lg:col-span-4 flex flex-col">
+             <div className="bg-white border border-slate-200 rounded-lg p-5 shadow-sm h-full flex flex-col">
+               <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider mb-4 flex items-center gap-2">
+                  <Bookmark className="w-4 h-4 text-amber-500" /> Considered Players
+                </h3>
+                {consideredPlayers.length === 0 ? (
+                  <div className="flex-1 flex flex-col items-center justify-center p-6 text-slate-400 bg-slate-50 rounded border border-slate-100 border-dashed">
+                    <Bookmark className="w-8 h-8 mb-2 opacity-50" />
+                    <p className="text-sm font-medium text-center">Bookmark players from the categories to consider them here.</p>
+                  </div>
+                ) : (
+                  <div className="flex-1 overflow-y-auto">
+                    {consideredPlayers.map(p => <PlayerRow key={p.id} player={p} isSelected={false} />)}
+                  </div>
+                )}
+             </div>
+           </div>
+
+        </div>
+      </div>
     </div>
   );
 }
