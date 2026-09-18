@@ -1,9 +1,14 @@
 import React from 'react';
 import { Search, X } from 'lucide-react';
+import { motion } from 'motion/react';
 import { BATTING_STYLE_OPTIONS, BOWLING_STYLE_OPTIONS, ROLE_FILTER_OPTIONS } from './selectionData';
+import { useHaptics } from '../../hooks/useHaptics';
 
 export default function SelectionFilters({ filters, setFilters, searchQuery, setSearchQuery }) {
+  const haptics = useHaptics();
+
   const updateFilter = (key, value) => {
+    haptics.light();
     setFilters(prev => ({ ...prev, [key]: value }));
   };
 
@@ -11,7 +16,8 @@ export default function SelectionFilters({ filters, setFilters, searchQuery, set
     <div className="mb-5">
       <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">{title}</h3>
       <div className="flex flex-wrap gap-1.5">
-        <button
+        <motion.button
+          whileTap={{ scale: 0.95 }}
           onClick={() => updateFilter(filterKey, 'All')}
           className={`px-2.5 py-1 text-xs font-medium rounded transition-colors ${
             activeValue === 'All'
@@ -20,10 +26,11 @@ export default function SelectionFilters({ filters, setFilters, searchQuery, set
           }`}
         >
           All
-        </button>
+        </motion.button>
         {options.map(opt => (
-          <button
+          <motion.button
             key={opt}
+            whileTap={{ scale: 0.95 }}
             onClick={() => updateFilter(filterKey, opt)}
             className={`px-2.5 py-1 text-xs font-medium rounded transition-colors ${
               activeValue === opt
@@ -32,7 +39,7 @@ export default function SelectionFilters({ filters, setFilters, searchQuery, set
             }`}
           >
             {opt}
-          </button>
+          </motion.button>
         ))}
       </div>
     </div>
@@ -88,8 +95,10 @@ export default function SelectionFilters({ filters, setFilters, searchQuery, set
       />
 
       <div className="mt-4 pt-4 border-t border-slate-100">
-        <button 
+        <motion.button 
+          whileTap={{ scale: 0.98 }}
           onClick={() => {
+            haptics.medium();
             setSearchQuery('');
             setFilters({
               role: 'All', gender: 'All', battingStyle: 'All', bowlingStyle: 'All', status: 'All'
@@ -98,7 +107,7 @@ export default function SelectionFilters({ filters, setFilters, searchQuery, set
           className="w-full py-2 text-xs font-semibold text-slate-500 hover:text-slate-800 transition-colors"
         >
           Clear All Filters
-        </button>
+        </motion.button>
       </div>
     </div>
   );

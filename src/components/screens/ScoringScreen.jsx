@@ -261,7 +261,9 @@ export default function ScoringScreen() {
                 key={value} 
                 whileTap={{ scale: 0.96 }}
                 onClick={() => {
-                  haptics.light();
+                  if (value === 0) haptics.light();
+                  else if (value === 4 || value === 6) haptics.success();
+                  else haptics.medium();
                   doRun(value);
                 }} 
                 className={`h-16 rounded-[12px] flex items-center justify-center text-[24px] font-black shadow-sm transition-colors border ${
