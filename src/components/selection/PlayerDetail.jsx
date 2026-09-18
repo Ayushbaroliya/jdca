@@ -1,7 +1,9 @@
 import React from 'react';
 import { 
-  X, User, Calendar, MapPin, Shield, CheckCircle2, Bookmark, Activity, History, ChevronRight, Trophy
+  User, CheckCircle2, Bookmark, X, Star, Calendar, 
+  MapPin, Shield, Activity, Award
 } from 'lucide-react';
+import CloudinaryAvatar from '../ui/CloudinaryAvatar';
 
 export default function PlayerDetail({ 
   player, team, onClose, onToggleConsider, onToggleSelect, isConsidered, isSelected 
@@ -63,11 +65,7 @@ export default function PlayerDetail({
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
              <div className="w-14 h-14 rounded-md bg-white border border-slate-200 shadow-sm flex items-center justify-center overflow-hidden">
-                {player.avatar ? (
-                  <img src={player.avatar} alt={player.name} className="w-full h-full object-cover" />
-                ) : (
-                  <User className="w-6 h-6 text-slate-400" />
-                )}
+                  <CloudinaryAvatar src={player.avatar} alt={player.name} className="w-full h-full object-cover" />
              </div>
              <div>
                 <h2 className="text-lg font-bold text-slate-900 leading-tight">{player.name}</h2>

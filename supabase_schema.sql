@@ -163,21 +163,6 @@ create table if not exists profiles (
   updated_at timestamptz not null default now()
 );
 
--- Selector Scope Mapping Tables
-create table if not exists selector_age_access (
-  selector_id uuid references profiles(id) on delete cascade,
-  max_age_category_id uuid references age_categories(id) on delete cascade,
-  created_at timestamptz not null default now(),
-  primary key (selector_id)
-);
-
-create table if not exists selector_district_access (
-  selector_id uuid references profiles(id) on delete cascade,
-  district_id uuid references districts(id) on delete cascade,
-  created_at timestamptz not null default now(),
-  primary key (selector_id, district_id)
-);
-
 -- ============================================================
 -- AGE CATEGORIES
 -- ============================================================
@@ -195,6 +180,21 @@ create table if not exists age_categories (
   constraint age_range_valid check (
     minimum_age is null or maximum_age is null or minimum_age <= maximum_age
   )
+);
+
+-- Selector Scope Mapping Tables
+create table if not exists selector_age_access (
+  selector_id uuid references profiles(id) on delete cascade,
+  max_age_category_id uuid references age_categories(id) on delete cascade,
+  created_at timestamptz not null default now(),
+  primary key (selector_id)
+);
+
+create table if not exists selector_district_access (
+  selector_id uuid references profiles(id) on delete cascade,
+  district_id uuid references districts(id) on delete cascade,
+  created_at timestamptz not null default now(),
+  primary key (selector_id, district_id)
 );
 
 -- ============================================================
@@ -1489,3 +1489,4 @@ values
   ('Senior','SENIOR', 6, 23, null, 'Senior/open eligibility according to competition rules')
 on conflict (short_name) do nothing;
 
+commit;

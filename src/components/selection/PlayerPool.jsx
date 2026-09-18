@@ -8,6 +8,7 @@ import {
   UserCheck,
   AlertTriangle,
 } from 'lucide-react';
+import CloudinaryAvatar from '../ui/CloudinaryAvatar';
 
 /**
  * JDCA ROLE PALETTE
@@ -114,7 +115,7 @@ export default function PlayerPool({
             {/* 1. HEADER: AVATAR + NAME + STATUS */}
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-center gap-3 min-w-0">
-                <img
+                <CloudinaryAvatar
                   src={player.avatar}
                   alt={player.name}
                   className="w-11 h-11 rounded-lg object-cover border border-slate-200 shrink-0"

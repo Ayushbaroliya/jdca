@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { ArrowLeft, CheckCircle2, UserPlus, Camera, MapPin, Activity } from 'lucide-react';
+import { ArrowLeft, UserPlus, CheckCircle2, Shield, Calendar, MapPin, Activity, Award, Camera } from 'lucide-react';
+import CloudinaryAvatar from '../ui/CloudinaryAvatar';
 import { useCricket } from '../../context/CricketContext';
 import { PlayerRegistrationSchema } from '../../engine/validationSchemas';
 
@@ -29,6 +30,36 @@ export default function PlayerRegistrationScreen() {
     'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&auto=format&fit=crop&q=80',
     'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=300&auto=format&fit=crop&q=80'
   ];
+
+  const [isUploading, setIsUploading] = useState(false);
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', 'jdcaunsignedupload');
+
+    try {
+      const res = await fetch('https://api.cloudinary.com/v1_1/gglzv8pn/image/upload', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await res.json();
+      if (data.secure_url) {
+        setAvatar(data.secure_url);
+      } else if (data.error) {
+        alert(data.error.message || 'Failed to upload image.');
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      alert('Failed to upload image. Please try again.');
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -88,16 +119,21 @@ export default function PlayerRegistrationScreen() {
             <h2 className="text-[12px] font-black uppercase tracking-widest text-[#596579] mb-4 flex items-center gap-1.5"><Camera size={14}/> Identity</h2>
             
             <div className="flex flex-col items-center mb-6">
-              <div className="relative mb-3">
-                <img src={avatar} alt="Preview" className="w-24 h-24 rounded-full object-cover border-[3px] border-white shadow-md" />
+              <label className="relative mb-3 cursor-pointer group block">
+                <CloudinaryAvatar src={avatar} alt="Preview" className={`w-24 h-24 rounded-full object-cover border-[3px] border-white shadow-md transition ${isUploading ? 'opacity-50' : 'group-hover:opacity-80'}`} />
                 <div className="absolute bottom-0 right-0 w-7 h-7 bg-[#2457D6] rounded-full flex items-center justify-center text-white border-2 border-white shadow-sm">
-                  <Camera size={12} />
+                  {isUploading ? (
+                    <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <Camera size={12} />
+                  )}
                 </div>
-              </div>
+                <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} disabled={isUploading} />
+              </label>
               <div className="flex gap-2">
                 {avatarPresets.map((preset, idx) => (
                   <button key={idx} type="button" onClick={() => setAvatar(preset)} className={`w-8 h-8 rounded-full border-2 ${avatar === preset ? 'border-[#2457D6]' : 'border-transparent opacity-50'}`}>
-                    <img src={preset} alt="" className="w-full h-full rounded-full object-cover" />
+                    <CloudinaryAvatar src={preset} alt="" className="w-full h-full rounded-full object-cover" />
                   </button>
                 ))}
               </div>

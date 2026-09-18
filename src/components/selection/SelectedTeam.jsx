@@ -9,6 +9,7 @@ import {
   ChevronRight,
   UserX,
 } from 'lucide-react';
+import CloudinaryAvatar from '../ui/CloudinaryAvatar';
 
 export default function SelectedTeam({
   team,
@@ -294,7 +295,7 @@ function PlayerGroup({ title, players, teamRoles, onSelect, onRemove }) {
               className={`p-3 flex items-center justify-between hover:bg-slate-50 transition cursor-pointer ${t.accent}`}
             >
               <div className="flex items-center gap-3 min-w-0 flex-1">
-                <img src={p.avatar} alt={p.name} className="w-10 h-10 rounded-lg object-cover border border-slate-100 shrink-0" />
+                <CloudinaryAvatar src={p.avatar} alt={p.name} className="w-10 h-10 rounded-lg object-cover border border-slate-100 shrink-0" />
                 <div className="min-w-0 flex-1 space-y-0.5">
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="font-semibold text-sm text-slate-900">{p.name}</span>

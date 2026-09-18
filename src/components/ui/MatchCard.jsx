@@ -1,5 +1,6 @@
 import React from 'react';
 import { CalendarDays, ArrowRight, MapPin } from 'lucide-react';
+import { CloudinaryAvatar } from './CloudinaryAvatar';
 
 export const MatchCard = ({ match, onClick }) => {
   const isLive = match.status === 'LIVE' || match.status === 'IN_PROGRESS';
@@ -13,7 +14,7 @@ export const MatchCard = ({ match, onClick }) => {
 
   // Image placeholders
   const bannerImage = match.bannerImage || "/imageformatchescard.png";
-  const playerAvatar = match.topPerformer?.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(topPerformer.name)}&background=random&color=fff&bold=true`;
+  const playerAvatar = match.topPerformer?.image;
 
   return (
     <div 
@@ -106,7 +107,7 @@ export const MatchCard = ({ match, onClick }) => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {/* Man of the Match */}
                 <div className="flex items-center gap-3 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
-                    <img src={playerAvatar} alt={topPerformer.name} className="w-10 h-10 rounded-full object-cover border border-slate-200 shadow-sm" />
+                    <CloudinaryAvatar src={playerAvatar} alt={topPerformer.name} className="w-10 h-10 rounded-full object-cover border border-slate-200 shadow-sm shrink-0" />
                     <div className="flex flex-col flex-1">
                        <span className="text-[9px] text-orange-500 font-bold uppercase tracking-wider flex items-center gap-1">🏆 Player of the Match</span>
                        <span className="text-xs font-black text-slate-800">{topPerformer.name}</span>

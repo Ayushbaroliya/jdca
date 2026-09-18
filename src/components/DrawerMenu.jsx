@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  X, Home, Calendar, Trophy, Users, Clipboard, Radio, Settings, LogOut, Shield, Megaphone
+  X, Home, Calendar, Trophy, Users, Clipboard, Radio, Settings, LogOut, Shield, Megaphone, Moon, Sun
 } from 'lucide-react';
 import { useCricket } from '../context/CricketContext';
 import { RoleBadge } from './ui/Badge';
@@ -31,7 +31,7 @@ const ACTIVE_MAP = {
 };
 
 export default function DrawerMenu() {
-  const { drawerOpen, setDrawerOpen, navigateTo, currentScreen, userRole, userEmail, setIsAuthenticated } = useCricket();
+  const { drawerOpen, setDrawerOpen, navigateTo, currentScreen, userRole, userEmail, setIsAuthenticated, isDarkMode, setIsDarkMode } = useCricket();
 
   const activeId = ACTIVE_MAP[currentScreen] || currentScreen;
 
@@ -145,14 +145,23 @@ export default function DrawerMenu() {
                 </div>
                 <RoleBadge role={userRole} />
               </div>
-              <button
-                onClick={handleLogout}
-                className="flex items-center gap-3 px-3 py-2.5 w-full text-[#8a99b0] hover:text-white hover:bg-white/5 rounded-xl transition-colors"
-                id="drawer-logout-btn"
-              >
-                <LogOut size={16} strokeWidth={2} />
-                <span className="font-medium" style={{ fontSize: 14 }}>Sign Out</span>
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setIsDarkMode(!isDarkMode)}
+                  className="flex flex-1 items-center justify-center gap-2 px-3 py-2.5 text-[#8a99b0] hover:text-white hover:bg-white/5 rounded-xl transition-colors"
+                >
+                  {isDarkMode ? <Sun size={16} strokeWidth={2} /> : <Moon size={16} strokeWidth={2} />}
+                  <span className="font-medium" style={{ fontSize: 14 }}>{isDarkMode ? 'Light' : 'Dark'}</span>
+                </button>
+                <button
+                  onClick={handleLogout}
+                  className="flex flex-1 items-center justify-center gap-2 px-3 py-2.5 text-[#8a99b0] hover:text-white hover:bg-white/5 rounded-xl transition-colors"
+                  id="drawer-logout-btn"
+                >
+                  <LogOut size={16} strokeWidth={2} />
+                  <span className="font-medium" style={{ fontSize: 14 }}>Sign Out</span>
+                </button>
+              </div>
             </div>
           </motion.div>
         </div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { User, CheckCircle2, Bookmark } from 'lucide-react';
+import CloudinaryAvatar from '../ui/CloudinaryAvatar';
 
 export default function PlayerList({ players, activeTeam, selectedPlayerId, onSelectPlayer, onToggleConsider, onToggleSelect }) {
   
@@ -36,11 +37,7 @@ export default function PlayerList({ players, activeTeam, selectedPlayerId, onSe
           >
             {/* Avatar */}
             <div className="w-10 h-10 rounded bg-slate-100 border border-slate-200 overflow-hidden shrink-0 flex items-center justify-center mr-3">
-              {p.avatar ? (
-                <img src={p.avatar} alt={p.name} className="w-full h-full object-cover" />
-              ) : (
-                <User className="w-5 h-5 text-slate-400" />
-              )}
+              <CloudinaryAvatar src={p.avatar} alt={p.name} className="w-full h-full object-cover" />
             </div>
 
             {/* Info */}

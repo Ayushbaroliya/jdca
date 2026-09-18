@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import CloudinaryAvatar from '../ui/CloudinaryAvatar';
 import { 
   Shield, 
   Users, 
@@ -417,7 +418,7 @@ export default function TeamsScreen() {
                         className="group relative cursor-pointer flex flex-col items-center shrink-0"
                         title={`${player.name} (${player.role} - ${player.district})`}
                       >
-                        <img
+                        <CloudinaryAvatar
                           src={player.avatar}
                           alt={player.name}
                           className="w-8 h-8 rounded-full object-cover border border-slate-200 group-hover:border-blue-600 transition"
@@ -658,7 +659,7 @@ export default function TeamsScreen() {
                               </td>
                               <td className="py-2.5 px-3">
                                 <div className="flex items-center gap-2.5">
-                                  <img
+                                  <CloudinaryAvatar
                                     src={player.avatar}
                                     alt={player.name}
                                     className="w-7 h-7 rounded-full object-cover border border-slate-200 shrink-0"

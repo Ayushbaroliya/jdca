@@ -22,13 +22,14 @@ import {
   ChevronDown,
   ChevronUp
 } from 'lucide-react';
-import confetti from 'canvas-confetti';
-import { motion, AnimatePresence } from 'motion/react';
 import { 
   normalizeSelectionPlayer, 
   INITIAL_OFFICIAL_TEAMS,
   getAvailableDistricts
 } from './selectionData';
+import CloudinaryAvatar from '../ui/CloudinaryAvatar';
+import confetti from 'canvas-confetti';
+import { motion, AnimatePresence } from 'motion/react';
 
 const ROLE_BADGES = {
   'Batter': { bg: 'bg-amber-50', text: 'text-amber-800', border: 'border-amber-200' },
@@ -523,8 +524,8 @@ export default function SelectionWorkspace() {
                     {/* Player Info */}
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex items-center gap-3 min-w-0">
-                        <img
-                          src={player.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120'}
+                        <CloudinaryAvatar
+                          src={player.avatar}
                           alt={player.name}
                           className="w-11 h-11 rounded-xl object-cover border border-slate-200 shrink-0"
                         />
@@ -716,7 +717,7 @@ export default function SelectionWorkspace() {
                         className="p-3 rounded-xl border border-slate-200 bg-white flex items-center justify-between gap-3 shadow-2xs"
                       >
                         <div className="flex items-center gap-2.5 min-w-0">
-                          <img
+                          <CloudinaryAvatar
                             src={player.avatar}
                             alt={player.name}
                             className="w-9 h-9 rounded-xl object-cover border border-slate-200 shrink-0"
@@ -954,7 +955,7 @@ export default function SelectionWorkspace() {
             >
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
-                  <img
+                  <CloudinaryAvatar
                     src={playerDetails.avatar}
                     alt={playerDetails.name}
                     className="w-12 h-12 rounded-xl object-cover border border-slate-200"

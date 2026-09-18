@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
+import CloudinaryAvatar from '../ui/CloudinaryAvatar';
 import { Search, ChevronRight, UserPlus, Filter, User } from 'lucide-react';
 import { useCricket } from '../../context/CricketContext';
 
@@ -25,8 +26,8 @@ const PlayerListItem = ({ player, onClick }) => {
     >
       <div className="flex items-center gap-3.5 min-w-0">
         <div className="relative shrink-0">
-          <img
-            src={player.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80'}
+          <CloudinaryAvatar
+            src={player.avatar}
             alt={player.name}
             className="w-11 h-11 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-white shadow-md ring-2 ring-blue-500/20"
           />

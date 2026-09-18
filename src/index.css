@@ -556,8 +556,8 @@
   --jdca-muted: #a1a1aa;
 }
 
-html.dark, html.dark body, html.dark main {
-  background-color: var(--jdca-cloud) !important;
+html.dark, html.dark body, html.dark main, html.dark #root {
+  background: var(--jdca-cloud) !important;
   color: var(--jdca-ink) !important;
 }
 
@@ -605,6 +605,56 @@ html.dark .bg-slate-50, html.dark .bg-slate-100 {
 
 html.dark .border-slate-200, html.dark .border-slate-100 {
   border-color: #27272a !important;
+}
+
+html.dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]),
+html.dark .divide-slate-200 > :not([hidden]) ~ :not([hidden]) {
+  border-color: #27272a !important;
+}
+
+html.dark .jdca-input, html.dark .jdca-select {
+  background-color: #121214 !important;
+  border-color: #27272a !important;
+  color: #fafafa !important;
+}
+
+html.dark .jdca-input:focus, html.dark .jdca-select:focus {
+  border-color: #60a5fa !important;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.15) !important;
+}
+
+html.dark .jdca-label {
+  color: #a1a1aa !important;
+}
+
+html.dark .btn-secondary {
+  background-color: #18181b !important;
+  border-color: #27272a !important;
+  color: #fafafa !important;
+}
+
+html.dark .btn-secondary:hover {
+  background-color: #27272a !important;
+}
+
+html.dark .bg-blue-50\/40, html.dark .bg-blue-50 {
+  background-color: rgba(30, 58, 138, 0.3) !important;
+}
+
+html.dark .border-blue-100 {
+  border-color: rgba(30, 58, 138, 0.5) !important;
+}
+
+html.dark .page-header {
+  border-bottom-color: #27272a !important;
+}
+
+html.dark .page-tab {
+  color: #a1a1aa !important;
+}
+
+html.dark .page-tab[aria-selected="true"] {
+  color: #fafafa !important;
 }
 
 body {
