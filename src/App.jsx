@@ -45,9 +45,21 @@ function RootRedirect() {
 }
 
 function MainApp() {
-  const { currentScreen } = useCricket();
+  const { currentScreen, isAppLoading } = useCricket();
   const location = useLocation();
   const isAuth = currentScreen === 'welcome';
+
+  if (isAppLoading) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-[#F7F8F4] text-slate-900">
+        <div className="w-20 h-20 mb-6 bg-slate-900 rounded-2xl flex items-center justify-center shadow-lg animate-pulse">
+          <img src="/jdca-logo.png" alt="JDCA Logo" className="w-12 h-12 object-contain filter invert" />
+        </div>
+        <h2 className="text-xl font-black uppercase tracking-widest text-slate-800">JDCA</h2>
+        <p className="text-sm font-semibold text-slate-400 mt-2">Loading Live Data...</p>
+      </div>
+    );
+  }
 
   return (
     <div

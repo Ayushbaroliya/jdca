@@ -10,18 +10,7 @@ import {
   canBowlerBowlNextOver,
   MATCH_STATES,
 } from '../engine/cricketStateMachine';
-import {
-  INITIAL_PLAYERS,
-  INITIAL_MATCHES,
-  OFFICIALS,
-  INITIAL_SCORECARD,
-  FIELD_DIRECTIONS,
-  TOURNAMENTS,
-  DISTRICT_STATS,
-  SELECTION_HISTORY,
-  ANNOUNCEMENTS,
-  POINTS_TABLE,
-} from '../data/mockData';
+import { INITIAL_SCORECARD, FIELD_DIRECTIONS } from '../data/constants';
 
 const CricketContext = createContext();
 
@@ -55,6 +44,9 @@ export function CricketProvider({ children }) {
     'access-control': 'administration',
   };
   const activeTab = activeTabMap[currentScreen] || 'home';
+
+  // Application Loading State
+  const [isAppLoading, setIsAppLoading] = useState(true);
 
   // Authentication State
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -118,13 +110,13 @@ export function CricketProvider({ children }) {
   });
 
   // Players & Scouting
-  const [players, setPlayers] = useState(INITIAL_PLAYERS);
-  const [selectedPlayer, setSelectedPlayer] = useState(INITIAL_PLAYERS[0]); // default Rohan Sharma
-  const [shortlistedIds, setShortlistedIds] = useState(['rohan-sharma-u13']);
+  const [players, setPlayers] = useState([]);
+  const [selectedPlayer, setSelectedPlayer] = useState(null);
+  const [shortlistedIds, setShortlistedIds] = useState([]);
 
   // Matches State
-  const [matches, setMatches] = useState(INITIAL_MATCHES);
-  const [activeMatchId, setActiveMatchId] = useState('match-live-1');
+  const [matches, setMatches] = useState([]);
+  const [activeMatchId, setActiveMatchId] = useState(null);
 
   // Offline-First & Realtime Data Sync
   useEffect(() => {
@@ -137,12 +129,31 @@ export function CricketProvider({ children }) {
         // 1. Load from Dexie (Offline First)
         let localMatches = await db.matches.toArray();
         if (localMatches.length === 0) {
-          // Seed the database if empty
-          console.log('[CricketContext] Seeding local Dexie database with INITIAL_MATCHES');
-          await db.matches.bulkAdd(INITIAL_MATCHES);
-          localMatches = INITIAL_MATCHES;
+          console.log('[CricketContext] No local matches, fetching from Supabase...');
+          if (supabase) {
+            const { data, error } = await supabase.from('matches').select('*');
+            if (!error && data) {
+              await db.matches.bulkAdd(data);
+              localMatches = data;
+            }
+          }
         }
         setMatches(localMatches);
+        if (localMatches.length > 0) setActiveMatchId(localMatches[0].id);
+
+        let localPlayers = await db.players.toArray();
+        if (localPlayers.length === 0 && supabase) {
+          console.log('[CricketContext] No local players, fetching from Supabase...');
+          const { data, error } = await supabase.from('players').select('*');
+          if (!error && data) {
+            await db.players.bulkAdd(data);
+            localPlayers = data;
+          }
+        }
+        setPlayers(localPlayers);
+        if (localPlayers.length > 0) setSelectedPlayer(localPlayers[0]);
+
+        setIsAppLoading(false);
 
         // 2. Setup Supabase Realtime Subscription
         if (supabase) {
@@ -178,6 +189,8 @@ export function CricketProvider({ children }) {
         }
       } catch (err) {
         console.error('[CricketContext] Sync error:', err);
+        setIsAppLoading(false);
+      }
       }
     };
 
@@ -293,7 +306,7 @@ export function CricketProvider({ children }) {
   const [dismissalModalOpen, setDismissalModalOpen] = useState(false);
   const [extrasModalOpen, setExtrasModalOpen] = useState(false);
   const [compareModalOpen, setCompareModalOpen] = useState(false);
-  const [comparePlayer2, setComparePlayer2] = useState(INITIAL_PLAYERS[1]);
+  const [comparePlayer2, setComparePlayer2] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   // Scorecard detailed tables
@@ -750,12 +763,13 @@ export function CricketProvider({ children }) {
         continueAfterOver,
         scoringFirstRunDone,
         markScoringFirstRunDone,
-        officials: OFFICIALS,
-        tournaments: TOURNAMENTS,
-        districtStats: DISTRICT_STATS,
-        selectionHistory: SELECTION_HISTORY,
-        announcements: ANNOUNCEMENTS,
-        pointsTable: POINTS_TABLE,
+        isAppLoading,
+        officials: [],
+        tournaments: [],
+        districtStats: [],
+        selectionHistory: [],
+        announcements: [],
+        pointsTable: [],
         representativeTeams,
         setRepresentativeTeams,
         activeSelectionTeam,
