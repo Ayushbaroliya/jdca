@@ -2,6 +2,18 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import './index.css';
+import { registerSW } from 'virtual:pwa-register';
+
+// Register PWA service worker and automatically force updates when a new deployment occurs
+const updateSW = registerSW({
+  onNeedRefresh() {
+    // Force the new service worker to take control and reload the page instantly
+    updateSW(true);
+  },
+  onOfflineReady() {
+    console.log('JDCA Application is ready to work offline.');
+  }
+});
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
