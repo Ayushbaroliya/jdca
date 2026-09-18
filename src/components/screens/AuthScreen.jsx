@@ -178,7 +178,6 @@ export default function AuthScreen() {
                 {ROLES.map((r) => {
                   const isSelected = selectedRole === r.id;
                   return (
-                  return (
                     <motion.div
                       key={r.id}
                       whileTap={{ scale: 0.98 }}
