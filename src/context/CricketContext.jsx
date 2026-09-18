@@ -126,6 +126,42 @@ export function CricketProvider({ children }) {
       try {
         const { db } = await import('../lib/db.js');
         
+        // 0. Setup Auth
+        let currentSession = null;
+        if (supabase) {
+          const { data: { session } } = await supabase.auth.getSession();
+          currentSession = session;
+          
+          if (session?.user) {
+            setUserEmail(session.user.email);
+            setIsAuthenticated(true);
+            // Fetch role from profiles
+            const { data: profile } = await supabase
+              .from('profiles')
+              .select('role')
+              .eq('id', session.user.id)
+              .single();
+            if (profile) setUserRole(profile.role);
+          }
+          
+          supabase.auth.onAuthStateChange(async (event, session) => {
+            if (session?.user) {
+              setUserEmail(session.user.email);
+              setIsAuthenticated(true);
+              const { data: profile } = await supabase
+                .from('profiles')
+                .select('role')
+                .eq('id', session.user.id)
+                .single();
+              if (profile) setUserRole(profile.role);
+            } else {
+              setIsAuthenticated(false);
+              setUserEmail('');
+              setUserRole('Player');
+            }
+          });
+        }
+
         // 1. Load from Dexie (Offline First)
         let localMatches = await db.matches.toArray();
         

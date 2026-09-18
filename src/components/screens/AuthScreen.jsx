@@ -4,61 +4,47 @@ import { Shield, CheckCircle2, Lock, UserCheck, ArrowRight, Award, Loader2 } fro
 import { motion, AnimatePresence } from 'motion/react';
 import { ROLE_HOME } from '../ProtectedRoute';
 import { useHaptics } from '../../hooks/useHaptics';
+import { supabase } from '../../lib/supabase';
 
-const ROLES = [
-  { id: 'SuperAdmin', label: 'Super Admin', desc: 'Apex Council & Full Access' },
-  { id: 'Admin', label: 'District Admin', desc: 'District Operations & Tournaments' },
-  { id: 'Scorer', label: 'Official Scorer', desc: 'Live Ball-by-Ball Match Console' },
-  { id: 'Selector', label: 'Selection Staff', desc: 'District Teams & Player Selection' },
-  { id: 'Player', label: 'Player / Viewer', desc: 'Public Live Scores & Profiles' },
-];
+// Removed ROLES since role is inferred from Supabase profiles
 
 export default function AuthScreen() {
   const { navigateTo, setUserEmail, setUserRole, setIsAuthenticated } = useCricket();
   const [emailInput, setEmailInput] = useState('');
   const [passwordInput, setPasswordInput] = useState('');
-  const [selectedRole, setSelectedRole] = useState('SuperAdmin');
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
   const haptics = useHaptics();
 
-  const completeLogin = (email, role) => {
-    setUserEmail(email || `${role.toLowerCase()}@jdca.mp.in`);
-    setUserRole(role);
-    setIsAuthenticated(true);
-    
-    // Navigate to role-appropriate home
-    if (role === 'Scorer') {
-      navigateTo('matches');
-    } else if (role === 'Selector') {
-      navigateTo('selection');
-    } else if (role === 'Player') {
-      navigateTo('home');
-    } else {
-      navigateTo('home');
-    }
-  };
-
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     haptics.light();
     
-    // Simulate wrong password check for demo purposes
-    if (passwordInput && passwordInput !== 'jdca2026') {
+    if (!emailInput || !passwordInput) {
       haptics.error();
-      setErrorMsg('Incorrect credentials. For demo, leave password blank or use "jdca2026".');
+      setErrorMsg('Please enter both email and password.');
       return;
     }
     
     setErrorMsg('');
     setIsLoading(true);
-    // Fake loading delay for branding motion graphic
-    setTimeout(() => {
+    
+    const { error } = await supabase.auth.signInWithPassword({
+      email: emailInput,
+      password: passwordInput,
+    });
+
+    if (error) {
       setIsLoading(false);
-      haptics.success();
-      completeLogin(emailInput, selectedRole);
-    }, 2200);
+      haptics.error();
+      setErrorMsg(error.message);
+      return;
+    }
+
+    // On success, CricketContext's onAuthStateChange handles navigation via App.jsx RootRedirect
+    haptics.success();
+    // No need to setIsLoading(false) because component unmounts upon redirect
   };
 
   return (
@@ -168,45 +154,7 @@ export default function AuthScreen() {
         >
           <form onSubmit={handleLogin} className="space-y-5">
             
-            {/* Role Selection Grid */}
-            <div>
-              <label className="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center justify-between mb-3">
-                <span>Select Official Role</span>
-              </label>
-
-              <div className="space-y-2.5">
-                {ROLES.map((r) => {
-                  const isSelected = selectedRole === r.id;
-                  return (
-                    <motion.div
-                      key={r.id}
-                      whileTap={{ scale: 0.98 }}
-                      onClick={() => { haptics.light(); setSelectedRole(r.id); }}
-                      className={`p-3.5 rounded-2xl border-2 cursor-pointer transition-colors flex items-center justify-between ${
-                        isSelected
-                          ? 'border-blue-600 bg-blue-50/80 shadow-md'
-                          : 'border-slate-100 bg-white hover:bg-slate-50 hover:border-slate-200'
-                      }`}
-                    >
-                      <div>
-                        <div className="font-bold text-sm text-slate-900 flex items-center gap-1.5">
-                          {r.label}
-                          {isSelected && (
-                            <CheckCircle2 size={15} className="text-blue-600" />
-                          )}
-                        </div>
-                        <div className="text-xs text-slate-500 mt-0.5 font-medium">{r.desc}</div>
-                      </div>
-                      <span className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors shrink-0 ${
-                        isSelected ? 'border-blue-600 bg-blue-600' : 'border-slate-300'
-                      }`}>
-                        {isSelected && <span className="w-2 h-2 rounded-full bg-white" />}
-                      </span>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            </div>
+            {/* Role Selection Removed */}
 
             {errorMsg && (
               <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="p-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-xs font-bold text-center">
@@ -220,7 +168,7 @@ export default function AuthScreen() {
               <div className="relative">
                 <input
                   type="text"
-                  placeholder={`${selectedRole.toLowerCase()}@jdca.mp.in`}
+                  placeholder="admin@jdca.mp.in"
                   value={emailInput}
                   onChange={(e) => setEmailInput(e.target.value)}
                   className="w-full bg-slate-50 border-2 border-slate-100 rounded-xl p-3.5 pl-10 text-sm font-semibold outline-none focus:border-blue-500 focus:bg-white transition-colors placeholder:text-slate-400"
@@ -256,12 +204,7 @@ export default function AuthScreen() {
             </motion.button>
           </form>
 
-          {/* Quick Demo Access Note */}
-          <div className="mt-6 pt-5 border-t border-slate-100 text-center">
-            <p className="text-xs text-slate-500 font-medium leading-relaxed">
-              Demo Mode enabled. You can click <strong className="text-slate-700">Secure Login</strong> directly to access the workspace as <strong className="text-slate-700">{selectedRole}</strong>.
-            </p>
-          </div>
+          {/* Removed Demo Note */}
         </motion.div>
 
         {/* Association Footer Credential */}
