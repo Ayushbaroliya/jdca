@@ -250,9 +250,9 @@ export default function ScoringScreen() {
               <h3 className="text-[16px] font-black text-slate-900">Record Ball</h3>
               <div className="text-[12px] font-medium text-slate-500">Tap the result of the delivery</div>
             </div>
-            <button onClick={undoLastAction} disabled={!deliveryLog.length} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-slate-200 text-slate-600 text-xs font-bold uppercase tracking-wider shadow-sm disabled:opacity-50 hover:bg-slate-50 active:bg-slate-100 transition-colors">
+            <motion.button whileTap={{ scale: 0.92 }} onClick={() => { haptics.medium(); undoLastAction(); }} disabled={!deliveryLog.length} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-slate-200 text-slate-600 text-xs font-bold uppercase tracking-wider shadow-sm disabled:opacity-50 hover:bg-slate-50 transition-colors">
               <RotateCcw size={14} /> Undo
-            </button>
+            </motion.button>
           </div>
 
           <div className="grid grid-cols-3 gap-2.5 mb-2.5">
@@ -342,13 +342,14 @@ export default function ScoringScreen() {
 
             <div className="flex gap-2 mt-6">
               <button className="flex-1 py-3 rounded-[10px] font-bold bg-white border border-slate-200 text-slate-700" onClick={() => setDismissalOpen(false)}>Cancel</button>
-              <button 
-                className="flex-1 py-3 rounded-[10px] font-bold bg-coral text-white disabled:opacity-50" 
-                onClick={submitWicket} 
+              <motion.button 
+                whileTap={{ scale: 0.96 }}
+                className="flex-1 py-3 rounded-[10px] font-bold bg-coral text-white disabled:opacity-50 shadow-md" 
+                onClick={() => { haptics.heavy(); submitWicket(); }} 
                 disabled={(selectedDismissal === 'Caught' || selectedDismissal === 'Run Out') && !fielder}
               >
                 Confirm Wicket
-              </button>
+              </motion.button>
             </div>
           </Modal>
         )}

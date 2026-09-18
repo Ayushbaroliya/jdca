@@ -3,6 +3,7 @@ import { useCricket } from '../../context/CricketContext';
 import { Shield, CheckCircle2, Lock, UserCheck, ArrowRight, Award, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ROLE_HOME } from '../ProtectedRoute';
+import { useHaptics } from '../../hooks/useHaptics';
 
 const ROLES = [
   { id: 'SuperAdmin', label: 'Super Admin', desc: 'Apex Council & Full Access' },
@@ -15,8 +16,12 @@ const ROLES = [
 export default function AuthScreen() {
   const { navigateTo, setUserEmail, setUserRole, setIsAuthenticated } = useCricket();
   const [emailInput, setEmailInput] = useState('');
+  const [passwordInput, setPasswordInput] = useState('');
   const [selectedRole, setSelectedRole] = useState('SuperAdmin');
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+
+  const haptics = useHaptics();
 
   const completeLogin = (email, role) => {
     setUserEmail(email || `${role.toLowerCase()}@jdca.mp.in`);
@@ -37,10 +42,21 @@ export default function AuthScreen() {
 
   const handleLogin = (e) => {
     e.preventDefault();
+    haptics.light();
+    
+    // Simulate wrong password check for demo purposes
+    if (passwordInput && passwordInput !== 'jdca2026') {
+      haptics.error();
+      setErrorMsg('Incorrect credentials. For demo, leave password blank or use "jdca2026".');
+      return;
+    }
+    
+    setErrorMsg('');
     setIsLoading(true);
     // Fake loading delay for branding motion graphic
     setTimeout(() => {
       setIsLoading(false);
+      haptics.success();
       completeLogin(emailInput, selectedRole);
     }, 2200);
   };
@@ -162,12 +178,14 @@ export default function AuthScreen() {
                 {ROLES.map((r) => {
                   const isSelected = selectedRole === r.id;
                   return (
-                    <div
+                  return (
+                    <motion.div
                       key={r.id}
-                      onClick={() => setSelectedRole(r.id)}
-                      className={`p-3.5 rounded-2xl border-2 cursor-pointer transition-all flex items-center justify-between ${
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => { haptics.light(); setSelectedRole(r.id); }}
+                      className={`p-3.5 rounded-2xl border-2 cursor-pointer transition-colors flex items-center justify-between ${
                         isSelected
-                          ? 'border-blue-600 bg-blue-50/80 shadow-md transform scale-[1.02]'
+                          ? 'border-blue-600 bg-blue-50/80 shadow-md'
                           : 'border-slate-100 bg-white hover:bg-slate-50 hover:border-slate-200'
                       }`}
                     >
@@ -185,11 +203,17 @@ export default function AuthScreen() {
                       }`}>
                         {isSelected && <span className="w-2 h-2 rounded-full bg-white" />}
                       </span>
-                    </div>
+                    </motion.div>
                   );
                 })}
               </div>
             </div>
+
+            {errorMsg && (
+              <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="p-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-xs font-bold text-center">
+                {errorMsg}
+              </motion.div>
+            )}
 
             {/* Email Input */}
             <div>
@@ -206,15 +230,31 @@ export default function AuthScreen() {
               </div>
             </div>
 
+            {/* Password Input */}
+            <div>
+              <label className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 block">Password</label>
+              <div className="relative">
+                <input
+                  type="password"
+                  placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                  value={passwordInput}
+                  onChange={(e) => setPasswordInput(e.target.value)}
+                  className="w-full bg-slate-50 border-2 border-slate-100 rounded-xl p-3.5 pl-10 text-sm font-semibold outline-none focus:border-blue-500 focus:bg-white transition-colors placeholder:text-slate-400"
+                />
+                <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-lg flex items-center">*</div>
+              </div>
+            </div>
+
             {/* Submit Button */}
-            <button
+            <motion.button
+              whileTap={{ scale: 0.98 }}
               type="submit"
               disabled={isLoading}
-              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl p-4 text-sm font-black flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:hover:scale-100 mt-2"
+              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl p-4 text-sm font-black flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30 transition-colors disabled:opacity-70 mt-2"
             >
               <span>{isLoading ? 'Authenticating...' : 'Secure Login'}</span>
               {!isLoading && <ArrowRight size={16} />}
-            </button>
+            </motion.button>
           </form>
 
           {/* Quick Demo Access Note */}

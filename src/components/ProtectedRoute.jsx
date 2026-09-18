@@ -2,25 +2,34 @@ import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useCricket } from '../context/CricketContext';
 
+const PLAYER_ROUTES = [
+  '/home', '/matches', '/match-overview', '/match-detail', '/scorecard', '/player-profile',
+  '/teams', '/tournaments', '/news'
+];
+
+const SCORER_ROUTES = [
+  ...PLAYER_ROUTES,
+  '/match-setup', '/scoring', '/innings-break', '/match-result'
+];
+
+const SELECTOR_ROUTES = [
+  ...SCORER_ROUTES,
+  '/players', '/player-registration', '/selection',
+  '/scouting', '/selectors' // legacy aliases
+];
+
+const ADMIN_ROUTES = [
+  ...SELECTOR_ROUTES,
+  '/administration', '/access-control'
+];
+
 // ─── Role → Allowed Routes ─────────────────────────────────────────────────
 export const ROLE_PERMISSIONS = {
   SuperAdmin: '*', // full access
-  Admin: '*',      // full access
-  Scorer: [
-    '/home', '/matches', '/match-setup', '/match-overview',
-    '/scoring', '/scorecard', '/innings-break', '/match-result',
-    '/teams', '/tournaments', '/news'
-  ],
-  Selector: [
-    '/home', '/matches', '/match-overview', '/scorecard',
-    '/players', '/scouting', '/player-profile', '/player-registration',
-    '/selection', '/selectors',
-    '/teams', '/tournaments', '/news'
-  ],
-  Player: [
-    '/home', '/matches', '/match-overview', '/scorecard', '/player-profile',
-    '/teams', '/tournaments', '/news'
-  ],
+  Admin: ADMIN_ROUTES,
+  Selector: SELECTOR_ROUTES,
+  Scorer: SCORER_ROUTES,
+  Player: PLAYER_ROUTES,
 };
 
 // ─── Role → Default Landing Page After Login ──────────────────────────────
