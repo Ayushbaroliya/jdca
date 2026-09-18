@@ -8,6 +8,7 @@ import DrawerMenu from './components/DrawerMenu';
 import Sidebar  from './components/Sidebar';
 import ProtectedRoute, { ROLE_HOME } from './components/ProtectedRoute';
 import AnimatedPage from './components/AnimatedPage';
+import NotificationPrompt from './components/NotificationPrompt';
 
 // ── Screens ────────────────────────────────────────────────────
 import AuthScreen             from './components/screens/AuthScreen';
@@ -120,6 +121,9 @@ function MainApp() {
 
       {/* Player comparison modal */}
       <PlayerComparisonModal />
+
+      {/* Push Notification Prompt */}
+      {!isAuth && <NotificationPrompt />}
     </div>
   );
 }

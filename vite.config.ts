@@ -11,7 +11,16 @@ export default defineConfig(() => {
       react(), 
       tailwindcss(),
       VitePWA({
-        registerType: 'autoUpdate',
+        strategies: 'injectManifest',
+        srcDir: 'src',
+        filename: 'sw.js',
+        injectManifest: {
+          injectionPoint: undefined
+        },
+        devOptions: {
+          enabled: true,
+          type: 'module',
+        },
         includeAssets: ['jdca-logo.png'],
         manifest: {
           name: 'JDCA Scoring App',

@@ -9,6 +9,7 @@ import { useHaptics } from '../../hooks/useHaptics';
 import { FREE_HIT_ALLOWED_DISMISSALS } from '../../engine/validationSchemas';
 import { motion } from 'motion/react';
 import Modal from '../ui/Modal';
+import { supabase } from '../../lib/supabase';
 
 const DISMISSALS = ['Bowled', 'Caught', 'LBW', 'Run Out', 'Stumped', 'Hit Wicket', 'Other'];
 const QUICK_RUNS = [0, 1, 2, 3, 4, 6];
@@ -56,6 +57,16 @@ export default function ScoringScreen() {
   const doRun = (value) => {
     recordRuns(value);
     if (!scoringFirstRunDone) markScoringFirstRunDone?.();
+
+    if (value === 6) {
+      supabase.functions.invoke('send-push', {
+        body: {
+          title: 'SIX! What a shot!',
+          body: `${striker.name} just smashed a massive six! Score is now ${runs + 6}/${wickets}`,
+          url: `/matches`
+        }
+      });
+    }
   };
 
   const submitWicket = () => {
@@ -69,6 +80,16 @@ export default function ScoringScreen() {
 
     setReplacingBatterType(outName === nonStriker.name ? 'nonStriker' : 'striker');
     recordWicket(selectedDismissal, outName, fielder, wk);
+    
+    // Trigger push notification for wicket
+    supabase.functions.invoke('send-push', {
+      body: {
+        title: 'WICKET!',
+        body: `${outName} is out ${selectedDismissal}! ${teamAName} vs ${teamBName} (${runs}/${wickets + 1})`,
+        url: `/matches`
+      }
+    });
+
     setDismissalOpen(false);
     setFielder('');
     setRunOutPlayer('');
