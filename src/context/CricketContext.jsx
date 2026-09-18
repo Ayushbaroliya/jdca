@@ -128,6 +128,15 @@ export function CricketProvider({ children }) {
         
         // 1. Load from Dexie (Offline First)
         let localMatches = await db.matches.toArray();
+        
+        // --- MIGRATION: Purge old mock data from local cache ---
+        if (localMatches.some(m => m.id === 'match-live-1' || m.id === 'match-completed-1')) {
+          console.log('[CricketContext] Legacy mock data detected in cache. Purging...');
+          await db.matches.clear();
+          await db.players.clear();
+          localMatches = [];
+        }
+
         if (localMatches.length === 0) {
           console.log('[CricketContext] No local matches, fetching from Supabase...');
           if (supabase) {
