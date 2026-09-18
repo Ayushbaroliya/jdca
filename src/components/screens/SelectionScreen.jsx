@@ -10,7 +10,10 @@ import {
   Download, 
   Save, 
   Sparkles,
-  ShieldAlert
+  ShieldAlert,
+  Sliders,
+  AlertTriangle,
+  Trophy
 } from 'lucide-react';
 import { useCricket } from '../../context/CricketContext';
 import { PageHeader, SectionLabel } from '../ui/PageHeader';
@@ -44,7 +47,6 @@ const JDCA_DISTRICTS = [
   'Pandhurna'
 ];
 
-const AGE_CATEGORIES = ['Under 14', 'Under 16', 'Under 19', 'Under 23', 'Senior'];
 const ROLE_FILTERS = ['All Roles', 'Batsman', 'Bowler', 'All-Rounder', 'Wicket-Keeper'];
 
 export default function SelectionScreen() {
@@ -52,28 +54,58 @@ export default function SelectionScreen() {
     players = [], 
     shortlistedIds = [], 
     toggleShortlist, 
-    setSelectedPlayer, 
+    setSelectedPlayer,
+    setCompareModalOpen,
+    setComparePlayer2,
+    representativeTeams = [],
+    activeSelectionTeam,
+    setActiveSelectionTeam,
+    selectorPermissions,
     navigateTo 
   } = useCricket();
 
-  const [selectedCategory, setSelectedCategory] = useState('Under 14');
   const [selectedDistrict, setSelectedDistrict] = useState('All Districts');
   const [selectedRole, setSelectedRole] = useState('All Roles');
   const [searchQuery, setSearchQuery] = useState('');
   const [showSavedToast, setShowSavedToast] = useState(false);
 
-  // Filter players
-  const filteredPlayers = players.filter((player) => {
-    const normalizedPlayerCategory = (player.category || '').replace('-', ' ').toLowerCase();
-    const normalizedSelectedCategory = selectedCategory.replace('-', ' ').toLowerCase();
-    const matchesCategory = normalizedPlayerCategory === normalizedSelectedCategory;
+  const currentTeam = activeSelectionTeam || representativeTeams[3] || {
+    id: 'jdca-u19-m-2026',
+    name: 'JDCA U19 Men 2026',
+    ageCategory: 'Under 19',
+    gender: 'Men',
+    season: '2026',
+    targetSquadSize: 16,
+    ageRankLevel: 4
+  };
 
+  // Filter players according to authorized age rank and district permissions
+  const filteredPlayers = players.filter((player) => {
+    // 1. Selector Permission Level Check (Max Age Rank Level)
+    const maxRank = selectorPermissions?.maxAgeRankLevel || 6;
+    const playerCategoryRank = 
+      player.category === 'Under 13' || player.category === 'U13' ? 1 :
+      player.category === 'Under 15' || player.category === 'U15' ? 2 :
+      player.category === 'Under 17' || player.category === 'U17' ? 3 :
+      player.category === 'Under 19' || player.category === 'U19' ? 4 :
+      player.category === 'Under 23' || player.category === 'U23' ? 5 : 6;
+
+    if (playerCategoryRank > maxRank) return false;
+
+    // 2. Category Match with Active Target Team
+    const normalizedPlayerCategory = (player.category || '').replace('-', ' ').toLowerCase();
+    const normalizedTargetCategory = (currentTeam.ageCategory || '').replace('-', ' ').toLowerCase();
+    const matchesCategory = normalizedPlayerCategory === normalizedTargetCategory || playerCategoryRank <= (currentTeam.ageRankLevel || 4);
+
+    // 3. District Access Filter
     const matchesDistrict = 
       selectedDistrict === 'All Districts' ? true : player.district === selectedDistrict;
 
+    // 4. Role Filter
     const matchesRole = 
-      selectedRole === 'All Roles' ? true : (player.primaryRole || player.role || '').toLowerCase() === selectedRole.toLowerCase();
+      selectedRole === 'All Roles' ? true : (player.primaryRole || player.role || '').toLowerCase().includes(selectedRole.toLowerCase());
 
+    // 5. Search Filter
     const matchesSearch = 
       (player.name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
       (player.district || '').toLowerCase().includes(searchQuery.toLowerCase());
@@ -94,6 +126,22 @@ export default function SelectionScreen() {
     return acc;
   }, { batsmen: 0, bowlers: 0, allRounders: 0, wicketKeepers: 0, others: 0 });
 
+  // Factual Warnings
+  const squadWarnings = [];
+  if (selectedSquad.length > 0) {
+    if (squadComposition.wicketKeepers < 1) {
+      squadWarnings.push('Warning: No Wicketkeeper selected in the squad.');
+    } else if (squadComposition.wicketKeepers === 1) {
+      squadWarnings.push('Notice: Only 1 Wicketkeeper selected.');
+    }
+    if (squadComposition.bowlers < 3) {
+      squadWarnings.push('Warning: Fewer than 3 specialized bowlers selected.');
+    }
+    if (selectedSquad.length > currentTeam.targetSquadSize) {
+      squadWarnings.push(`Caution: Squad count (${selectedSquad.length}) exceeds target limit (${currentTeam.targetSquadSize}).`);
+    }
+  }
+
   const handlePlayerClick = (player) => {
     if (setSelectedPlayer) setSelectedPlayer(player);
     if (navigateTo) navigateTo('player-profile');
@@ -104,94 +152,161 @@ export default function SelectionScreen() {
     setTimeout(() => setShowSavedToast(false), 3000);
   };
 
+  const handleOpenComparison = (player1) => {
+    setSelectedPlayer(player1);
+    const otherPlayer = players.find(p => p.id !== player1.id) || players[1];
+    setComparePlayer2(otherPlayer);
+    setCompareModalOpen(true);
+  };
+
   return (
     <div className="space-y-6 pb-24">
       {/* Toast Notification */}
       {showSavedToast && (
-        <div className="fixed top-20 right-6 z-50 flex items-center gap-2 rounded-xl bg-jade-600 px-4 py-3 text-white shadow-xl animate-in fade-in slide-in-from-top-2">
+        <div className="fixed top-20 right-6 z-50 flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-3 text-white shadow-xl animate-in fade-in slide-in-from-top-2">
           <CheckCircle2 className="w-5 h-5" />
-          <span className="text-sm font-semibold">Team selection saved successfully!</span>
+          <span className="text-sm font-semibold">Representative Squad choice recorded successfully!</span>
         </div>
       )}
 
       {/* Page Header */}
       <PageHeader
         title="Player Selection"
-        subtitle="Official Jabalpur District Cricket Association Team Selection"
+        subtitle="Form Official JDCA Representative Teams for Age Categories"
         actions={
           <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={handleSaveSquad}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-cobalt px-3.5 py-2 text-xs font-semibold text-white shadow-xs transition hover:bg-cobalt-700"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-cobalt px-4 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-cobalt-700 transition cursor-pointer"
             >
-              <Save className="w-3.5 h-3.5" />
-              <span>Save Team ({shortlistedIds.length})</span>
+              <Save className="w-4 h-4" />
+              <span>Finalize {currentTeam.name} ({shortlistedIds.length}/{currentTeam.targetSquadSize})</span>
             </button>
           </div>
         }
       />
 
-      {/* Selection Metrics Overview */}
+      {/* STEP 1: DESTINATION TEAM SELECTION BANNER */}
+      <div className="jdca-card p-4.5 bg-gradient-to-r from-slate-900 to-slate-800 text-white rounded-2xl shadow-lg border border-slate-700">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="p-3 rounded-xl bg-[#E1FF01] text-slate-950">
+              <Trophy className="w-6 h-6" />
+            </div>
+            <div>
+              <span className="text-[10px] uppercase tracking-wider font-extrabold text-[#E1FF01]">
+                CURRENT SELECTION TARGET
+              </span>
+              <h2 className="text-lg font-black text-white flex items-center gap-2">
+                {currentTeam.name}
+              </h2>
+              <p className="text-xs text-slate-300">
+                Season {currentTeam.season} • Category: {currentTeam.ageCategory} • Gender: {currentTeam.gender}
+              </p>
+            </div>
+          </div>
+
+          {/* Team Switcher Dropdown */}
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-bold text-slate-400 whitespace-nowrap">Target Team:</span>
+            <select
+              value={currentTeam.id}
+              onChange={(e) => {
+                const team = representativeTeams.find(t => t.id === e.target.value);
+                if (team) setActiveSelectionTeam(team);
+              }}
+              className="bg-slate-800 border border-slate-600 rounded-xl px-3 py-2 text-xs font-bold text-white outline-none focus:border-[#E1FF01] cursor-pointer"
+            >
+              {representativeTeams.map((team) => {
+                const isAuthorized = (team.ageRankLevel || 1) <= (selectorPermissions?.maxAgeRankLevel || 6);
+                return (
+                  <option 
+                    key={team.id} 
+                    value={team.id}
+                    disabled={!isAuthorized}
+                  >
+                    {team.name} {!isAuthorized ? '(Restricted)' : ''}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+        </div>
+      </div>
+
+      {/* Squad Overview & Composition Indicators */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
         <StatCard
-          label="Total Players"
+          label="Eligible Players"
           value={filteredPlayers.length}
-          subtext={`In ${selectedCategory}`}
+          subtext={`Authorized for ${currentTeam.ageCategory}`}
           icon={Users}
         />
         <StatCard
-          label="Selected Players"
-          value={shortlistedIds.length}
-          subtext="Target team: 15-18"
-          tone={shortlistedIds.length >= 15 && shortlistedIds.length <= 18 ? 'success' : 'primary'}
+          label="Selected in Squad"
+          value={`${shortlistedIds.length} / ${currentTeam.targetSquadSize}`}
+          subtext="Target squad size"
+          tone={shortlistedIds.length >= currentTeam.targetSquadSize - 2 ? 'success' : 'primary'}
           icon={CheckCircle2}
         />
         <StatCard
-          label="Districts Represented"
+          label="Districts Included"
           value={new Set(selectedSquad.map(p => p.district)).size}
-          subtext="Across 9 JDCA districts"
+          subtext="Across Jabalpur Division"
           tone="warning"
           icon={MapPin}
         />
         <StatCard
-          label="Pro / High Performance"
-          value={selectedSquad.filter(p => p.isPro || p.inForm).length}
-          subtext="In-form or pro-rated"
-          tone="info"
+          label="Squad Wicketkeepers"
+          value={squadComposition.wicketKeepers}
+          subtext="Minimum 1 recommended"
+          tone={squadComposition.wicketKeepers > 0 ? 'info' : 'danger'}
           icon={Sparkles}
         />
       </div>
 
-      {/* Selected Team Strip if any selected */}
+      {/* Factual Squad Warnings if any */}
+      {squadWarnings.length > 0 && (
+        <div className="space-y-2">
+          {squadWarnings.map((warn, idx) => (
+            <div key={idx} className="flex items-center gap-2.5 p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs font-bold">
+              <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0" />
+              <span>{warn}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Selected Team Strip */}
       {shortlistedIds.length > 0 && (
-        <div className="jdca-card p-4.5 bg-emerald-50 border-emerald-200">
+        <div className="jdca-card p-4 bg-emerald-50/90 border-emerald-200 rounded-2xl">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
             <div>
               <div className="flex items-center gap-2">
                 <span className="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-                <h3 className="text-sm font-bold text-ink">
-                  Selected Team ({shortlistedIds.length} Players)
+                <h3 className="text-sm font-black text-slate-900">
+                  {currentTeam.name} — Current Squad ({shortlistedIds.length})
                 </h3>
               </div>
-              <div className="flex flex-wrap items-center gap-3 mt-1 text-xs text-gray-500">
-                <span>Batsmen: <strong className="text-gray-900">{squadComposition.batsmen}</strong></span>
+              <div className="flex flex-wrap items-center gap-3 mt-1 text-xs text-slate-600 font-medium">
+                <span>Batters: <strong className="text-slate-900">{squadComposition.batsmen}</strong></span>
                 <span>•</span>
-                <span>Bowlers: <strong className="text-gray-900">{squadComposition.bowlers}</strong></span>
+                <span>Bowlers: <strong className="text-slate-900">{squadComposition.bowlers}</strong></span>
                 <span>•</span>
-                <span>All-Rounders: <strong className="text-gray-900">{squadComposition.allRounders}</strong></span>
+                <span>All-Rounders: <strong className="text-slate-900">{squadComposition.allRounders}</strong></span>
                 <span>•</span>
-                <span>Wicket-Keepers: <strong className="text-gray-900">{squadComposition.wicketKeepers}</strong></span>
+                <span>Wicket-Keepers: <strong className="text-slate-900">{squadComposition.wicketKeepers}</strong></span>
               </div>
             </div>
 
             <button
               type="button"
               onClick={handleSaveSquad}
-              className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-emerald-600 px-3.5 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-emerald-700"
+              className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-emerald-600 px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-emerald-700 cursor-pointer"
             >
               <Save className="w-3.5 h-3.5" />
-              <span>Confirm & Save Team</span>
+              <span>Confirm & Lock Squad</span>
             </button>
           </div>
 
@@ -201,22 +316,21 @@ export default function SelectionScreen() {
                 <motion.div
                   key={player.id}
                   layout
-                  initial={{ opacity: 0, scale: 0.5, filter: 'blur(10px)' }}
-                  animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-                  exit={{ opacity: 0, scale: 0.5, filter: 'blur(10px)' }}
-                  transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.5 }}
                   onClick={() => handlePlayerClick(player)}
-                  className="group relative flex flex-col items-center min-w-[72px] cursor-pointer rounded-xl p-2 bg-white/60 backdrop-blur-md border border-emerald-100 shadow-2xs hover:shadow-xs transition"
+                  className="group relative flex flex-col items-center min-w-[76px] cursor-pointer rounded-xl p-2 bg-white border border-emerald-200 shadow-2xs hover:shadow-xs transition"
                 >
                   <img
                     src={player.avatar || `https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80`}
                     alt={player.name}
                     className="w-11 h-11 rounded-full object-cover border-2 border-emerald-500 shadow-2xs"
                   />
-                  <span className="text-xs font-bold text-gray-900 truncate w-16 text-center mt-1">
+                  <span className="text-xs font-bold text-slate-900 truncate w-16 text-center mt-1">
                     {player.name ? player.name.split(' ')[0] : 'Player'}
                   </span>
-                  <span className="text-[9px] text-gray-400 truncate max-w-[64px]">
+                  <span className="text-[9px] font-semibold text-slate-500 truncate max-w-[64px]">
                     {player.district}
                   </span>
                 </motion.div>
@@ -228,40 +342,20 @@ export default function SelectionScreen() {
 
       {/* Filter Toolbar */}
       <div className="jdca-card p-4 space-y-3">
-        {/* Category Tabs */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
-          {AGE_CATEGORIES.map((cat) => {
-            const isActive = selectedCategory === cat;
-            return (
-              <button
-                key={cat}
-                type="button"
-                onClick={() => setSelectedCategory(cat)}
-                className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition cursor-pointer ${
-                  isActive
-                    ? 'bg-cobalt text-white shadow-xs'
-                    : 'bg-gray-50 text-gray-600 hover:bg-gray-100 hover:text-gray-900 border border-gray-100'
-                }`}
-              >
-                {cat}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Search and Dropdown Controls */}
-        <div className="grid grid-cols-1 sm:grid-cols-12 gap-2.5 pt-1">
+        <div className="grid grid-cols-1 sm:grid-cols-12 gap-2.5">
+          {/* Search */}
           <div className="relative sm:col-span-6">
             <Search className="w-4 h-4 absolute left-3 top-3 text-gray-400" />
             <input
               type="text"
-              placeholder={`Search ${selectedCategory} players by name or district...`}
+              placeholder={`Search ${currentTeam.ageCategory} players by name or district...`}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-9 pr-3 py-2 text-xs bg-gray-50/70 border border-gray-200 rounded-xl outline-none focus:bg-white focus:border-cobalt font-medium text-gray-900"
             />
           </div>
 
+          {/* District Filter */}
           <div className="sm:col-span-3">
             <select
               value={selectedDistrict}
@@ -274,6 +368,7 @@ export default function SelectionScreen() {
             </select>
           </div>
 
+          {/* Role Filter */}
           <div className="sm:col-span-3">
             <select
               value={selectedRole}
@@ -288,14 +383,14 @@ export default function SelectionScreen() {
         </div>
       </div>
 
-      {/* Player List Grid */}
+      {/* Candidate Players Grid */}
       <div>
         {filteredPlayers.length === 0 ? (
           <div className="jdca-card p-12 text-center space-y-2">
             <ShieldAlert className="w-8 h-8 text-gray-300 mx-auto" />
-            <h4 className="text-sm font-bold text-gray-700">No players found matching your criteria</h4>
+            <h4 className="text-sm font-bold text-gray-700">No players found for {currentTeam.name}</h4>
             <p className="text-xs text-gray-400">
-              Try adjusting your category, district, or role filter to view players.
+              Try adjusting your district or role filter to view authorized players.
             </p>
           </div>
         ) : (
@@ -311,15 +406,15 @@ export default function SelectionScreen() {
               return (
                 <motion.div
                   variants={itemVariants}
-                  whileHover={{ scale: 1.02, y: -4 }}
+                  whileHover={{ scale: 1.01, y: -2 }}
                   key={player.id}
-                  className={`jdca-card p-4.5 flex flex-col justify-between transition-all duration-200 ${
+                  className={`jdca-card p-4 flex flex-col justify-between transition-all duration-200 ${
                     isShortlisted
-                      ? 'border-emerald-300 ring-2 ring-emerald-500/20 bg-emerald-50/40 backdrop-blur-md'
-                      : 'hover:border-cobalt-200 hover:shadow-md bg-white/80 backdrop-blur-md'
+                      ? 'border-emerald-400 ring-2 ring-emerald-500/20 bg-emerald-50/30'
+                      : 'hover:border-cobalt-200 bg-white'
                   }`}
                 >
-                  {/* Top: Avatar, Names, Badges */}
+                  {/* Top Info */}
                   <div>
                     <div className="flex items-start justify-between gap-3">
                       <div 
@@ -333,7 +428,7 @@ export default function SelectionScreen() {
                             className="w-12 h-12 rounded-xl object-cover border border-gray-200"
                           />
                           {player.isPro && (
-                            <span className="absolute -bottom-1 -right-1 px-1 py-0.2 rounded bg-mango-400 text-ink font-black text-[9px] shadow-2xs">
+                            <span className="absolute -bottom-1 -right-1 px-1 py-0.2 rounded bg-mango-400 text-ink font-black text-[9px]">
                               PRO
                             </span>
                           )}
@@ -341,96 +436,83 @@ export default function SelectionScreen() {
 
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-1.5">
-                            <h4 className="font-bold text-sm text-gray-900 truncate group-hover:text-cobalt transition">
+                            <h4 className="font-bold text-sm text-slate-900 truncate group-hover:text-cobalt transition">
                               {player.name}
                             </h4>
                             {player.inForm && (
                               <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" title="In Form" />
                             )}
                           </div>
-                          <p className="text-xs text-gray-500 truncate mt-0.5">
-                            {player.primaryRole || player.role || 'Player'} • {player.battingStyle || 'Right hand'}
+                          <p className="text-xs text-slate-500 truncate mt-0.5">
+                            {player.primaryRole || player.role || 'Player'} • {player.district || 'Jabalpur'}
                           </p>
-                          <div className="flex items-center gap-1 text-xs text-gray-400 mt-1">
-                            <MapPin className="w-3 h-3 text-gray-400 shrink-0" />
-                            <span className="truncate">{player.district || 'Jabalpur'}</span>
+                          <div className="flex items-center gap-1.5 text-[11px] text-slate-400 mt-1">
+                            <Badge variant="neutral" size="xs">{player.category || currentTeam.ageCategory}</Badge>
+                            <span>{player.battingStyle || 'RHB'}</span>
                           </div>
                         </div>
                       </div>
 
-                      <Badge
-                        variant={isShortlisted ? 'success' : 'neutral'}
-                        size="xs"
-                      >
+                      <Badge variant={isShortlisted ? 'success' : 'neutral'} size="xs">
                         {isShortlisted ? 'Selected' : 'Candidate'}
                       </Badge>
                     </div>
 
-                    {/* Stats Strip */}
+                    {/* Factual Performance Stats derived from match data */}
                     <div 
                       onClick={() => handlePlayerClick(player)}
-                      className="grid grid-cols-4 gap-2 my-3.5 p-2.5 rounded-lg bg-gray-50/80 border border-gray-100 cursor-pointer text-center"
+                      className="grid grid-cols-4 gap-2 my-3 p-2.5 rounded-xl bg-slate-50 border border-slate-100 cursor-pointer text-center"
                     >
                       <div>
-                        <span className="text-xs uppercase font-bold text-gray-400 block">
-                          RUNS
-                        </span>
-                        <span className="text-xs font-bold text-gray-900">
-                          {player.careerRuns || player.runs || 0}
-                        </span>
+                        <span className="text-[10px] uppercase font-bold text-slate-400 block">RUNS</span>
+                        <span className="text-xs font-black text-slate-900">{player.careerRuns || player.runs || 0}</span>
                       </div>
 
                       <div>
-                        <span className="text-xs uppercase font-bold text-gray-400 block">
-                          AVG
-                        </span>
-                        <span className="text-xs font-bold text-cobalt">
-                          {player.battingAvg || player.average || 0}
-                        </span>
+                        <span className="text-[10px] uppercase font-bold text-slate-400 block">AVG</span>
+                        <span className="text-xs font-black text-cobalt">{player.battingAvg || player.average || 0}</span>
                       </div>
 
                       <div>
-                        <span className="text-xs uppercase font-bold text-gray-400 block">
-                          SR
-                        </span>
-                        <span className="text-xs font-bold text-gray-900">
-                          {player.strikeRate || 0}
-                        </span>
+                        <span className="text-[10px] uppercase font-bold text-slate-400 block">SR</span>
+                        <span className="text-xs font-black text-slate-900">{player.strikeRate || 0}</span>
                       </div>
 
                       <div>
-                        <span className="text-xs uppercase font-bold text-gray-400 block">
-                          HS
-                        </span>
-                        <span className="text-xs font-bold text-gray-900">
-                          {player.highScore || '0'}
-                        </span>
+                        <span className="text-[10px] uppercase font-bold text-slate-400 block">50/100</span>
+                        <span className="text-xs font-black text-slate-900">{player.fifties || 0}/{player.hundreds || 0}</span>
                       </div>
                     </div>
                   </div>
 
-                  {/* Bottom: Selection Action */}
-                  <div className="pt-2 border-t border-gray-100 flex items-center justify-between">
-                    <span className="text-xs font-semibold text-gray-700">
-                      {isShortlisted ? 'In Team' : 'Add to Team'}
-                    </span>
+                  {/* Bottom Action Bar */}
+                  <div className="pt-2 border-t border-slate-100 flex items-center justify-between gap-2">
+                    <button
+                      type="button"
+                      onClick={() => handleOpenComparison(player)}
+                      className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-100 transition cursor-pointer"
+                      title="Compare with another player"
+                    >
+                      <Sliders className="w-3.5 h-3.5 text-cobalt" />
+                      <span>Compare</span>
+                    </button>
 
                     <button
                       type="button"
                       onClick={() => toggleShortlist(player.id)}
-                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer ${
+                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
                         isShortlisted
-                          ? 'bg-emerald-600 text-white hover:bg-emerald-700'
-                          : 'bg-gray-100 text-gray-700 hover:bg-cobalt hover:text-white'
+                          ? 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-xs'
+                          : 'bg-slate-900 text-white hover:bg-cobalt shadow-xs'
                       }`}
                     >
                       {isShortlisted ? (
                         <>
                           <CheckCircle2 className="w-3.5 h-3.5" />
-                          <span>Selected</span>
+                          <span>In {currentTeam.shortName || currentTeam.ageCategory} Squad</span>
                         </>
                       ) : (
-                        <span>+ Select</span>
+                        <span>+ Select for {currentTeam.name.replace('2026', '').trim()}</span>
                       )}
                     </button>
                   </div>
@@ -443,3 +525,4 @@ export default function SelectionScreen() {
     </div>
   );
 }
+

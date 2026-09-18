@@ -1,4 +1,4 @@
-﻿-- ============================================================
+-- ============================================================
 -- JDCA PRODUCTION DATABASE SCHEMA v2.0
 -- Supabase / PostgreSQL
 -- ============================================================
@@ -163,6 +163,21 @@ create table if not exists profiles (
   updated_at timestamptz not null default now()
 );
 
+-- Selector Scope Mapping Tables
+create table if not exists selector_age_access (
+  selector_id uuid references profiles(id) on delete cascade,
+  max_age_category_id uuid references age_categories(id) on delete cascade,
+  created_at timestamptz not null default now(),
+  primary key (selector_id)
+);
+
+create table if not exists selector_district_access (
+  selector_id uuid references profiles(id) on delete cascade,
+  district_id uuid references districts(id) on delete cascade,
+  created_at timestamptz not null default now(),
+  primary key (selector_id, district_id)
+);
+
 -- ============================================================
 -- AGE CATEGORIES
 -- ============================================================
@@ -171,6 +186,7 @@ create table if not exists age_categories (
   id uuid primary key default gen_random_uuid(),
   name varchar(80) not null unique,
   short_name varchar(30) not null unique,
+  rank_level integer not null unique,
   minimum_age integer,
   maximum_age integer,
   cutoff_date_rule varchar(200),
@@ -835,6 +851,8 @@ select
   max(runs_scored)::bigint as highest_score,
   sum(fours)::bigint as total_fours,
   sum(sixes)::bigint as total_sixes,
+  count(*) filter (where runs_scored >= 50 and runs_scored < 100)::bigint as fifties,
+  count(*) filter (where runs_scored >= 100)::bigint as hundreds,
   round(
     case
       when sum(balls_faced) = 0 then 0
@@ -1041,6 +1059,49 @@ as $$
     ('SUPER_ADMIN','DISTRICT_ADMIN','SELECTOR','SCORER'), false);
 $$;
 
+create or replace function is_selector_authorized_for_player(p_player_id uuid, p_user_id uuid)
+returns boolean
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_role app_role;
+  v_max_rank integer;
+  v_authorized boolean;
+begin
+  select role into v_role from profiles where id = p_user_id;
+  
+  if v_role in ('SUPER_ADMIN', 'DISTRICT_ADMIN') then
+    return true;
+  elsif v_role = 'SELECTOR' then
+    select ac.rank_level into v_max_rank
+    from selector_age_access saa
+    join age_categories ac on ac.id = saa.max_age_category_id
+    where saa.selector_id = p_user_id;
+    
+    if v_max_rank is null then
+      return false;
+    end if;
+
+    select exists (
+      select 1 
+      from player_registrations pr
+      join age_categories pac on pac.id = pr.age_category_id
+      join selector_district_access sda on sda.district_id = pr.district_id
+      where pr.player_id = p_player_id
+        and sda.selector_id = p_user_id
+        and pac.rank_level <= v_max_rank
+        and pr.registration_status = 'ACTIVE'
+    ) into v_authorized;
+    
+    return coalesce(v_authorized, false);
+  else
+    return true;
+  end if;
+end;
+$$;
+
 -- ============================================================
 -- PUBLIC READ POLICIES
 -- ============================================================
@@ -1096,12 +1157,15 @@ for select using (
 );
 
 -- ============================================================
--- STAFF READ
+-- STAFF & SELECTOR READ POLICIES
 -- ============================================================
 
 drop policy if exists players_staff_read on players;
 create policy players_staff_read on players
-for select using (auth.uid() is not null);
+for select using (
+  auth.uid() is not null 
+  and is_selector_authorized_for_player(id, auth.uid())
+);
 
 drop policy if exists teams_staff_read on teams;
 create policy teams_staff_read on teams
@@ -1161,6 +1225,26 @@ drop policy if exists team_players_admin_write on team_players;
 create policy team_players_admin_write on team_players
 for all using (is_admin())
 with check (is_admin());
+
+-- ============================================================
+-- SELECTOR SCOPE PERMISSIONS
+-- ============================================================
+
+drop policy if exists selector_age_access_read on selector_age_access;
+create policy selector_age_access_read on selector_age_access
+for select using (is_admin() or selector_id = auth.uid());
+
+drop policy if exists selector_age_access_write on selector_age_access;
+create policy selector_age_access_write on selector_age_access
+for all using (is_admin()) with check (is_admin());
+
+drop policy if exists selector_district_access_read on selector_district_access;
+create policy selector_district_access_read on selector_district_access
+for select using (is_admin() or selector_id = auth.uid());
+
+drop policy if exists selector_district_access_write on selector_district_access;
+create policy selector_district_access_write on selector_district_access
+for all using (is_admin()) with check (is_admin());
 
 -- ============================================================
 -- SELECTION WRITE
@@ -1395,12 +1479,13 @@ exception when duplicate_object then null; end $$;
 -- ============================================================
 
 insert into age_categories
-  (name, short_name, minimum_age, maximum_age, cutoff_date_rule)
+  (name, short_name, rank_level, minimum_age, maximum_age, cutoff_date_rule)
 values
-  ('Under 13','U13',null,12,'Eligibility determined from official competition cutoff date'),
-  ('Under 15','U15',null,14,'Eligibility determined from official competition cutoff date'),
-  ('Under 17','U17',null,16,'Eligibility determined from official competition cutoff date'),
-  ('Under 19','U19',null,18,'Eligibility determined from official competition cutoff date'),
-  ('Senior','SENIOR',19,null,'Senior/open eligibility according to competition rules')
+  ('Under 13','U13', 1, null, 12, 'Eligibility determined from official competition cutoff date'),
+  ('Under 15','U15', 2, null, 14, 'Eligibility determined from official competition cutoff date'),
+  ('Under 17','U17', 3, null, 16, 'Eligibility determined from official competition cutoff date'),
+  ('Under 19','U19', 4, null, 18, 'Eligibility determined from official competition cutoff date'),
+  ('Under 23','U23', 5, 19, 22, 'Eligibility determined from official competition cutoff date'),
+  ('Senior','SENIOR', 6, 23, null, 'Senior/open eligibility according to competition rules')
 on conflict (short_name) do nothing;
 

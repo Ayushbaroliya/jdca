@@ -8,7 +8,8 @@ export const AGE_HIERARCHY_LEVELS = {
   'U15': 2,
   'U17': 3,
   'U19': 4,
-  'Senior': 5,
+  'U23': 5,
+  'Senior': 6,
 };
 
 export const TEAM_CATEGORIES = [
@@ -16,10 +17,12 @@ export const TEAM_CATEGORIES = [
   { id: 'u15', name: 'U15', level: 2, gender: 'Men' },
   { id: 'u17', name: 'U17', level: 3, gender: 'Men' },
   { id: 'u19', name: 'U19', level: 4, gender: 'Men' },
-  { id: 'senior', name: 'Senior', level: 5, gender: 'Men' },
+  { id: 'u23', name: 'U23', level: 5, gender: 'Men' },
+  { id: 'senior', name: 'Senior', level: 6, gender: 'Men' },
   { id: 'u15_women', name: 'U15', level: 2, gender: 'Women' },
   { id: 'u19_women', name: 'U19', level: 4, gender: 'Women' },
-  { id: 'senior_women', name: 'Senior', level: 5, gender: 'Women' },
+  { id: 'u23_women', name: 'U23', level: 5, gender: 'Women' },
+  { id: 'senior_women', name: 'Senior', level: 6, gender: 'Women' },
 ];
 
 export const MOCK_CURRENT_USER = {

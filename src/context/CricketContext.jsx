@@ -89,6 +89,34 @@ export function CricketProvider({ children }) {
     { id: 'usr_005', name: 'Player Virat', email: 'player@jdca.com', password: 'password123', role: 'Player' }
   ]);
 
+  // Selection Context State & Representative Teams
+  const [representativeTeams, setRepresentativeTeams] = useState([
+    { id: 'jdca-u13-m-2026', name: 'JDCA U13 Men 2026', ageCategory: 'Under 13', gender: 'Men', season: '2026', targetSquadSize: 16, ageRankLevel: 1 },
+    { id: 'jdca-u15-m-2026', name: 'JDCA U15 Men 2026', ageCategory: 'Under 15', gender: 'Men', season: '2026', targetSquadSize: 16, ageRankLevel: 2 },
+    { id: 'jdca-u17-m-2026', name: 'JDCA U17 Men 2026', ageCategory: 'Under 17', gender: 'Men', season: '2026', targetSquadSize: 16, ageRankLevel: 3 },
+    { id: 'jdca-u19-m-2026', name: 'JDCA U19 Men 2026', ageCategory: 'Under 19', gender: 'Men', season: '2026', targetSquadSize: 16, ageRankLevel: 4 },
+    { id: 'jdca-u23-m-2026', name: 'JDCA U23 Men 2026', ageCategory: 'Under 23', gender: 'Men', season: '2026', targetSquadSize: 16, ageRankLevel: 5 },
+    { id: 'jdca-senior-m-2026', name: 'JDCA Senior Men 2026', ageCategory: 'Senior', gender: 'Men', season: '2026', targetSquadSize: 16, ageRankLevel: 6 },
+    { id: 'jdca-u19-w-2026', name: 'JDCA U19 Women 2026', ageCategory: 'Under 19', gender: 'Women', season: '2026', targetSquadSize: 16, ageRankLevel: 4 },
+    { id: 'jdca-senior-w-2026', name: 'JDCA Senior Women 2026', ageCategory: 'Senior', gender: 'Women', season: '2026', targetSquadSize: 16, ageRankLevel: 6 },
+  ]);
+
+  const [activeSelectionTeam, setActiveSelectionTeam] = useState({
+    id: 'jdca-u19-m-2026',
+    name: 'JDCA U19 Men 2026',
+    ageCategory: 'Under 19',
+    gender: 'Men',
+    season: '2026',
+    targetSquadSize: 16,
+    ageRankLevel: 4
+  });
+
+  // Selector Permission Scopes (Age Category Level & Allowed Districts)
+  const [selectorPermissions, setSelectorPermissions] = useState({
+    maxAgeRankLevel: 4, // Default U19 Selector (Sees U19, U17, U15, U13)
+    allowedDistricts: ['Jabalpur', 'Katni', 'Narsinghpur', 'Seoni', 'Mandla', 'Balaghat', 'Chhindwara', 'Dindori', 'Pandhurna'] // All by default unless configured
+  });
+
   // Players & Scouting
   const [players, setPlayers] = useState(INITIAL_PLAYERS);
   const [selectedPlayer, setSelectedPlayer] = useState(INITIAL_PLAYERS[0]); // default Rohan Sharma
@@ -728,6 +756,12 @@ export function CricketProvider({ children }) {
         selectionHistory: SELECTION_HISTORY,
         announcements: ANNOUNCEMENTS,
         pointsTable: POINTS_TABLE,
+        representativeTeams,
+        setRepresentativeTeams,
+        activeSelectionTeam,
+        setActiveSelectionTeam,
+        selectorPermissions,
+        setSelectorPermissions,
       }}
     >
       {children}
