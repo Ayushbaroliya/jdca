@@ -139,7 +139,7 @@ export default function AuthScreen() {
             transition={{ delay: 0.1 }}
             className="text-2xl sm:text-3xl font-black text-white tracking-tight leading-tight"
           >
-            JDCA Hub
+            JDCA
           </motion.h1>
           <motion.p 
             initial={{ y: 10, opacity: 0 }}
