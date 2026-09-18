@@ -5,6 +5,7 @@ import {
   MoreHorizontal, Users
 } from 'lucide-react';
 import { useCricket } from '../../context/CricketContext';
+import { useHaptics } from '../../hooks/useHaptics';
 import { FREE_HIT_ALLOWED_DISMISSALS } from '../../engine/validationSchemas';
 import { motion } from 'motion/react';
 import Modal from '../ui/Modal';
@@ -21,6 +22,8 @@ export default function ScoringScreen() {
     matchSetup, setMatchSetup, replaceStriker, replaceBatter, handleRetireBatter, continueAfterOver, lastOverBowlerId,
     deliveryLog = [], scoringFirstRunDone, markScoringFirstRunDone, goBack
   } = useCricket();
+
+  const haptics = useHaptics();
 
   const [dismissalOpen, setDismissalOpen] = useState(false);
   const [selectedDismissal, setSelectedDismissal] = useState('Caught');
@@ -254,37 +257,41 @@ export default function ScoringScreen() {
 
           <div className="grid grid-cols-3 gap-2.5 mb-2.5">
             {QUICK_RUNS.map(value => (
-              <button 
+              <motion.button 
                 key={value} 
-                onClick={() => doRun(value)} 
-                className={`h-16 rounded-[12px] flex items-center justify-center text-[24px] font-black shadow-sm active:scale-[0.97] transition-all border ${
+                whileTap={{ scale: 0.96 }}
+                onClick={() => {
+                  haptics.light();
+                  doRun(value);
+                }} 
+                className={`h-16 rounded-[12px] flex items-center justify-center text-[24px] font-black shadow-sm transition-colors border ${
                   value === 0 ? 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50' : 
-                  value >= 4 ? 'bg-cobalt text-white border-cobalt shadow-md hover:bg-cobalt-700' : 
+                  value >= 4 ? 'bg-[#E1FF01] text-slate-900 border-[#cbe500] shadow-md hover:brightness-95' : 
                   'bg-white text-slate-900 border-slate-200 hover:bg-slate-50'
                 }`}
               >
                 {value}
-              </button>
+              </motion.button>
             ))}
           </div>
 
           <div className="grid grid-cols-4 gap-2 mb-4">
-             <button onClick={() => recordExtra('wide', 0)} className="h-12 rounded-[10px] bg-white border border-slate-200 text-slate-700 text-[12px] font-black uppercase tracking-wider hover:bg-slate-50 active:bg-slate-100 shadow-sm transition-colors">WD</button>
-             <button onClick={() => recordExtra('no_ball', 0)} className="h-12 rounded-[10px] bg-white border border-slate-200 text-slate-700 text-[12px] font-black uppercase tracking-wider hover:bg-slate-50 active:bg-slate-100 shadow-sm transition-colors">NB</button>
-             <button onClick={() => recordExtra('bye', 1)} className="h-12 rounded-[10px] bg-white border border-slate-200 text-slate-700 text-[12px] font-black uppercase tracking-wider hover:bg-slate-50 active:bg-slate-100 shadow-sm transition-colors">B</button>
-             <button onClick={() => recordExtra('leg_bye', 1)} className="h-12 rounded-[10px] bg-white border border-slate-200 text-slate-700 text-[12px] font-black uppercase tracking-wider hover:bg-slate-50 active:bg-slate-100 shadow-sm transition-colors">LB</button>
+             <motion.button whileTap={{ scale: 0.96 }} onClick={() => { haptics.light(); recordExtra('wide', 0); }} className="h-12 rounded-[10px] bg-white border border-slate-200 text-slate-700 text-[12px] font-black uppercase tracking-wider hover:bg-slate-50 shadow-sm transition-colors">WD</motion.button>
+             <motion.button whileTap={{ scale: 0.96 }} onClick={() => { haptics.light(); recordExtra('no_ball', 0); }} className="h-12 rounded-[10px] bg-white border border-slate-200 text-slate-700 text-[12px] font-black uppercase tracking-wider hover:bg-slate-50 shadow-sm transition-colors">NB</motion.button>
+             <motion.button whileTap={{ scale: 0.96 }} onClick={() => { haptics.light(); recordExtra('bye', 1); }} className="h-12 rounded-[10px] bg-white border border-slate-200 text-slate-700 text-[12px] font-black uppercase tracking-wider hover:bg-slate-50 shadow-sm transition-colors">B</motion.button>
+             <motion.button whileTap={{ scale: 0.96 }} onClick={() => { haptics.light(); recordExtra('leg_bye', 1); }} className="h-12 rounded-[10px] bg-white border border-slate-200 text-slate-700 text-[12px] font-black uppercase tracking-wider hover:bg-slate-50 shadow-sm transition-colors">LB</motion.button>
           </div>
 
           <div className="grid grid-cols-3 gap-2.5">
-             <button onClick={() => setDismissalOpen(true)} className="h-14 rounded-[12px] bg-coral text-white flex items-center justify-center gap-1.5 text-[13px] font-black shadow-md active:scale-[0.98] transition-all border border-coral">
+             <motion.button whileTap={{ scale: 0.96 }} onClick={() => { haptics.heavy(); setDismissalOpen(true); }} className="h-14 rounded-[12px] bg-red-600 text-white flex items-center justify-center gap-1.5 text-[13px] font-black shadow-md border border-red-700">
                <ShieldAlert size={16} /> WICKET
-             </button>
-             <button onClick={() => setRetireModalOpen(true)} className="h-14 rounded-[12px] bg-white border border-slate-200 text-slate-700 flex items-center justify-center gap-1.5 text-[13px] font-black shadow-sm active:bg-slate-50 transition-colors">
+             </motion.button>
+             <motion.button whileTap={{ scale: 0.96 }} onClick={() => { haptics.medium(); setRetireModalOpen(true); }} className="h-14 rounded-[12px] bg-white border border-slate-200 text-slate-700 flex items-center justify-center gap-1.5 text-[13px] font-black shadow-sm active:bg-slate-50 transition-colors">
                RETIRE
-             </button>
-             <button onClick={() => setExtrasOpen(true)} className="h-14 rounded-[12px] bg-white border border-slate-200 text-slate-700 flex items-center justify-center gap-1.5 text-[12px] font-bold shadow-sm active:bg-slate-50 transition-colors">
+             </motion.button>
+             <motion.button whileTap={{ scale: 0.96 }} onClick={() => { haptics.light(); setExtrasOpen(true); }} className="h-14 rounded-[12px] bg-white border border-slate-200 text-slate-700 flex items-center justify-center gap-1.5 text-[12px] font-bold shadow-sm active:bg-slate-50 transition-colors">
                <MoreHorizontal size={16} /> EXTRAS
-             </button>
+             </motion.button>
           </div>
         </div>
 

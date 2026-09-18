@@ -30,6 +30,8 @@ import {
 import CloudinaryAvatar from '../ui/CloudinaryAvatar';
 import confetti from 'canvas-confetti';
 import { motion, AnimatePresence } from 'motion/react';
+import BottomSheet from '../ui/BottomSheet';
+import PlayerDetail from './PlayerDetail';
 
 const ROLE_BADGES = {
   'Batter': { bg: 'bg-amber-50', text: 'text-amber-800', border: 'border-amber-200' },
@@ -942,81 +944,28 @@ export default function SelectionWorkspace() {
       </AnimatePresence>
 
       {/* ───────────────────────────────────────────────────────────── */}
-      {/* PLAYER DETAILS MODAL */}
+      {/* PLAYER DETAILS BOTTOM SHEET */}
       {/* ───────────────────────────────────────────────────────────── */}
-      <AnimatePresence>
+      <BottomSheet 
+        isOpen={!!playerDetails} 
+        onClose={() => setPlayerDetails(null)}
+        title={activeTeam ? `Selecting for ${activeTeam.name}` : 'Player Detail'}
+      >
         {playerDetails && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white rounded-2xl shadow-2xl border border-slate-200 max-w-md w-full p-5 space-y-4"
-            >
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-3">
-                  <CloudinaryAvatar
-                    src={playerDetails.avatar}
-                    alt={playerDetails.name}
-                    className="w-12 h-12 rounded-xl object-cover border border-slate-200"
-                  />
-                  <div>
-                    <h3 className="font-bold text-base text-slate-900">{playerDetails.name}</h3>
-                    <span className="text-xs text-slate-500">{playerDetails.role} • {playerDetails.district} District</span>
-                  </div>
-                </div>
-                <button onClick={() => setPlayerDetails(null)} className="p-1 text-slate-400 hover:text-slate-600">
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-
-              {/* Stats */}
-              <div className="grid grid-cols-4 gap-2 p-3 rounded-xl bg-slate-50 text-center text-xs">
-                <div>
-                  <span className="text-xs text-slate-400 uppercase font-bold block">Runs</span>
-                  <strong className="text-slate-900">{playerDetails.careerRuns || 0}</strong>
-                </div>
-                <div>
-                  <span className="text-xs text-slate-400 uppercase font-bold block">Avg</span>
-                  <strong className="text-blue-600">{playerDetails.battingAvg || '-'}</strong>
-                </div>
-                <div>
-                  <span className="text-xs text-slate-400 uppercase font-bold block">SR</span>
-                  <strong className="text-slate-900">{playerDetails.strikeRate || '-'}</strong>
-                </div>
-                <div>
-                  <span className="text-xs text-slate-400 uppercase font-bold block">Wickets</span>
-                  <strong className="text-emerald-600">{playerDetails.wickets || 0}</strong>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between pt-2 border-t border-slate-100">
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (setContextPlayer) setContextPlayer(playerDetails);
-                    if (navigateTo) navigateTo('player-profile');
-                  }}
-                  className="text-xs font-bold text-blue-600 hover:text-blue-800"
-                >
-                  Full Profile →
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    handleTogglePlayer(playerDetails.id);
-                    setPlayerDetails(null);
-                  }}
-                  className="px-4 py-2 rounded-xl bg-slate-900 hover:bg-blue-600 text-white text-xs font-bold transition"
-                >
-                  {isSelected(playerDetails.id) ? 'Remove Player' : '+ Add Player'}
-                </button>
-              </div>
-            </motion.div>
-          </div>
+          <PlayerDetail 
+            player={playerDetails} 
+            team={activeTeam}
+            isSelected={activeTeam && activeTeam.selectedPlayerIds?.includes(playerDetails.id)}
+            isConsidered={activeTeam && activeTeam.shortlistedPlayerIds?.includes(playerDetails.id)}
+            onToggleSelect={() => {
+              handleTogglePlayer(playerDetails.id);
+              setPlayerDetails(null);
+            }}
+            onToggleConsider={() => {}}
+            onClose={() => setPlayerDetails(null)}
+          />
         )}
-      </AnimatePresence>
+      </BottomSheet>
 
     </div>
   );

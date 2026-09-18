@@ -1,7 +1,8 @@
 import React from 'react';
 import { CalendarDays, ArrowRight, MapPin } from 'lucide-react';
 import { CloudinaryAvatar } from './CloudinaryAvatar';
-
+import { motion } from 'motion/react';
+import { useHaptics } from '../../hooks/useHaptics';
 export const MatchCard = ({ match, onClick }) => {
   const isLive = match.status === 'LIVE' || match.status === 'IN_PROGRESS';
   const isCompleted = match.status === 'COMPLETED' || match.status === 'FINISHED';
@@ -16,10 +17,16 @@ export const MatchCard = ({ match, onClick }) => {
   const bannerImage = match.bannerImage || "/imageformatchescard.png";
   const playerAvatar = match.topPerformer?.image;
 
+  const haptics = useHaptics();
+
   return (
-    <div 
-      onClick={onClick}
-      className={`bg-white rounded-2xl cursor-pointer relative transition-all duration-300 active:scale-[0.99] border border-slate-200 mb-4 shadow-sm hover:shadow-md group overflow-hidden flex flex-col w-full`}
+    <motion.div 
+      whileTap={{ scale: 0.985 }}
+      onClick={(e) => {
+        haptics.light();
+        if (onClick) onClick(e);
+      }}
+      className={`bg-white rounded-2xl cursor-pointer relative transition-colors border border-slate-200 mb-4 shadow-sm hover:shadow-md group overflow-hidden flex flex-col w-full`}
     >
       {/* Dynamic Banner Header */}
       <div className="h-24 w-full relative">
@@ -155,6 +162,6 @@ export const MatchCard = ({ match, onClick }) => {
             </div>
           </div>
       </div>
-    </div>
+    </motion.div>
   );
 };

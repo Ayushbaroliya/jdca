@@ -77,7 +77,7 @@ export default function BottomNav() {
   const tabs = getNavItems();
 
   return (
-    <nav className={`lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-gray-200 pb-safe shadow-[0_-4px_24px_rgba(0,0,0,0.06)] h-[68px] transition-transform duration-300 ease-in-out ${
+    <nav className={`lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/70 backdrop-blur-xl border-t border-slate-200 pb-safe shadow-none h-[68px] transition-transform duration-300 ease-in-out ${
       isVisible ? 'translate-y-0' : 'translate-y-full'
     }`}>
       <div className="flex items-stretch justify-start overflow-x-auto no-scrollbar h-full px-2 relative">

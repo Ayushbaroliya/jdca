@@ -9,6 +9,8 @@ import {
   AlertTriangle,
 } from 'lucide-react';
 import CloudinaryAvatar from '../ui/CloudinaryAvatar';
+import { motion } from 'motion/react';
+import { useHaptics } from '../../hooks/useHaptics';
 
 /**
  * JDCA ROLE PALETTE
@@ -80,6 +82,7 @@ export default function PlayerPool({
   compareIds,
   onToggleCompare,
 }) {
+  const haptics = useHaptics();
   if (!players || players.length === 0) {
     return (
       <div className="bg-white rounded-xl border border-slate-200 p-8 text-center space-y-2">
@@ -101,10 +104,14 @@ export default function PlayerPool({
         const t = ROLE_THEMES[player.role] || DEFAULT_THEME;
 
         return (
-          <div
+          <motion.div
             key={player.id}
-            onClick={() => onSelectPlayer(player.id)}
-            className={`group bg-white rounded-xl border border-slate-200 border-l-4 ${t.border} p-4 transition-all cursor-pointer shadow-sm hover:shadow-md ${
+            whileTap={{ scale: 0.985 }}
+            onClick={() => {
+              haptics.light();
+              onSelectPlayer(player.id);
+            }}
+            className={`group bg-white rounded-xl border border-slate-200 border-l-4 ${t.border} p-4 transition-colors cursor-pointer shadow-sm hover:shadow-md ${
               isSelectedInDetail
                 ? `ring-2 ${t.ringOn} ring-offset-1`
                 : isInSelectedTeam
@@ -253,7 +260,7 @@ export default function PlayerPool({
                 <ChevronRight className="w-3.5 h-3.5" />
               </button>
             </div>
-          </div>
+          </motion.div>
         );
       })}
     </div>

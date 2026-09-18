@@ -63,7 +63,7 @@ export default function Header() {
   const info = SCREEN_TITLES[currentScreen] || { title: 'JDCA', showBack: false };
 
   return (
-    <header className={`lg:hidden sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 pt-safe px-4 shadow-2xs h-[56px] flex items-center justify-between transition-transform duration-300 ease-in-out ${
+    <header className={`lg:hidden sticky top-0 z-40 bg-white/70 backdrop-blur-xl border-b border-slate-200 pt-safe px-4 shadow-none h-[56px] flex items-center justify-between transition-transform duration-300 ease-in-out ${
       isVisible ? 'translate-y-0' : '-translate-y-full'
     }`}>
       {/* Left: back button or Logo */}

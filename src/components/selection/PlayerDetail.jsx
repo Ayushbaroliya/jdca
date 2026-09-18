@@ -72,11 +72,6 @@ export default function PlayerDetail({
                 <p className="text-xs font-mono text-slate-500 mt-0.5">{player.registrationNumber}</p>
              </div>
           </div>
-          {onClose && (
-            <button onClick={onClose} className="p-1.5 hover:bg-slate-200 rounded text-slate-500 transition-colors">
-              <X className="w-5 h-5" />
-            </button>
-          )}
         </div>
 
         {/* Actions */}
@@ -84,25 +79,25 @@ export default function PlayerDetail({
           <div className="flex items-center gap-2 mt-4 pt-3 border-t border-slate-200">
             <button 
               onClick={onToggleSelect}
-              className={`flex-1 py-2 px-3 rounded flex items-center justify-center gap-1.5 text-xs font-bold uppercase tracking-wider transition-colors ${
+              className={`flex-1 py-3 px-4 rounded-xl flex items-center justify-center gap-1.5 text-[13px] font-black uppercase tracking-widest transition-transform active:scale-95 ${
                 isSelected 
-                  ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' 
-                  : 'bg-emerald-600 text-white hover:bg-emerald-700'
+                  ? 'bg-slate-900 text-white' 
+                  : 'bg-[#E1FF01] text-[#27272A] hover:brightness-95'
               }`}
             >
               <CheckCircle2 className="w-4 h-4" />
-              {isSelected ? 'Selected' : `Select for ${team?.name?.replace(' 2026', '') || 'Team'}`}
+              {isSelected ? 'SELECTED' : `SELECT FOR ${team?.name?.replace(' 2026', '').toUpperCase() || 'TEAM'}`}
             </button>
             <button 
               onClick={onToggleConsider}
-              className={`flex-1 py-2 px-3 rounded flex items-center justify-center gap-1.5 text-xs font-bold transition-colors ${
+              className={`flex-none p-3 rounded-xl flex items-center justify-center gap-1.5 transition-transform active:scale-95 ${
                 isConsidered
-                  ? 'bg-amber-100 text-amber-800 border border-amber-200' 
-                  : 'bg-white border border-slate-300 text-slate-700 hover:bg-slate-50'
+                  ? 'bg-amber-100 text-amber-800' 
+                  : 'bg-white border-2 border-slate-200 text-slate-700 hover:bg-slate-50'
               }`}
+              title="Consider Player"
             >
-              <Bookmark className="w-4 h-4" />
-              {isConsidered ? 'Considered' : 'Consider'}
+              <Bookmark className={`w-5 h-5 ${isConsidered ? 'fill-current' : ''}`} />
             </button>
           </div>
         )}
