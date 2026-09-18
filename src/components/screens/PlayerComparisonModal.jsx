@@ -16,6 +16,8 @@ export default function PlayerComparisonModal() {
   const p1 = selectedPlayer;
   const p2 = comparePlayer2;
 
+  if (!p1 || !p2) return null;
+
   const metrics = [
     { label: 'Career Runs', v1: p1.careerRuns, v2: p2.careerRuns, higherIsBetter: true },
     { label: 'Batting Avg', v1: p1.battingAvg, v2: p2.battingAvg, higherIsBetter: true },
