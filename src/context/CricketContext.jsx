@@ -191,7 +191,6 @@ export function CricketProvider({ children }) {
         console.error('[CricketContext] Sync error:', err);
         setIsAppLoading(false);
       }
-      }
     };
 
     setupDataAndSync();
